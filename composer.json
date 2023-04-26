@@ -1,6 +1,6 @@
 {
     "name":             "usualtool/ut-cms",
-    "description":      "UTCMS V9版是基于UT框架构建的内容管理系统，支持快速创建多种类型的应用。（不兼容V8版本）",
+    "description":      "UTCMS-V9是基于UT框架构建的内容管理系统，支持快速创建多种类型的应用。（不兼容V8版本）",
     "keywords":         ["UTCMS", "UsualToolCMS", "UT Framework"],
     "homepage":         "http://cms.usualtool.com",
     "license": "Apache-2.0",
