@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title><{$title}></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="UT Framework" />
+    <meta name="Description" content="UsualTool.com" />
+</head>
+<body>
+<div style='width:400px;padding:10px;'>
+    <p>/**</p> 
+    <p>* The framework runs successfully.</p> 
+    <{if $setup==0}><p>* Visual development package not installed.</p><{/if}>
+    <p>* --------------------------------------------------------</p>      
+    <p align='center'><img src="/app/assets/ut-logo.png"></p>
+    <p>*   Author:HuangDou   Email:usualtool@qq.com</p>
+    <p>*   QQ-Group:583610949</p>
+    <p>*   WebSite:http://www.UsualTool.com</p>
+    <p>*   UT Framework is suitable for Apache2 protocol.</p>
+    <p>* --------------------------------------------------------</p>
+    <p>*/</p>
+</div>
+</body>
+</html>

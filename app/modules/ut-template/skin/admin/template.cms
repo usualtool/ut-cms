@@ -1,0 +1,145 @@
+<{include "$pubtemp/head.cms"}>
+        <div class="main-panel">
+			<div class="content">
+				<div class="page-inner">
+					<div class="page-header">
+						<h4 class="page-title"><{$title}></h4>
+						<ul class="breadcrumbs">
+							<li class="nav-home">
+								<a href="./">
+									<i class="fa fa-home"></i>
+								</a>
+							</li>
+							<li class="separator">
+								<i class="fa fa-angle-double-right"></i>
+							</li>
+							<li class="nav-item">
+								整站模板市场
+							</li>
+							<li class="nav-item pl-3 pr-3">
+                                <{item=>$module,$backitem}>
+                            </li>
+						</ul>
+					</div>
+							<div class="card">
+							    <div class="card-header">
+									<h4 class="card-title">模板市场</h4>
+								</div>
+                                <div class="card-body">
+									<ul class="nav nav-pills nav-secondary" id="pills-tab" role="tablist">
+										<li class="nav-item submenu">
+											<a class="nav-link active show" id="g-tab" data-toggle="pill" href="#g" role="tab" aria-controls="g" aria-selected="true">官方模板</a>
+										</li>
+                                        <li class="nav-item submenu">
+											<a class="nav-link" id="b-tab" data-toggle="pill" href="#b" role="tab" aria-controls="b" aria-selected="false">推送模板</a>
+										</li>
+                                        <li class="nav-item submenu">
+											<a class="nav-link" id="s-tab" data-toggle="pill" href="#s" role="tab" aria-controls="s" aria-selected="false">私有模板</a>
+										</li>
+									</ul>
+									<div class="tab-content mt-2 mb-3" id="pills-tabContent">
+										<div class="tab-pane fade active show" id="g" role="tabpanel" aria-labelledby="g-tab">
+										    <div class="row">
+											<{loop=>$pubilc_template $rows}>
+                                            <div class="col-sm-6 col-md-3">
+							                <div class="card card-stats card-round">
+								                <div class="card-body">
+										            <div class="col col-stats ml-3 ml-sm-0">
+											            <div class="numbers">
+												            <p>
+															<img src="<{$rows->picurl}>" class="avatar-img" style="width:100%;height:250px;">										                
+															</p>
+															<h5 class="card-title" style="font-size:16px;font-weight:bold;"><{$rows->title}></h5>
+															<p class="card-category"><{$rows->lang}></p>
+															<p class="card-category"><{$rows->isfree}></p>
+															<p class="card-category">
+															<{php=>
+																if(library\UsualToolData\UTData::QueryData("cms_template","","tid='{return=>$rows->tid}'","","")["querynum"]>0):
+																	echo"已同步 | <a href='?m=ut-template&p=template&do=uninstall&tid={return=>$rows->tid}'>卸载</a>";
+																else:
+																	echo"<i class='fas fa-pen-nib'></i> <a style='color:green;' href='?m=ut-template&p=template&do=install&tid={return=>$rows->tid}&t=g'>同步模板</a>";
+																endif;
+															}>
+															</p>
+											            </div>
+										            </div>
+								                </div>
+							                </div>
+						                    </div>
+                                            <{/loop}>
+											</div>
+										</div>
+										<div class="tab-pane fade" id="b" role="tabpanel" aria-labelledby="b-tab">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">订单时间</th>
+                                                        <th scope="col">订单编号</th>
+                                                        <th scope="col">模板ID</th>
+                                                        <th scope="col">模板名称</th>
+                                                        <th scope="col">操作</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <{loop=>$buy_template $rows}>
+                                                    <tr>
+                                                        <td><{$rows->ordertime}></td>
+                                                        <td><{$rows->orderid}></td>
+                                                        <td><{$rows->tid}></td>
+                                                        <td><{$rows->title}></td>
+                                                        <td>
+															<{php=>
+															if(library\UsualToolData\UTData::QueryData("cms_template","","tid='{return=>$rows->tid}'","","")["querynum"]>0):
+																echo"已同步 | <a href='?m=ut-template&p=template&do=uninstall&tid={return=>$rows->tid}'>卸载</a>";
+															else:
+																 echo"<a href='?m=ut-template&p=template&do=install&tid={return=>$rows->tid}&t=b' class='text-blue'>同步</a>";
+															endif;
+															}>
+                                                        </td>
+                                                    </tr>
+                                                    <{/loop}>
+                                                </tbody>
+                                            </table>
+										</div>
+										<div class="tab-pane fade" id="s" role="tabpanel" aria-labelledby="s-tab">
+										    <div class="row">
+											<{loop=>$private_template $rows}>
+                                            <div class="col-sm-6 col-md-3">
+							                <div class="card card-stats card-round">
+								                <div class="card-body">
+									                <div class="row align-items-center">
+										                <div class="col-icon">
+											                <div class="icon-big text-center icon-primary bubble-shadow-small" style="font-size:12px;color:white;">
+												                <{$rows->tid}>											                
+															</div>
+										                </div>
+										            <div class="col col-stats ml-3 ml-sm-0">
+											            <div class="numbers">
+												            <h5 class="card-title" style="font-size:16px;font-weight:bold;"><{$rows->title}></h5>
+															<p class="card-category"><{$rows->auther}></p>
+															<p class="card-category">
+															<{php=>
+																if(library\UsualToolData\UTData::QueryData("cms_template","","tid='{return=>$rows->tid}'","","")["querynum"]>0):
+																	echo"已同步 | <a href='?m=ut-template&p=template&do=uninstall&tid={return=>$rows->tid}'>卸载</a>";
+																else:
+																	echo"<i class='fas fa-pen-nib'></i> <a style='color:green;' href='?m=ut-template&p=template&do=install&tid={return=>$rows->tid}&t=s'>同步</a>";
+																endif;
+															}>
+															</p>
+											            </div>
+										            </div>
+									                </div>
+								                </div>
+							                </div>
+						                    </div>
+                                            <{/loop}>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+					</div>
+				</div>
+			</div>
+		</div>
+<{include "$pubtemp/foot.cms"}>		

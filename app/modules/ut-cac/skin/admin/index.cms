@@ -1,0 +1,79 @@
+<{include "$pubtemp/head.cms"}>
+<style>
+    #dosbody{
+		background-color:#000033;
+		color:white;
+		height:460px;
+		padding:10px;
+		}
+    body{
+		cursor:text, default !important;
+		}
+    p{
+		margin-bottom:0px !important;line-height:15px !important;
+		}
+    #writedos{
+		width:95%;
+		background-color:#000033 !important;
+		color:#fff;
+		outline:none;
+		border:0;
+		height:25px;
+		font-size:13px;
+		}
+</style> 
+        <div class="main-panel">
+			<div class="content">
+				<div class="page-inner">
+					<div class="page-header">
+						<h4 class="page-title"><{$title}></h4>
+						<ul class="breadcrumbs">
+							<li class="nav-home">
+								<a href="./">
+									<i class="fa fa-home"></i>
+								</a>
+							</li>
+							<li class="separator">
+								<i class="fa fa-angle-double-right"></i>
+							</li>
+							<li class="nav-item">
+								命令行工具
+							</li>
+							<li class="nav-item pl-3 pr-3">
+                                                            <{item=>$module,$backitem}>
+                                                        </li>
+						</ul>
+					</div>
+							<div class="card">
+								<div class="card-body">
+								    <div class="row">
+								        <div class="col-md-12">
+										    <div id="dosbody">
+                                                <p>[<?php echo$_SESSION['admin'];?>@localhost ~]#UTDOS INIT</P>
+                                                <span id="doslist"></span>
+                                                <input id="writedos">
+                                            </div>
+								        </div>
+								    </div>
+								</div>
+							</div>
+					</div>
+				</div>
+			</div>
+		</div>
+<{include "$pubtemp/foot.cms"}>
+<script>
+(function($,undefined){
+$(document).ready(function(){
+    $('#writedos').bind('keypress',function(event){
+        if(event.keyCode == "13") {
+            var o=$("#writedos").val();
+            $.post("?m=ut-cac&p=cli",{o:o},function(result){
+                  $("#doslist").append(result);
+            });
+        }
+    });
+    $("input").focus();
+});
+})(jQuery);
+</script>

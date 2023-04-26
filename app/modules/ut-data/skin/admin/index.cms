@@ -1,0 +1,351 @@
+<{include "$pubtemp/head.cms"}> 
+        <div class="main-panel">
+			<div class="content">
+				<div class="page-inner">
+					<div class="page-header">
+						<h4 class="page-title"><{$title}></h4>
+						<ul class="breadcrumbs">
+							<li class="nav-home">
+								<a href="./">
+									<i class="fa fa-home"></i>
+								</a>
+							</li>
+							<li class="separator">
+								<i class="fa fa-angle-double-right"></i>
+							</li>
+							<li class="nav-item">
+								<{$title}>
+							</li>
+							<li class="separator">
+								<i class="fa fa-angle-double-right"></i>
+							</li>
+							<li class="nav-item">
+								表管理
+							</li>
+							<li class="nav-item pl-3 pr-3">
+                                                            <{item=>$module,$backitem}>
+                                                        </li>
+						</ul>
+					</div>
+							<div class="card">
+								<div class="card-header">
+									<div class="card-head-row">
+										<div class="card-title">
+										<span class="btn-label">
+											<i class="fa fa-table"></i>
+										</span>
+										表列表
+									    </div>
+									</div>
+								</div>
+								<div class="card-body">
+                                    <table class="table table-hover border">
+										<thead>
+											<tr>
+												<th scope="col">表</th>
+												<th scope="col">行数</th>
+												<th scope="col">字段数</th>
+												<th scope="col">操作</th>
+											</tr>
+										</thead>
+										<tbody>
+										    <{loop=>$data $rows}>
+											<{php=>
+											$cols=explode(",",return=>$rows["field"]);
+											$types=explode(",",return=>$rows["type"]);
+											$nulls=explode(",",return=>$rows["null"]);
+											$keys=explode(",",return=>$rows["key"]);
+											$defs=explode(",",return=>$rows["def"]);
+											$extras=explode(",",return=>$rows["extra"]);
+											$colnum=count($cols);
+                                            $col="";
+											$val="";
+											$type="";
+											$null="";
+											$key="";
+											$def="";
+											$extra="";
+											for($i=0;$i<$colnum;$i++){
+                                                $col.="`".$cols[$i]."`,";
+												$val.="'值',";
+											    $type.="".$types[$i].",";
+											    $null.="".$nulls[$i].",";
+											    $key.="".$keys[$i].",";
+											    $def.="".$defs[$i].",";
+											    $extra.="".$extras[$i].",";
+                                            } 
+											$col=rtrim($col,",");
+											$val=rtrim($val,",");
+											$type=rtrim($type,",");
+											$null=rtrim($null,",");
+											$key=rtrim($key,",");
+											$def=rtrim($def,",");
+											$extra=rtrim($extra,",");
+											}>
+											<tr>
+												<td><{$rows->name}></td>
+												<td><{$rows->num}></td>
+												<td><{php=>echo$colnum;}></td>
+												<td>
+												<span class="mr-2">
+												    <button type="button" class="btn btn-primary col-md-2" onclick="opencol('<{$rows->name}>','<{$rows->field}>','<{$rows->type}>','<{$rows->null}>','<{$rows->key}>','<{$rows->def}>','<{$rows->extra}>')">
+												        <i class="fas fa-code-branch"></i> 表结构
+												    </button>
+												</span>
+												<span class="mr-2">
+												    <button type="button" class="btn btn-primary col-md-2" onclick="addcol('<{$rows->name}>')">
+												        <i class="fas fa-pen-nib"></i> 增加字段
+												    </button>
+												</span>
+												<span class="mr-2">
+												    <input type="hidden" id="c_<{$rows->name}>" value="INSERT INTO `<{$rows->name}>` (<{php=>echo$col;}>) VALUES (<{php=>echo$val;}>);">
+												    <button class="btn btn-success col-md-2" onclick='mysql("插入记录:<{$rows->name}>","c_<{$rows->name}>")'>
+											            <span class="btn-label"><i class="fas fa-code"></i> </span>
+											            插入记录
+										            </button>
+												</span>
+												<span class="mr-2">
+												    <input type="hidden" id="q_<{$rows->name}>" value="DELETE from <{$rows->name}>;">
+												    <button class="btn btn-warning col-md-2" onclick='mysql("清空记录:<{$rows->name}>","q_<{$rows->name}>")'>
+											            <span class="btn-label"><i class="fas fa-broom"></i> </span>
+											            清空记录
+										            </button>
+												</span>
+												<span class="mr-2">
+												    <input type="hidden" id="s_<{$rows->name}>" value="DROP TABLE IF EXISTS `<{$rows->name}>`;">
+												    <button class="btn btn-danger col-md-2" onclick='mysql("删除表:<{$rows->name}>","s_<{$rows->name}>")'>
+											            <span class="btn-label"><i class="fas fa-times"></i> </span>
+											            删除表
+										            </button>
+												</span>
+												</td>
+											</tr>
+											<{/loop}>
+										</tbody>
+									</table>									
+								</div>
+							</div>
+					</div>
+				</div>
+			</div>
+		</div>
+<style>
+.swal2-title{font-size:16px !important;margin-bottom:10px !important;}
+	.ut-input{
+		border-bottom:1px solid #ddd;
+		border-top:0;
+		border-left:0;
+		border-right:0;
+		height:30px;
+		line-height:35px;
+		width:96%;
+	}
+	.ut-input-red{
+		border-bottom:1px solid red;
+		border-top:0;
+		border-left:0;
+		border-right:0;
+		height:30px;
+		line-height:35px;
+		width:96%;
+	}
+	</style>
+<{include "$pubtemp/foot.cms"}>
+<script>
+    function mysql(str,id){
+		var sql=$("#"+id+"").val();
+		var html="<div class='row'>";
+		html+='<textarea class="form-control" id="u_sql" rows="4">'+sql+'</textarea>';
+        html+="</div>";
+		swal({
+            title: "SQL操作:"+str,
+            html: html,
+			showCancelButton: true,
+            closeOnConfirm: false,
+			confirmButtonText: '执行',
+			cancelButtonText: '关闭窗口'
+        }).then((result) => {
+            if(result.value){
+				var u_sql=$("#u_sql").val();
+                $.ajax({
+                     url:'?m=ut-data&p=mysql&do=mysql-sql',
+                     type:"post",
+                     data:{
+						 'sql':u_sql
+						 },
+					 dataType: "json",
+                     success: function(data){
+						window.location.reload();
+                        alert("SQL执行成功!");
+                   },
+                   failure:function(d){
+                          alert("Error");
+                   }
+                 });
+			}
+        })		
+	}
+    function add_col(table){
+        var piccount=999;
+        piccount++;
+        $("#mysql-table").append("<tr><td><input class='ut-input-red' name='u_col' type='text'></td><td><input class='ut-input-red' name='u_type' type='text'></td><td><input class='ut-input-red' name='u_null' type='text'></td><td><input class='ut-input-red' name='u_def' type='text'></td></tr>");
+    }
+	function addcol(table){
+		var html="<input id='u_table' type='hidden' value='"+table+"'>";
+		html+="<div class='row'>";
+		html+="<p><a onclick='add_col()' style='color:red;'>增加字段</a></p>";
+		html+="<table style='font-size:13px;text-align: left;' id='mysql-table'><tr>";
+		html+="<td>字段名称</td><td>数据类型</td>";
+		html+="<td>是否为空</td>";
+		html+="<td>默认值</td></tr>";
+			html+="<tr>";
+			html+="<td><input class='ut-input-red' name='u_col' type='text'></td>"; 
+			html+="<td><input class='ut-input-red' name='u_type' type='text'></td>";
+			html+="<td><input class='ut-input-red' name='u_null' type='text'></td>";
+			html+="<td><input class='ut-input-red' name='u_def' type='text'></td></tr>";
+		html+="</div>";
+		swal({
+            title: "增加字段:"+table,
+            html: html,
+			showCancelButton: true,
+            closeOnConfirm: false,
+			confirmButtonText: '增加',
+			cancelButtonText: '关闭窗口'
+        }).then((result) => {
+            if(result.value){
+				var u_table=$("#u_table").val();
+				var ucols="";
+				$("input[name='u_col']").each(function(){
+					ucols+=$(this).val()+",";
+				});
+				var utypes="";
+				$("input[name='u_type']").each(function(){
+					utypes+=$(this).val()+",";
+				});
+				var unulls="";
+				$("input[name='u_null']").each(function(){
+					unulls+=$(this).val()+",";
+				});
+				var udefs="";
+				$("input[name='u_def']").each(function(){
+					udefs+=$(this).val()+",";
+				});
+                $.ajax({
+                     url:'?m=ut-data&p=mysql&do=mysql-add',
+                     type:"post",
+                     data:{
+						 'u_table':u_table,
+						 'col':ucols.substring(0,ucols.length-1),
+						 'type':utypes.substring(0,utypes.length-1),
+						 'null':unulls.substring(0,unulls.length-1),
+						 'def':udefs.substring(0,udefs.length-1)
+						 },
+					 dataType: "json",
+                     success: function(data){
+						window.location.reload();
+                        alert("字段增加成功!");
+                   },
+                   failure:function(d){
+                          alert("Error");
+                   }
+                 });
+			}
+        })
+	}
+	function opencol(table,col,type,nullk,key,def,extra){
+		var cols=col.split(",");
+		var types=type.split(",");
+		var nulls=nullk.split(",");
+		var keys=key.split(",");
+		var defs=def.split(",");
+		var extras=extra.split(",");
+		var html="<input id='u_table' type='hidden' value='"+table+"'>";
+		html+="<input id='u_cols' type='hidden' value='"+col+"'>";
+		html+="<div class='row'><table style='font-size:13px;text-align: left;'><tr>";
+		html+="<td>字段名称</td><td>数据类型</td>";
+		html+="<td>是否为空</td><td>主键</td>";
+		html+="<td>默认值</td><td>自动编号</td></tr>";
+		var i;
+		var k;
+		for(i=0;i<cols.length;i++){
+			k=i+1;
+			if(keys[i]===null || keys[i]==="" || keys[i]===undefined){
+				utkey="";
+			}else{
+				utkey=keys[i];
+			}
+			if(defs[i]===null || defs[i]==="" || defs[i]===undefined){
+				utdef="";
+			}else{
+				utdef=defs[i];
+			}
+			if(extras[i]===null || extras[i]==="" || extras[i]===undefined){
+				utext="";
+			}else{
+				utext=extras[i];
+			}
+			html+="<tr>";
+			html+="<td><input class='ut-input-red' name='u_col' type='text' value='"+cols[i]+"'></td>"; 
+			html+="<td><input class='ut-input-red' name='u_type' type='text' value='"+types[i]+"'></td>";
+			html+="<td><input class='ut-input-red' name='u_null' type='text' value='"+nulls[i]+"'></td>";
+			html+="<td><input class='ut-input' name='u_key' readonly type='text' value='"+utkey+"'></td>";
+			html+="<td><input class='ut-input-red' name='u_def' type='text' value='"+utdef+"'></td>";
+			html+="<td><input class='ut-input' name='u_ext' readonly type='text' value='"+utext+"'></td></tr>";
+        };
+		html+="</div>";
+		swal({
+            title: "编辑字段:"+table,
+            html: html,
+			showCancelButton: true,
+            closeOnConfirm: false,
+			confirmButtonText: '编辑',
+			cancelButtonText: '关闭窗口'
+        }).then((result) => {
+            if(result.value){
+				var u_table=$("#u_table").val();
+				var u_cols=$("#u_cols").val();
+				var ucols="";
+				$("input[name='u_col']").each(function(){
+					ucols+=$(this).val()+",";
+				});
+				var utypes="";
+				$("input[name='u_type']").each(function(){
+					utypes+=$(this).val()+",";
+				});
+				var unulls="";
+				$("input[name='u_null']").each(function(){
+					unulls+=$(this).val()+",";
+				});
+				var udefs="";
+				$("input[name='u_def']").each(function(){
+					udefs+=$(this).val()+",";
+				});
+				var uexts="";
+				$("input[name='u_ext']").each(function(){
+					uexts+=$(this).val()+",";
+				});
+                $.ajax({
+                     url:'?m=ut-data&p=mysql&do=mysql-edit',
+                     type:"post",
+                     data:{
+						 'u_table':u_table,
+						 'u_cols':u_cols,
+						 'col':ucols.substring(0,ucols.length-1),
+						 'type':utypes.substring(0,utypes.length-1),
+						 'null':unulls.substring(0,unulls.length-1),
+						 'def':udefs.substring(0,udefs.length-1),
+						 'ext':uexts.substring(0,uexts.length-1)
+						 },
+					 dataType: "json",
+                     success: function(data){
+						window.location.reload();
+                        alert("字段编辑成功!");
+                   },
+                   failure:function(d){
+                          alert("Error");
+                   }
+                 });
+			}
+        })
+	}	
+</script>
