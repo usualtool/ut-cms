@@ -192,7 +192,7 @@
 						<{if !empty($custmods)}>
 						<!--自定义模块-->
 						<li class="nav-section">
-							<h4 class="text-section">自定义模块</h4>
+							<h4 class="text-section">内容管理</h4>
 						</li>
 						<{loop=>$custmods as $rows}>	
 						<{if empty($rows["backitem"])}>		
@@ -232,7 +232,7 @@
 						<!--底层模块-->	 
 						<{if $develop==1}>
 						<li class="nav-section">
-							<h4 class="text-section">UT可视化管理</h4>
+							<h4 class="text-section">系统管理</h4>
 						</li>
 						<{loop=>$modules as $rows}>	
 						<{if empty($rows["backitem"])}>		
