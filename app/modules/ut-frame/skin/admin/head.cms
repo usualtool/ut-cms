@@ -154,7 +154,7 @@
 			<div class="sidebar-wrapper scrollbar-inner">
 				<div class="sidebar-content">
 					<div class="user">
-						<div class="avatar-sm float-left mr-2">
+						<div class="border avatar-sm float-left mr-2">
 							<img src="<{$admin_avatar}>" alt="..." class="avatar-img rounded-circle">
 						</div>
 						<div class="info">
@@ -189,6 +189,46 @@
 								<p>首页</p>
 							</a>
 						</li>
+						<{if !empty($custmods)}>
+						<!--自定义模块-->
+						<li class="nav-section">
+							<h4 class="text-section">自定义模块</h4>
+						</li>
+						<{loop=>$custmods as $rows}>	
+						<{if empty($rows["backitem"])}>		
+						<li class="nav-item <{php=>if($_COOKIE["Nav"]==return=>$rows->mid):echo"active";endif;}>">
+						<a href="?m=<{$rows->mid}>" onclick="clicknav('<{$rows->mid}>')">
+								<i class="fas fa-sort"></i>
+								<p><{$rows->modname}></p>
+						</a>
+						</li>
+						<{else}>	
+						<li class="nav-item <{php=>if($_COOKIE["Nav"]==return=>$rows->mid):echo"submenu";endif;}>">
+							<a data-toggle="collapse" href="#<{$rows->mid}>">
+								<i class="fas fa-sort"></i>
+								<p><{$rows->modname}></p>
+								<span class="caret"></span>
+							</a>
+							<div class="collapse <{php=>if($_COOKIE["Nav"]==return=>$rows->mid):echo"show";endif;}>" id="<{$rows->mid}>">
+								<ul class="nav nav-collapse">
+								<{php=>
+								$navs=explode(",",return=>$rows->backitem);
+								for($k=0;$k<count($navs);$k++):
+								$navtitle=explode(":",$navs[$k])[0];
+								$navurl=explode(":",$navs[$k])[1];
+								}>
+									<li>
+										<a href="?m=<{$rows->mid}>&p=<{php=>echo$navurl}>" onclick="clicknav('<{$rows->mid}>')">
+											<span class="sub-item"><{php=>echo$navtitle}></span>
+										</a>
+									</li>
+								<{php=>endfor;}>
+								</ul>
+							</div>
+						</li>
+						<{/if}>
+						<{/loop}>
+						<{/if}>
 						<!--底层模块-->	 
 						<{if $develop==1}>
 						<li class="nav-section">
@@ -198,7 +238,7 @@
 						<{if empty($rows["backitem"])}>		
 						<li class="nav-item <{php=>if($_COOKIE["Nav"]==return=>$rows->mid):echo"active";endif;}>">
 						<a href="?m=<{$rows->mid}>" onclick="clicknav('<{$rows->mid}>')">
-								<i class="fa fa-code"></i>
+								<i class="fas fa-sort"></i>
 								<p><{$rows->modname}></p>
 						</a>
 						</li>

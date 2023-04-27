@@ -28,6 +28,10 @@ $app->Runin("message",explode("|",UTInc::Auth($config["UTCODE"],$config["UTFURL"
  */
 $app->Runin("modules",UTData::QueryData("cms_module","","bid=3 and mid<>'".$config["DEFAULT_MOD"]."'","","")["querydata"]);
 /**
+ * 写入自定义模块
+ */
+$app->Runin("custmods",UTData::QueryData("cms_module","","bid<>3")["querydata"]);
+/**
  * 写入当前运行模块名称及栏目
  * befoitem前端地址集，backtem后端栏目集
  */

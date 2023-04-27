@@ -4,7 +4,7 @@ use library\UsualToolData\UTData;
 /**
  * 连接数据库
  */
-$db=UTData::GetDataBase();
+$db=UTData::GetDatabase();
 /**
  * 传递参数过程
  */
