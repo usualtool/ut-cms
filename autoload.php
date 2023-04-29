@@ -39,7 +39,7 @@ $config=UTInc::GetConfig();
  * 禁止配置联网
  */
 if(!empty($config["APPURL"]) && UTInc::HttpCode($config["APPURL"]."/.ut.config")=="200"):
-    UTInc::GoUrl("-1","Error:Configuration disclosure.");
+    UTInc::GoUrl("-1","Error:The configuration must be disconnected from the network.");
 endif;
 /**
  * 公共模块
