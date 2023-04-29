@@ -44,14 +44,15 @@ endif;
     body{font-size:0.8rem;}
     a{color:black;text-decoration:underline;}
     p{margin-bottom:0rem;font-size:14px;}
-    .fontsmall{font-size:12px;}#license p{font-size:11px;
+    .fontsmall{font-size:12px;}
+    #license p{font-size:11px;
     }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="row">
-            <div class="col-md-12 mb-3"></div>
+            <div class="col-md-12 mt-3 mb-3 text-center"><img src="/app/assets/logo.png"></div>
             <div class="col-md-12">
                 <div class="border p-4">
                 <?php
@@ -94,7 +95,9 @@ endif;
                         })
                     </script>
                 <?php
-                elseif($do=="config"):?>
+                elseif($do=="config"):
+                    if(UTInc::FileMode(UTF_ROOT)):
+                ?>
                     <div class="row">
                         <div class="col-7">
                             <h4>简要配置</h4>
@@ -155,6 +158,9 @@ endif;
                     </div>
                     </form>
                 <?php
+                    else:
+                        echo"<p>请将根目录权限临时设置为可写（755），并在此处 <a onclick='Refresh()' class='text-danger'>刷新页面</a></p>";
+                    endif;
                 elseif($do=="sql"):?>
                     <div class="row">
                         <div class="col-7">
@@ -247,8 +253,14 @@ endif;
                     <?php
                     endif;
                 elseif($do=="finish"):
-                    file_put_contents("./usualtool.lock","lock");
-                    UTInc::GoUrl("../app/dev/","后端初始账号密码为“admin”请及时修改!");
+                    $state=UTInc::HttpCode($config["APPURL"]."/.ut.config");
+                    if($state=="200"):
+                        echo"<p>请设置禁止访问 <u>.cms/.log/.config</u> 后缀文件，并在此处 <a onclick='Refresh()' class='text-danger'>刷新页面</a></p>";
+                        echo"<p>设置请参考关于敏感文件禁止访问一节：<a  target='_blank' href='https://frame.usualtool.com/baike/config.php'>https://frame.usualtool.com/baike/config.php</a></p>";
+                    else:
+                        file_put_contents("./usualtool.lock","lock");
+                        UTInc::GoUrl("../app/dev/","后端初始账号密码为“admin”请及时修改!");
+                    endif;
                 endif;
                 ?>
                 </div>
@@ -256,4 +268,9 @@ endif;
         </div>
     </div>
 </body>
+    <script>
+        function Refresh(){
+            window.location.reload();
+        }
+    </script>
 </html>
