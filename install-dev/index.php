@@ -112,6 +112,7 @@ endif;
                         <div class="form-group col-md-6">
                             <p>与UT通讯状态：<?php echo$httpcode;?> <?php echo $httpcode=="200" ? "" : "， 因通讯障碍，安装将有极大几率失败。";?></p>
                             <p>PHP版本：<?php echo$sysinfo["PHP"];?></p>
+                            <p>安装前请将.ut.config与网络断开，否则无法正常安装。设置方法见：<a target="_blank" href="https://frame.usualtool.com/baike/config.php?do=%E7%A6%81%E6%AD%A2%E8%AE%BF%E9%97%AE">禁止访问.ut.config文件</a></p>
                         </div>
                     </div>
                     <div class="row">
