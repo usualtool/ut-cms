@@ -1,8 +1,26 @@
-#### UTCMS-V9
+#### 简要说明
 UTCMS V9版本是基于UT框架构建的内容管理系统，能够快速搭建各种类型的应用。（该版本不兼容2021年停止维护的V8版本）
-#### 开源协议
-UT框架基于Apache2.0协议使用，UTCMS亦遵循UT框架相应的开源与免费协议。详见相关文书：http://frame.usualtool.com/baike/#license
-#### 安装
-首次安装请直接访问应用即可。如果安装/操作失败，请赋予相应权限。
-#### 关于令牌
-请您明确UT令牌的作用。令牌并不是所必要的，它主要对开放市场上的部分模块、插件、模板进行应用。如若不涉及则无需申领。
+#### 系统要求
+Nginx/Apache/IIS.  
+PHP5/PHP7/PHP8  
+UTFramework 5+
+#### 安装方式 
+- 下载安装包并解压
+- 运行应用域名/IP进行初始配置
+- 初始超级账户密码，均为admin
+#### 敏感安全
+.config配置包含敏感信息，为防止远程访问和下载，您必须在站点配置文件中设置禁止非本地访问.config。
+Nginx
+```
+location ~* \.(log|config|cms)$ {
+deny all;
+}
+```
+Apache
+```
+<Files ~ "\.config$">
+Order allow,deny
+Deny from all
+</Files>
+```
+#### [演示](http://cms.frame.usualtool.com/test/)
