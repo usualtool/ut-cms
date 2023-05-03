@@ -52,7 +52,7 @@ endif;
 <body>
     <div class="container">
         <div class="row">
-            <div class="col-md-12 mt-3 mb-3 text-center"><img src="/app/assets/logo.png"></div>
+            <div class="col-md-12 mt-3 mb-3 text-center"><img src="<?php echo$config["APPURL"];?>/app/assets/logo.png"></div>
             <div class="col-md-12">
                 <div class="border p-4">
                 <?php
