@@ -445,15 +445,27 @@ div.dataTables_paginate ul.pagination {
     color: #007991;
 }
 
+#ut-auto
+{
+    width: 100%;
+    overflow: scroll;
+    white-space: nowrap;
+}
+
+#ut-auto::-webkit-scrollbar
+{
+    width:5px;
+    height: 5px;
+}
+
+#ut-auto::-webkit-scrollbar-thumb
+{
+  background-color: #007bff;
+  border-radius: 2em;
+}
+
 @media(max-width:640px)
 {
-    #ut-auto
-    {
-        width: 100%;
-        overflow: scroll;
-        white-space: nowrap;
-    }
-
     #ut-table_filter
     {
         float: left;

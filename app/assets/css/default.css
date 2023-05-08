@@ -157,14 +157,22 @@ p{
     line-height: 12px;
     color: #fff;
 }
+#ut-auto{
+    width: 100%;
+    overflow: scroll;
+    white-space: nowrap;
+}
+#ut-auto::-webkit-scrollbar{
+    width:5px;
+    height: 5px;
+}
+#ut-auto::-webkit-scrollbar-thumb{
+  background-color: #007bff;
+  border-radius: 2em;
+}
 @media(max-width:640px){
     .none{
         display:none;
-    }
-    #ut-auto{
-        width: 100%;
-        overflow: scroll;
-        white-space: nowrap;
     }
     #ut-table_filter{
         float: left;
