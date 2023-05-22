@@ -70,6 +70,37 @@ function checkform(){
 	  return false;
 	}
 };
+//time
+function getnowdate() {
+    var thedate = new Date;
+    var year = thedate.getFullYear();
+    var mon = thedate.getMonth() + 1;
+    if(mon<10){
+        mon="0"+mon;
+    }
+    var date = thedate.getDate();
+    if(date<10){
+        date="0"+date;
+    }
+    var hours = thedate.getHours();
+    if(hours<10){
+        hours="0"+hours;
+    }
+    var minutes = thedate.getMinutes();
+    if(minutes<10){
+        minutes="0"+minutes;
+    }
+    var seconds = thedate.getSeconds();
+    if(seconds<10){
+        seconds="0"+seconds;
+    }
+    var now = year + "-" + mon + "-" + date + " " + hours + ":" + minutes + ":" + seconds;
+    return now;
+}
+//timestamp
+function gettimestamp() {
+    return Math.round(new Date(getnowdate()).getTime()/1000).toString();
+}
 //UT-Navclick
 function clicknav(module){
 	setcookie("Nav",module);

@@ -30,6 +30,7 @@
 <!-- UT Language -->
 <script src="<{$appurl}>/app/assets/js/jquery.localize.js"></script>
 <script src="<{$appurl}>/app/assets/js/jquery.lang.js"></script>
+<script src="<{$appurl}>/app/assets/js/md5.js"></script>
 <script src="<{$appurl}>/app/assets/js/jquery.ready.js"></script>
 <{if $lock==1}>
 <{php=>
