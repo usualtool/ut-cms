@@ -35,7 +35,6 @@ if($_POST["action"]=="add" || $_POST["action"]=="mon" || $_POST["action"]=="del"
         $authquery=str_replace("[".$i."]","'".$secret[$i]."'",$authquery);
     endfor;
     $data=UTData::QueryData($authtable,"",$authquery);
-    print_r($data);
     if($data["querynum"]<=0):
         UTInc::GoUrl('','[{"error":"Secret Error"}]');
     endif;
