@@ -3,7 +3,7 @@ use library\UsualToolInc\UTInc;
 use library\UsualToolData\UTData;
 require'data-verify.php';
 $table=UTInc::SqlCheck($_POST["table"]);
-$where=UTInc::SqlCheck($_POST["where"]);
+$where=$_POST["where"];
 $action=UTInc::SqlCheck($_POST["action"]);
 $data=array_diff_key($_POST,array("table"=>$table,"where"=>$where,"action"=>$action));
 if(UTData::ModTable($table)):

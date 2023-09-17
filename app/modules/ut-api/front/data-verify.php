@@ -13,7 +13,7 @@ $authquery=UTInc::DeSqlCheck($api["authquery"]);
 if(UTInc::Contain($origin,$api["white"])):
     header('Access-Control-Allow-Origin: '.$origin);
 endif;
-if(!UTInc::Contain($config["APPURL"],$referer) && !UTInc::Contain($referer,$white)):
+if(!UTInc::Contain($config["APPURL"],$referer) && !UTInc::Contain(parse_url($referer)["host"],$api["white"])):
     UTInc::GoUrl('','[{"error":"Origin Error"}]');
 endif;
 if(!isset($headers["HTTP_TOKEN"])):
