@@ -10,10 +10,10 @@ $white=explode(",",$api["white"]);
 $opentable=explode(",",$api["opentable"]);
 $authtable=$api["authtable"];
 $authquery=UTInc::DeSqlCheck($api["authquery"]);
-if(UTInc::Contain($origin,$api["white"])):
+if(UTInc::Contain(parse_url($origin,PHP_URL_HOST),$white)):
     header('Access-Control-Allow-Origin: '.$origin);
 endif;
-if(!UTInc::Contain($config["APPURL"],$referer) && !UTInc::Contain(parse_url($referer)["host"],$api["white"])):
+if(!UTInc::Contain($config["APPURL"],$referer) && !UTInc::Contain(parse_url($referer,PHP_URL_HOST),$white)):
     UTInc::GoUrl('','[{"error":"Origin Error"}]');
 endif;
 if(!isset($headers["HTTP_TOKEN"])):
