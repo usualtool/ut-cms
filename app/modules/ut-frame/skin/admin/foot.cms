@@ -1,0 +1,60 @@
+</div>
+<script src="<{$appurl}>/assets/js/plugin/jquery-ui/jquery.ui.min.js"></script>
+<script src="<{$appurl}>/assets/js/plugin/jquery-touch/jquery.touch.min.js"></script>
+<!-- jQuery Qrcode -->
+<script src="<{$appurl}>/assets/js/plugin/jquery-qrcode/qrcode.min.js"></script>
+<!-- jQuery Scrollbar -->
+<script src="<{$appurl}>/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+<!-- Moment JS -->
+<script src="<{$appurl}>/assets/js/plugin/moment/moment.min.js"></script>
+<!-- Chart JS -->
+<script src="<{$appurl}>/assets/js/plugin/chart-js/chart.min.js"></script>
+<!-- jQuery Sparkline -->
+<script src="<{$appurl}>/assets/js/plugin/jquery-sparkline/jquery.sparkline.min.js"></script>
+<!-- Chart Circle -->
+<script src="<{$appurl}>/assets/js/plugin/chart-circle/circles.min.js"></script>
+<!-- Datatables -->
+<script src="<{$appurl}>/assets/js/plugin/datatables/datatables.min.js"></script>
+<script src="<{$appurl}>/assets/js/plugin/datatables/datatables.buttons.min.js"></script>
+<script src="<{$appurl}>/assets/js/plugin/datatables/buttons.html5.min.js "></script> 
+<script src="<{$appurl}>/assets/js/plugin/datatables/jszip.min.js"></script> 
+<script src="<{$appurl}>/assets/js/plugin/datatables/buttons.print.min.js"></script> 
+<!-- Bootstrap Notify -->
+<script src="<{$appurl}>/assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script>
+<!-- Bootstrap Toggle -->
+<script src="<{$appurl}>/assets/js/plugin/bootstrap-toggle/bootstrap-toggle.min.js"></script>
+<!-- Sweet Alert -->
+<script src="<{$appurl}>/assets/js/plugin/sweetalert/sweetalert.min.js"></script>
+<!-- Plupload -->
+<script src="<{$appurl}>/assets/js/plugin/plupload/plupload.min.js"></script>
+<!-- UT Language -->
+<script src="<{$appurl}>/assets/js/jquery.localize.js"></script>
+<script src="<{$appurl}>/assets/js/jquery.lang.js"></script>
+<script src="<{$appurl}>/assets/js/md5.js"></script>
+<script src="<{$appurl}>/assets/js/jquery.ready.js"></script>
+<{if $lock==1}>
+<{php=>
+$param=library\UsualToolInc\UTInc::CurPageUrl();
+$param=str_replace(return=>$appurl."/dev/","",$param);
+$param=str_replace("?","____",$param);
+$param=str_replace("/","---",$param);
+$param=str_replace("&","___",$param);
+$param=str_replace("=","__",$param);
+}>
+<script>
+if(getcookie("Lock")==1){
+    window.location.href = "?p=lock&u=<{php=>echo$param;}>";
+}else{
+    var timer;
+    window.onload = document.onmousemove = document.onkeydown = function () {
+	    clearTimeout(timer);
+	    timer = setTimeout(function () {
+			setcookie("Lock",1);
+		    window.location.href = "?p=lock&u=<{php=>echo$param;}>";
+	    },5*60*1000);
+    }
+}
+</script>
+<{/if}>
+</body>
+</html>

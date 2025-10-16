@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<title><{if $module=="ut-frame"}>首页<{else}><{$title}><{/if}> - <{$appname}></title>
+	<meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport' />
+	<link rel="stylesheet" href="<{$appurl}>/assets/css/bootstrap.min.css">
+	<link rel="stylesheet" href="<{$appurl}>/assets/css/buttons.min.css"/>
+	<link rel="stylesheet" href="<{$appurl}>/assets/css/fontawesome.min.css">
+	<link rel="stylesheet" href="<{$appurl}>/assets/css/style.css">
+        <script src="<{$appurl}>/assets/js/jquery.min.js"></script>
+        <script src="<{$appurl}>/assets/js/popper.min.js"></script>
+        <script src="<{$appurl}>/assets/js/bootstrap.min.js"></script>
+</head>
+<body>
+	<div class="wrapper">
+		<!--
+		using: data-background-color="blue | purple | light-blue | green | orange | red"
+		-->
+		<div class="main-header" data-background-color="light-blue">
+			<!-- Logo Header -->
+			<div class="logo-header">
+				<a href="./" class="logo">
+					<font class="navbar-brand" style="color:white;">UTCMS V9</font>
+				</a>
+				<button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon">
+						<i class="fa fa-bars"></i>
+					</span>
+				</button>
+				<button class="topbar-toggler more"><i class="fa fa-ellipsis-v"></i></button>
+				<div class="navbar-minimize">
+					<button class="btn btn-minimize btn-rounded">
+						<i class="fa fa-bars"></i>
+					</button>
+				</div>
+			</div>
+			<!-- End Logo Header -->
+			<!-- Navbar Header -->
+			<nav class="navbar navbar-header navbar-expand-lg">
+				<div class="container-fluid">
+					<div class="collapse" id="search-nav">
+						<div class="navbar-left navbar-form nav-search mr-md-3">
+							<div class="input-group">
+								<div class="input-group-prepend">
+								<button type="button" class="btn btn-search pr-1">
+										<i class="fa fa-search search-icon"></i>
+									</button>
+								</div>
+								<input type="text" placeholder="搜索功能模块 ..." class="form-control type-ahead__input">
+								<ul class="type-ahead__suggestions hidden"></ul>
+							</div>
+						</div>
+					</div>
+					<ul class="navbar-nav topbar-nav ml-md-auto align-items-center">
+						<li class="nav-item toggle-nav-search hidden-caret">
+							<a class="nav-link" data-toggle="collapse" href="#search-nav" role="button" aria-expanded="false" aria-controls="search-nav">
+								<i class="fa fa-search"></i>
+							</a>
+						</li>						
+						<li class="nav-item dropdown hidden-caret submenu">
+							<a href="?p=update">
+							<div class="custom-toggle"><i class="fas fa-sync-alt"></i></div>
+							</a>
+						</li>
+                        <li class="nav-item dropdown hidden-caret" style="margin-right:20px;">
+							<a class="nav-link dropdown-toggle" href="#" id="notifDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<i class="fa fa-bell"></i>
+								<!--<span class="notification">0</span>-->
+							</a>
+							<ul class="dropdown-menu notif-box animated fadeIn" aria-labelledby="notifDropdown">
+								<li>
+									<div class="dropdown-title">官方消息</div>
+								</li>
+								<li>
+									<div class="scroll-wrapper notif-scroll scrollbar-outer" style="position: relative;">
+									<div class="notif-scroll scrollbar-outer scroll-content" style="height: auto; margin-bottom: 0px; margin-right: 0px; max-height: 0px;">
+										<div class="notif-center" style="margin: 10px 0;">
+										<{loop=>$message $rows}>
+										<div class="row" style="margin-left:0;margin-right:0px;margin-bottom: 10px;">
+													<div class="notif-icon notif-primary col-md-2">
+													<i style="background: #35cd3a!important;
+                                                    font-style: inherit;display: inline-flex;width: 35px;height: 35px;align-items: center;
+                                                    justify-content: center;border-radius: 50%;color: #fff!important;">
+	                                                    <{inc=>CnSubStr($rows,1)}>
+	                                                </i>
+													</div>
+											<div class="notif-content col-md-10">
+												<span class="block" style="font-size:14px;">
+													<{$rows}>
+												</span> 
+											</div>
+										</div>
+										<{/loop}>
+									</div>
+									<div class="scroll-element scroll-x">
+									<div class="scroll-element_outer">
+									<div class="scroll-element_size"></div>
+									<div class="scroll-element_track"></div>
+									<div class="scroll-bar ui-draggable ui-draggable-handle"></div>
+									</div>
+									</div>
+									<div class="scroll-element scroll-y">
+									<div class="scroll-element_outer">
+									<div class="scroll-element_size"></div>
+									<div class="scroll-element_track"></div>
+									<div class="scroll-bar ui-draggable ui-draggable-handle"></div>
+									</div>
+									</div>
+									</div>
+								</li>
+								<li>
+									<a class="see-all" href="javascript:void(0);">关闭<i class="fa fa-angle-right"></i> </a>
+								</li>
+							</ul>
+						</li>
+                        <li class="nav-item dropdown hidden-caret">
+							<a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false">
+								<div class="avatar-sm">
+									<img src="<{$admin_avatar}>" alt="..." class="avatar-img rounded-circle">
+								</div>
+							</a>
+							<ul class="dropdown-menu dropdown-user animated fadeIn">
+								<li>
+									<div class="user-box">
+										<div class="avatar-lg"><img src="<{$admin_avatar}>" alt="image profile" class="avatar-img rounded"></div>
+										<div class="u-text">
+											<h4><{$admin_user}></h4>
+											<p class="text-muted"><{$admin_role}></p>
+											<p class="text-muted">IP: <{inc=>GetIp()}></p>
+										</div>
+									</div>
+								</li>
+								<li>
+									<div class="dropdown-divider"></div>
+									<a class="dropdown-item" href="?m=ut-power&p=adminx&id=<{$admin_id}>">
+									    <i class="fas fa-user-tie"></i> 账户
+									</a>
+									<div class="dropdown-divider"></div>
+									<a class="dropdown-item" href="?p=login&do=out">
+                                        <i class="fa fa-sign-out-alt" aria-hidden="true"></i> 退出系统
+                                    </a>
+								</li>
+							</ul>
+						</li>						
+					</ul>
+				</div>
+			</nav>
+			<!-- End Navbar -->
+		</div>
+		<!-- Sidebar -->
+		<div class="sidebar">
+			<div class="sidebar-background"></div>
+			<div class="sidebar-wrapper scrollbar-inner">
+				<div class="sidebar-content">
+					<div class="user">
+						<div class="border avatar-sm float-left mr-2">
+							<img src="<{$admin_avatar}>" alt="..." class="avatar-img rounded-circle">
+						</div>
+						<div class="info">
+							<a data-toggle="collapse" href="#collapseExample" aria-expanded="true">
+								<span>
+									<{$admin_user}>
+									<span class="user-level"><{$admin_role}></span>
+									<span class="caret"></span>
+								</span>
+							</a>
+							<div class="clearfix"></div>
+							<div class="collapse in" id="collapseExample">
+								<ul class="nav">
+									<li>
+										<a href="?m=ut-power&p=adminx&id=<{$admin_id}>">
+											<span class="link-collapse">修改密码</span>
+										</a>
+									</li>
+									<li>
+										<a href="?p=login&do=out">
+											<span class="link-collapse">退出</span>
+										</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<ul class="nav">
+						<li class="nav-item <{php=>if($_COOKIE["Nav"]=="ut-frame"):echo"active";endif;}>">
+							<a href="./" onclick="clicknav('ut-frame')">
+								<i class="fas fa-home"></i>
+								<p>首页</p>
+							</a>
+						</li>
+						<{if !empty($custmods)}>
+						<!--自定义模块-->
+						<li class="nav-section">
+							<h4 class="text-section">内容管理</h4>
+						</li>
+						<{loop=>$custmods as $rows}>	
+						<{if empty($rows["backitem"])}>		
+						<li class="nav-item <{php=>if($_COOKIE["Nav"]==return=>$rows->mid):echo"active";endif;}>">
+						<a href="?m=<{$rows->mid}>" onclick="clicknav('<{$rows->mid}>')">
+								<i class="fas fa-sort"></i>
+								<p><{$rows->modname}></p>
+						</a>
+						</li>
+						<{else}>	
+						<li class="nav-item <{php=>if($_COOKIE["Nav"]==return=>$rows->mid):echo"submenu";endif;}>">
+							<a data-toggle="collapse" href="#<{$rows->mid}>">
+								<i class="fas fa-sort"></i>
+								<p><{$rows->modname}></p>
+								<span class="caret"></span>
+							</a>
+							<div class="collapse <{php=>if($_COOKIE["Nav"]==return=>$rows->mid):echo"show";endif;}>" id="<{$rows->mid}>">
+								<ul class="nav nav-collapse">
+								<{php=>
+								$navs=explode(",",return=>$rows->backitem);
+								for($k=0;$k<count($navs);$k++):
+								$navtitle=explode(":",$navs[$k])[0];
+								$navurl=explode(":",$navs[$k])[1];
+								}>
+									<li>
+										<a href="?m=<{$rows->mid}>&p=<{php=>echo$navurl}>" onclick="clicknav('<{$rows->mid}>')">
+											<span class="sub-item"><{php=>echo$navtitle}></span>
+										</a>
+									</li>
+								<{php=>endfor;}>
+								</ul>
+							</div>
+						</li>
+						<{/if}>
+						<{/loop}>
+						<{/if}>
+						<!--底层模块-->	 
+						<{if $develop==1}>
+						<li class="nav-section">
+							<h4 class="text-section">系统管理</h4>
+						</li>
+						<{loop=>$modules as $rows}>	
+						<{if empty($rows["backitem"])}>		
+						<li class="nav-item <{php=>if($_COOKIE["Nav"]==return=>$rows->mid):echo"active";endif;}>">
+						<a href="?m=<{$rows->mid}>" onclick="clicknav('<{$rows->mid}>')">
+								<i class="fas fa-sort"></i>
+								<p><{$rows->modname}></p>
+						</a>
+						</li>
+						<{else}>	
+						<li class="nav-item <{php=>if($_COOKIE["Nav"]==return=>$rows->mid):echo"submenu";endif;}>">
+							<a data-toggle="collapse" href="#<{$rows->mid}>">
+							    <{if $rows["mid"]=="ut-module"}>
+								<i class="fa fa-cubes"></i>
+								<{else if $rows["mid"]=="ut-plugin"}>
+								<i class="fa fa-plug"></i>
+								<{else if $rows["mid"]=="ut-template"}>
+								<i class="fas fa-layer-group"></i>
+								<{else if $rows["mid"]=="ut-system"}>
+								<i class="fa fa-cogs"></i>
+								<{else if $rows["mid"]=="ut-data"}>
+								<i class="fa fa-database"></i>
+								<{else if $rows["mid"]=="ut-power"}>
+								<i class="fas fa-user-secret"></i>
+								<{else}>
+								<i class="fas fa-th-large"></i>
+								<{/if}>
+								<p><{$rows->modname}></p>
+								<span class="caret"></span>
+							</a>
+							<div class="collapse <{php=>if($_COOKIE["Nav"]==return=>$rows->mid):echo"show";endif;}>" id="<{$rows->mid}>">
+								<ul class="nav nav-collapse">
+								<{php=>
+								$navs=explode(",",return=>$rows->backitem);
+								for($k=0;$k<count($navs);$k++):
+								$navtitle=explode(":",$navs[$k])[0];
+								$navurl=explode(":",$navs[$k])[1];
+								}>
+									<li>
+										<a href="?m=<{$rows->mid}>&p=<{php=>echo$navurl}>" onclick="clicknav('<{$rows->mid}>')">
+											<span class="sub-item"><{php=>echo$navtitle}></span>
+										</a>
+									</li>
+								<{php=>endfor;}>
+								</ul>
+							</div>
+						</li>
+						<{/if}>
+						<{/loop}>
+					    <{/if}>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<!-- End Sidebar -->

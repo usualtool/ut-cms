@@ -1,0 +1,47 @@
+<{include "$pubtemp/head.cms"}> 
+        <div class="main-panel">
+			<div class="content">
+				<div class="page-inner">
+					<div class="page-header">
+						<h4 class="page-title"><{$title}></h4>
+						<ul class="breadcrumbs">
+							<li class="nav-home">
+								<a href="./">
+									<i class="fa fa-home"></i>
+								</a>
+							</li>
+							<li class="separator">
+								<i class="fa fa-angle-double-right"></i>
+							</li>
+							<li class="nav-item">
+								<{$title}>
+							</li>
+							<li class="separator">
+								<i class="fa fa-angle-double-right"></i>
+							</li>
+							<li class="nav-item">
+								SQL查询
+							</li>
+							<li class="nav-item pl-3 pr-3">
+                                                            <{item=>$module,$backitem}>
+                                                        </li>
+						</ul>
+					</div>
+							<div class="card">
+								<div class="card-body">
+                                <form action="?m=ut-data&p=sql&do=sql" method="post" name="form" onSubmit="return checkform();">
+									<div class="form-group">
+										<label for="disableinput">SQL语句</label>
+										<textarea class="form-control" id="sql" name="sql" rows="5"><{post=>sql}></textarea>
+									</div>
+								</div>
+                                <div class="card-action">
+									<button class="btn btn-info">执行</button>
+								</div>
+                                </form>
+							</div>
+					</div>
+				</div>
+			</div>
+		</div>
+<{include "$pubtemp/foot.cms"}>

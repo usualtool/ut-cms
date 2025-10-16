@@ -1,0 +1,74 @@
+<{include "head.cms"}>
+		<div class="main-panel">
+			<div class="content">
+				<div class="page-inner">
+					<div class="row">
+						<div class="col-md-7">
+							<div class="card">
+								<div class="card-header">
+									<div class="card-title">在线更新<span style="float:right;font-size:12px;">当前版本: <{$ver}></span></div>
+								</div>
+								<div class="card-body">
+									<ol class="activity-feed">
+									<{php=>$i=0;}>
+									<{loop=>$updatelog $rows}>
+									<{php=>
+										$i=$i+1;
+										if($i<11):
+									}>
+										<li class="feed-item feed-item-secondary">
+										  <div class="row">
+										  <div class="col-md-3">
+											<time class="date" datetime="<{split=>$rows,^,1}>"><{split=>$rows,"^",1}></time>
+										  </div>
+										  <div class="col-md-6">
+											<span class="text"><{split=>$rows,"^",0}></span>
+										  </div>
+										  <div class="col-md-3">
+											<a target="_blank" href="<{$update}>/<{split=>$rows,"^",1}>.zip">下载</a> | 
+											<{php=>
+											$thisver=explode("^",return=>$rows)[1];
+											if(return=>$ver>=$thisver):
+											}>
+											已更新
+											<{php=>
+											else:
+											  $updatenum=library\UsualToolData\UTData::queryData("cms_update","","updateid='".$thisver."'","","","0")["querynum"];
+											  if($updatenum>0):
+											}>
+											    已更新
+											  <{php=>else:}>
+											    <a href="?p=update&i=<{split=>$rows,"^",1}>&t=update">更新</a>
+											  <{php=>endif;}>
+											<{php=>endif;}>
+										  </div>
+										  </div>
+										</li>	
+										<{php=>endif;}>
+										<{/loop}>
+									</ol>
+								</div>
+							</div>
+						</div>
+						<style>#ad img{width:100%;}</style>
+						<div class="col-md-5">
+                            <div class="card card-info bg-info-gradient bubble-shadow">
+								<div class="card-header">
+									<div class="card-title">AD</div>
+									<div class="card-category">为了UT开源项目继续发展，欢迎捐赠我们。</div>
+									<div><img src="/assets/ut-logo.png"></div>
+								</div>
+								<div class="card-body pb-0">
+									<div class="mb-4">
+										<{loop=>$ad $rows}>
+										    <p id="ad"><{$rows}></p>
+										<{/loop}>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+<{include "foot.cms"}>
