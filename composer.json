@@ -1,8 +1,8 @@
 {
-    "name":             "usualtool/framework",
-    "description":      "UT Framework is based on PHP multi-end development framework, class library perfect, suitable for the development of various types of applications.",
-    "keywords":         ["UT", "UsualTool Framework", "UT Framework"],
-    "homepage":         "http://frame.usualtool.com",
+    "name":             "usualtool/ut-cms",
+    "description":      "UTCMS-V10是基于UT框架构建的内容管理系统，支持快速创建多种类型的应用。（不兼容V8/V9版本）",
+    "keywords":         ["UTCMS", "UsualToolCMS", "UT Framework"],
+    "homepage":         "http://frame.usualtool.com/soft.php?v=cms",
     "license": "Apache-2.0",
     "authors": [{
         "name":         "HuangDou",
