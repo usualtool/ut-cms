@@ -56,7 +56,7 @@
 								<div class="card-header">
 									<div class="card-title">AD</div>
 									<div class="card-category">为了UT开源项目继续发展，欢迎捐赠我们。</div>
-									<div><img src="../assets/ut-logo.png"></div>
+									<div><img src="/assets/ut-logo.png"></div>
 								</div>
 								<div class="card-body pb-0">
 									<div class="mb-4">
