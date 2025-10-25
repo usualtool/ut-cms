@@ -2,18 +2,26 @@
 use library\UsualToolInc\UTInc;
 use library\UsualToolData\UTData;
 $do=$_GET["do"];
+function plugin($data){
+    $plugin = array_filter($data, function($item) {
+        $pid = (string)($item['pid'] ?? '');
+        return substr($pid, 0, 2) !== 'f_';
+    });
+    $plugin = array_values($plugin);
+    return $plugin;
+}
 /**
  * 载入私有插件
  */
-$app->Runin("private_plugin",UTInc::GetPlugin());
+$app->Runin("private_plugin",plugin(UTInc::GetPlugin()));
 /**
  * 载入第三方插件
  */
-$app->Runin("pubilc_plugin",UTInc::GetPlugin(1));
+$app->Runin("pubilc_plugin",plugin(UTInc::GetPlugin(1)));
 /**
  * 载入订购插件
  */
-$app->Runin("buy_plugin",UTInc::GetPlugin(2));
+$app->Runin("buy_plugin",plugin(UTInc::GetPlugin(2)));
 /**
  * 载入模板
  */
