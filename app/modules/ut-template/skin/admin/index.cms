@@ -41,7 +41,7 @@
                                     <li class="feed-item feed-item-warning">
                                         <time class="date"><{$key}></time>
                                         <{loop=>$val $v}>
-                                            <span class="text"><a href="<{url=>Link("ut-template","template_view","d=".$key."|skin|front|".str_replace(".cms","_cms",$v))}>"><{$v}></a></span>
+                                            <span class="text"><a href="?m=ut-template&p=template_view&d=<{php=>echo return=>$key."|skin|front|".str_replace(".cms","_cms",return=>$v);}>"><{$v}></a></span>
                                         <{/loop}>
                                     </li>
                                     <{/loop}>
@@ -60,7 +60,7 @@
                                     <li class="feed-item feed-item-warning">
                                         <time class="date"><{$key}></time>
                                         <{loop=>$val $v}>
-                                            <span class="text"><a href="<{url=>Link("ut-template","template_view","d=".$key."|skin|admin|".str_replace(".cms","_cms",$v))}>"><{$v}></a></span>
+                                            <span class="text"><a href="?m=ut-template&p=template_view&d=<{php=>echo return=>$key."|skin|admin|".str_replace(".cms","_cms",return=>$v);}>"><{$v}></a></span>
                                         <{/loop}>
                                     </li>
                                     <{/loop}>

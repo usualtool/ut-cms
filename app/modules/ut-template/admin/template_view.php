@@ -15,5 +15,5 @@ if($do=="save"){
     $file_path=APP_ROOT."/modules/".$file;
     $content=htmlspecialchars_decode($_POST["content"]);
     file_put_contents($file_path,$content);
-    UTInc::GoUrl(UTRoute::Link("ut-template","template_view","d=".$filex),'更新模板成功!');
+    UTInc::GoUrl("?m=ut-template&p=template_view&d=".$filex,'更新模板成功!');
 }

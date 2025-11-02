@@ -16,5 +16,5 @@ if($do=="save"){
     $page=UTInc::SqlCheck($_POST["page"]);
     $content=htmlspecialchars_decode($_POST["content"]);
     file_put_contents(APP_ROOT."/modules/".$module."/skin/".$skin."/".$page,$content);
-    echo "<script>alert('创建模板成功!');window.location.href='?m=ut-template&p=template_creat'</script>";
+    UTInc::GoUrl("?m=ut-template&p=template_creat","创建模板成功!");
 }

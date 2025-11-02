@@ -29,7 +29,7 @@
 					</div>
 							<div class="card">
 								<div class="card-body">
-                                <form action="<{url=>Link("ut-template","template_view","do=save")}>" method="post">
+                                <form action="?m=ut-template&p=template_view&do=save" method="post">
                                    <input type="hidden" name="filename" value="<{$d}>">
 								   <{if is_file($file)}>
                                        <div class="mb-2"><{$d}></div>
