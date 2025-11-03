@@ -22,17 +22,21 @@ if($do=="front" || $do=="admin"){
             UTData::UpdateData("cms_template",array("makefront"=>1),"tid='$tempid'");
             $info = preg_replace("/TEMPFRONT=(.*)/","TEMPFRONT={$tempid}",$info);
             file_put_contents(UTF_ROOT."/.ut.config",$info);
-            UTInc::MoveDir(APP_ROOT."/template/".$tempid."/move",UTF_ROOT);
-            UTInc::GoUrl("?m=ut-template&p=index&do=template","变更成功!");
+            if(is_dir(APP_ROOT."/template/".$tempid."/move")):
+                UTInc::MoveDir(APP_ROOT."/template/".$tempid."/move",UTF_ROOT);
+            endif;
+            UTInc::GoUrl("?m=ut-template&p=index&do=template","设置成功!");
         }else{
-            UTInc::GoUrl("-1","变更失败!");
+            UTInc::GoUrl("-1","设置失败!");
         }
     }else{
         if(UTData::UpdateData("cms_template",array("makeadmin"=>0),"id>0")){
             UTData::UpdateData("cms_template",array("makeadmin"=>1),"tid='$tempid'");
             $info = preg_replace("/TEMPADMIN=(.*)/","TEMPADMIN={$tempid}",$info);
             file_put_contents(UTF_ROOT."/.ut.config",$info);
-            UTInc::MoveDir(APP_ROOT."/template/".$tempid."/move",UTF_ROOT);
+            if(is_dir(APP_ROOT."/template/".$tempid."/move")):
+                UTInc::MoveDir(APP_ROOT."/template/".$tempid."/move",UTF_ROOT);
+            endif;
             UTInc::GoUrl("?m=ut-template&p=index&do=template","设置成功!");
         }else{
             UTInc::GoUrl("-1","设置失败!");

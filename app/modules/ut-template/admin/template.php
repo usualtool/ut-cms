@@ -44,7 +44,9 @@ if($do=="install"){
             UTInc::GoUrl("-1","安装权限不足!");
         endif;
     endif;
-    UTInc::MoveDir(APP_ROOT."/template/".$tid."/move",UTF_ROOT);
+    if(is_dir(APP_ROOT."/template/".$tid."/move")):
+        UTInc::MoveDir(APP_ROOT."/template/".$tid."/move",UTF_ROOT);
+    endif;
     $template=file_get_contents(APP_ROOT."/template/".$tid."/usualtool.config");
     $md=UTInc::StrSubstr("<module>","</module>",$template);
     $dir_data=UTInc::DirList(APP_ROOT."/modules");
