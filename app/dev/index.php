@@ -16,7 +16,7 @@ use library\UsualToolData\UTData;
 /**
  * 获取版本号并载入应用部分设置
  */
-$ver=substr(file_get_contents(UTF_ROOT."/UTVER.ini"),-6);
+$ver=substr(file_get_contents(UTF_ROOT."/UTVer.ini"),-6);
 $app->Runin(array("ver","update","develop","lock"),array($ver,$config["UPDATEURL"],$config["DEVELOP"],$config["LOCKSCREEN"]));
 /**
  * 接收官方消息
