@@ -27,7 +27,7 @@
 								</div>
 								<div class="card-body">
                                 <div class="row">
-                                    <{loop=>$module $rows}>
+                                    <{loop=>$module_ $rows}>
                                         <div class="col-sm-6 col-md-3">
                                             <div class="card card-stats card-round">
 								            <div class="card-body">

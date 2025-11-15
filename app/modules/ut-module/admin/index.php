@@ -5,7 +5,7 @@ $do=$_GET["do"];
 /**
  * 载入已安装模块
  */
-$app->Runin("module",UTData::QueryData("cms_module","","bid>0","id asc","")["querydata"]);
+$app->Runin("module_",UTData::QueryData("cms_module","","bid>0","id asc","")["querydata"]);
 /**
  * 载入模板
  */
