@@ -1,6 +1,6 @@
 {
     "name":             "usualtool/ut-cms",
-    "description":      "UTCMS-V10ÊÇ»ùÓÚUT¿ò¼Ü¹¹½¨µÄÄÚÈİ¹ÜÀíÏµÍ³£¬Ö§³Ö¿ìËÙ´´½¨¶àÖÖÀàĞÍµÄÓ¦ÓÃ¡££¨²»¼æÈİV8/V9°æ±¾£©",
+    "description":      "UTCMS-V10æ˜¯åŸºäºUTæ¡†æ¶æ„å»ºçš„å†…å®¹ç®¡ç†ç³»ç»Ÿï¼Œæ”¯æŒå¿«é€Ÿåˆ›å»ºå¤šç§ç±»å‹çš„åº”ç”¨ã€‚ï¼ˆä¸å…¼å®¹V8/V9ç‰ˆæœ¬ï¼‰",
     "keywords":         ["UTCMS", "UsualToolCMS", "UT Framework"],
     "homepage":         "http://frame.usualtool.com/soft.php?v=cms",
     "license": "Apache-2.0",
