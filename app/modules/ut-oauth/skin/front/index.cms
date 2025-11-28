@@ -1,0 +1,32 @@
+<{include "head.cms"}>
+    <div class="card">
+        <div class="card-header"><h5>我的账户</h5></div>
+        <div class="card-body">
+              <form action="?m=ut-oauth&do=update" method="post">
+              <{loop=>$data $rows}>
+                <div class="form-group row mb-3">
+                  <div class="col-md-3">
+                    <label class="mr-2"><b>账户</b></label><br/><{$rows->username}>
+                  </div>
+                  <div class="col-md-3">
+                    <label class="mr-2"><b>姓名</b></label><br/><{$rows->fullname}>
+                  </div>
+                </div>
+                <div class="form-group row mb-3">
+                  <div class="col-md-3">
+                    <label class="mr-2"><b>邮件</b></label><br/><{$rows->email}>
+                  </div>
+                  <div class="col-md-3">
+                    <label class="mr-2"><b>创建时间</b></label><br/><{$rows->addtime}>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="mr-2"><b>密码</b></label>
+                    <input type="password" class="form-control" name="password">
+                    <button type="submit" class="mt-2 btn btn-primary">更新</button>
+                  </div>
+                </div>
+              </form>
+              <{/loop}>
+        </div>
+    </div>
+<{include "foot.cms"}>

@@ -1,0 +1,123 @@
+<{include "head.cms"}>
+    <div class="card">
+        <div class="card-header">
+            <h5>帮助文档</h5>
+        </div>
+        <div class="card-body">
+        <p>
+        1.生成授权地址<br/>
+        <div class="border p-3" style="height:200px;overflow-y:auto;font-size:0.8rem;">
+        <code>
+        session_start();<br/>
+define('CLIENT_ID',     'testapp');<br/>
+define('CLIENT_SECRET', 'xxxxxxxxxxxxxx');<br/>
+define('REDIRECT_URI',  'http://locahost/?p=callback');<br/>
+define('OAUTH_SERVER',  '<{$appurl}>/?m=oauth&p=oauth');<br/>
+$state = bin2hex(random_bytes(16));<br/>
+$_SESSION['oauth_state'] = $state;<br/>
+$params = [<br/>
+    'response_type' => 'code',<br/>
+    'client_id'     => CLIENT_ID,<br/>
+    'redirect_uri'  => REDIRECT_URI,<br/>
+    'state'         => $state,<br/>
+    'scope'         => 'goods article'//权限集合，与应用申请时的权限保持一致<br/>
+];<br/>
+$query = http_build_query($params, '', '&', PHP_QUERY_RFC3986);<br/>
+$authUrl = OAUTH_SERVER . '&route=authorize&' . $query;<br/>
+header("Location: " . $authUrl);<br/>
+exit;
+        </code>
+        </div>
+        </p>
+        <p>
+        2.获取code换取Access_Token <br/>
+        <div class="border p-3" style="height:200px;overflow-y:auto;font-size:0.8rem;">
+        <code>
+session_start();<br/>
+define('CLIENT_ID',     'testapp');<br/>
+define('CLIENT_SECRET', 'xxxxxxxxxxxxxx');<br/>
+define('REDIRECT_URI',  'http://locahost/?p=callback');<br/>
+define('OAUTH_SERVER',  '<{$appurl}>/?m=oauth&p=oauth');<br/>
+if (!isset($_GET['state']) || !hash_equals($_GET['state'], $_SESSION['oauth_state'] ?? '')) {<br/>
+    http_response_code(400);<br/>
+    die('ERROR:STATE参数无效');<br/>
+}<br/>
+if (isset($_GET['error'])) {<br/>
+    $error = htmlspecialchars($_GET['error']);<br/>
+    $desc  = isset($_GET['error_description']) ? ': ' . htmlspecialchars($_GET['error_description']) : '';<br/>
+    die("授权错误： {$error}{$desc}");<br/>
+}<br/>
+if (!isset($_GET['code'])) {<br/>
+    http_response_code(400);<br/>
+    die('ERROR:CODE错误');<br/>
+}<br/>
+$code = $_GET['code'];<br/>
+$tokenUrl = OAUTH_SERVER . '&route=token';<br/>
+$postFields = http_build_query([<br/>
+    'grant_type'    => 'authorization_code',<br/>
+    'code'          => $code,<br/>
+    'redirect_uri'  => REDIRECT_URI,<br/>
+    'client_id'     => CLIENT_ID,<br/>
+    'client_secret' => CLIENT_SECRET<br/>
+], '', '&', PHP_QUERY_RFC3986);<br/>
+$ch = curl_init();<br/>
+curl_setopt_array($ch, [<br/>
+    CURLOPT_URL            => $tokenUrl,<br/>
+    CURLOPT_POST           => true,<br/>
+    CURLOPT_POSTFIELDS     => $postFields,<br/>
+    CURLOPT_HTTPHEADER     => ['Content-Type: application/x-www-form-urlencoded'],<br/>
+    CURLOPT_RETURNTRANSFER => true,<br/>
+    CURLOPT_TIMEOUT        => 30,<br/>
+    CURLOPT_SSL_VERIFYPEER => false//生产环境可启用<br/>
+]);<br/>
+$response = curl_exec($ch);<br/>
+$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);<br/>
+$error    = curl_error($ch);<br/>
+curl_close($ch);<br/>
+if ($httpCode !== 200) {<br/>
+    die("ERROR:网络错误");<br/>
+}<br/>
+$tokenData = json_decode($response, true);<br/>
+if (json_last_error() !== JSON_ERROR_NONE || !isset($tokenData['access_token'])) {<br/>
+    error_log("Invalid token response: $response");<br/>
+    http_response_code(500);<br/>
+    die("ERROR:令牌无效");<br/>
+}<br/>
+$access_token = htmlspecialchars($tokenData['access_token']);<br/>
+$expires_in   = $tokenData['expires_in'] ?? 'N/A';<br/>
+print_r($access_token);
+        </code>
+        </div>
+        </p>
+        <p>
+        3.凭Access_Token获取开放数据<br/>
+        <div class="border p-3" style="height:200px;overflow-y:auto;font-size:0.8rem;">
+        <code>
+$access_token = 'xxxxxxxxxxx';<br/>
+$data = [<br/>
+    'scope' => 'goods',//scope权限集合中的一个数据权限<br/>
+    'where' => '',//数据检索条件<br/>
+    'order' => '',//数据排序<br/>
+    'limit' => '',//数据数量<br/>
+];<br/>
+$ch = curl_init();<br/>
+curl_setopt_array($ch, [<br/>
+    CURLOPT_URL => '<{$appurl}>/?m=oauth&p=api',<br/>
+    CURLOPT_POST => true,<br/>
+    CURLOPT_POSTFIELDS => http_build_query($data),<br/>
+    CURLOPT_HTTPHEADER => [<br/>
+        "Authorization: Bearer {$access_token}"<br/>
+    ],<br/>
+    CURLOPT_RETURNTRANSFER => true,<br/>
+    CURLOPT_TIMEOUT => 10<br/>
+]);<br/>
+$response = curl_exec($ch);<br/>
+curl_close($ch);<br/>
+$result = json_decode($response, true) ?: ['data' => $response];<br/>
+print_r($result);
+        </code>
+        </div>
+        </p>
+        </div>
+    </div>
+<{include "foot.cms"}>
