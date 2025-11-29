@@ -17,7 +17,7 @@ if($_GET["do"]=="creat"):
     $fullname=UTInc::SqlCheck($_POST["fullname"]);
     $email=UTInc::SqlCheck($_POST["email"]);
     $scope=UTInc::SqlCheck($_POST["scope"]);
-    if(empty($username) || empty($password) || empty($email) || empty($scope)):
+    if(empty($username) || empty($password) || empty($email)):
         UTInc::GoUrl("-1","必填项不能为空");
     endif;
     if(UTData::QueryData("oauth_users","","username='$username' or email='$email'")["querynum"]>0):
@@ -28,7 +28,6 @@ if($_GET["do"]=="creat"):
             "password"=>$password,
             "fullname"=>$fullname,
             "email"=>$email,
-            "scope"=>$scope,
             "addtime"=>date('Y-m-d H:i:s',time()))
         )):
             UTInc::GoUrl("?m=ut-oauth&p=user","创建用户成功");
