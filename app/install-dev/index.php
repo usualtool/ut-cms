@@ -1,14 +1,13 @@
 <?php
 /**
        * --------------------------------------------------------       
-       *  |    ░░░░░░░░░     █   █░▀▀█▀▀░    ░░░░░░░░░      |           
-       *  |  ░░░░░░░         █▄▄▄█   █                      |            
-       *  |                                                 |            
-       *  | Author:HuangDou   Email:292951110@qq.com        |            
+       *  |                  █   █ ▀▀█▀▀                    |           
+       *  |                  █▄▄▄█   █                      |           
+       *  |                                                 |           
+       *  | Author:HuangDou   Email:292951110@qq.com        |           
        *  | QQ-Group:583610949                              |           
-       *  | WebSite:http://www.UsualTool.com                |            
-       *  | UT Framework is suitable for Apache2 protocol.  |            
-       * --------------------------------------------------------                
+       *  | Applicable to Apache 2.0 protocol.              |           
+       * --------------------------------------------------------       
 */
 require_once dirname(dirname(dirname(__FILE__))).'/'.'autoload.php';
 use library\UsualToolInc\UTInc;
@@ -18,7 +17,7 @@ if(UTInc::SearchFile(APP_ROOT."/install-dev/usualtool.lock")):
    header("location:../");
    exit();
 endif;
-$httpcode=UTInc::HttpCode("http://frame.usualtool.com");
+$httpcode=UTInc::HttpCode($config["UTFURL"]);
 $sysinfo=UTInc::GetSystemInfo();
 $do=UTInc::SqlCheck($_GET["do"]);
 if($do=="db-save"):
@@ -33,7 +32,7 @@ endif;
 <!DOCTYPE html>
 <html>
 <head>
-    <title>UTCMS V10安装</title>
+    <title>UTCMS安装</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="//cdn.staticfile.org/bootstrap/4.6.1/css/bootstrap.min.css">
@@ -63,14 +62,14 @@ endif;
                         <b>基于以下协议，本软件是免费且开源的软件。所有自然人或团体组织请在所在国法律允许范围内合法使用本软件。</b>
                     </p>
                     <p class="mb-2">
-                        文书1：<a target="_blank" href="//www.apache.org/licenses/LICENSE-2.0">UTCMS V9基于Apache2.0授权，可以通过//www.apache.org/licenses/LICENSE-2.0了解或下载到详尽的协议内容。</a>
+                        文书1：<a target="_blank" href="//www.apache.org/licenses/LICENSE-2.0">UTCMS基于Apache2.0授权，可以通过//www.apache.org/licenses/LICENSE-2.0了解或下载到详尽的协议内容。</a>
                     </p>
                     <p class="mb-2">
-                        文书2：<a target="_blank" href="//frame.usualtool.com/baike#license">UTCMS V9遵循UT开源与免费协议，任何自然人与团体组织在协议约定的范围内均可免费使用。使用人应当阅读UT序言中关于文书的部分，往此去：//frame.usualtool.com/baike#license。</a>
+                        文书2：<a target="_blank" href="//github.com/usualtool/ut-cms/blob/master/LICENSE.ADD">UTCMS遵循UT开源与免费协议，任何自然人与团体组织在协议约定的范围内均可免费使用。使用人应当阅读UT序言中关于文书的部分，往此去：//github.com/usualtool/ut-cms/blob/master/LICENSE.ADD。</a>
                     </p>
                     <p class="mb-3">
                         <b>你需要仔细阅读以上2份文书，在理解和同意的前提下，方可使用本软件。</b><br/><br/>
-                        <b>Made in China , usualtool.com , HuangDou</b>
+                        <b>Made in China , github.com/usualtool/ut-cms , HuangDou</b>
                     </p>
                     <p class="mb-2">
                         <input type="submit" class="btn btn-info" value="请查阅以上文书（60）" id="btn"/> 
@@ -253,14 +252,8 @@ endif;
                     <?php
                     endif;
                 elseif($do=="finish"):
-                    $state=UTInc::HttpCode($config["APPURL"]."/.ut.config");
-                    if($state=="200"):
-                        echo"<p>请设置禁止访问 <u>.cms/.log/.config</u> 后缀文件，并在此处 <a onclick='Refresh()' class='text-danger'>刷新页面</a></p>";
-                        echo"<p>设置请参考关于敏感文件禁止访问一节：<a  target='_blank' href='https://frame.usualtool.com/baike/config.php'>https://frame.usualtool.com/baike/config.php</a></p>";
-                    else:
-                        file_put_contents("./usualtool.lock","lock");
-                        UTInc::GoUrl("../dev/","后端初始账号密码为“admin”请及时修改!");
-                    endif;
+                    file_put_contents("./usualtool.lock","lock");
+                    UTInc::GoUrl("../dev/","后端初始账号密码为“admin”请及时修改!");
                 endif;
                 ?>
                 </div>
