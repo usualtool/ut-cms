@@ -133,7 +133,7 @@
 								</li>
 								<li>
 									<div class="dropdown-divider"></div>
-									<a class="dropdown-item" href="?m=ut-power&p=adminx&id=<{$admin_id}>">
+									<a class="dropdown-item" href="?m=ut-power&p=admin&id=<{$admin_id}>">
 									    <i class="fas fa-user-tie"></i> 账户
 									</a>
 									<div class="dropdown-divider"></div>
