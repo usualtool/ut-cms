@@ -1,26 +1,42 @@
 <{include "$pubtemp/head.cms"}>
 <style>
-    #dosbody{
-		background-color:#000033;
-		color:white;
-		height:460px;
-		padding:10px;
-		}
-    body{
-		cursor:text, default !important;
-		}
-    p{
-		margin-bottom:0px !important;line-height:15px !important;
-		}
-    #writedos{
-		width:95%;
-		background-color:#000033 !important;
-		color:#fff;
-		outline:none;
-		border:0;
-		height:25px;
-		font-size:13px;
-		}
+#dosbody {
+	background-color: #000033;
+	color: white;
+	height: 460px;
+	padding: 10px;
+}
+#dosbody {
+	width: 100%;
+	overflow-x: auto;
+}
+#dosbody pre {
+	color: #fbf4f4;
+	line-height: 0.8rem;
+	white-space: pre-wrap;
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+	margin: 0;
+	padding: 0;
+	font-family: monospace;
+}
+body {
+	cursor: text, default !important;
+}
+p {
+	margin-bottom: 0px !important;
+	line-height: 15px !important;
+}
+#writedos {
+	width: 95%;
+	padding-left: 0;
+	background-color: #000033 !important;
+	color: #fff;
+	outline: none;
+	border: 0;
+	height: 25px;
+	font-size: 13px;
+}
 </style> 
         <div class="main-panel">
 			<div class="content">
@@ -40,8 +56,8 @@
 								命令行工具
 							</li>
 							<li class="nav-item pl-3 pr-3">
-                                                            <{item=>$module,$backitem}>
-                                                        </li>
+                                <{item=>$module,$backitem}>
+                            </li>
 						</ul>
 					</div>
 							<div class="card">
@@ -49,9 +65,8 @@
 								    <div class="row">
 								        <div class="col-md-12">
 										    <div id="dosbody">
-                                                <p>[<?php echo$_SESSION['admin'];?>@localhost ~]#UTDOS INIT</P>
-                                                <span id="doslist"></span>
-                                                <input id="writedos">
+                                                <p>[<?php echo$_SESSION['admin'];?>@localhost ~]# UsualTool Framework Init</P>
+                                                <span id="doslist"></span><input id="writedos" value="[<{$admin_user}>@localhost ~]# ">
                                             </div>
 								        </div>
 								    </div>
@@ -63,17 +78,40 @@
 		</div>
 <{include "$pubtemp/foot.cms"}>
 <script>
-(function($,undefined){
-$(document).ready(function(){
-    $('#writedos').bind('keypress',function(event){
-        if(event.keyCode == "13") {
-            var o=$("#writedos").val();
-            $.post("?m=ut-cac&p=cli",{o:o},function(result){
-                  $("#doslist").append(result);
-            });
+(function($, undefined){
+    function moveCursorToEnd(input) {
+        if (input.setSelectionRange) {
+            const len = input.value.length;
+            input.setSelectionRange(len, len);
+        } else if (input.createTextRange) {
+            const range = input.createTextRange();
+            range.collapse(false);
+            range.select();
         }
+        input.focus();
+    }
+    $(document).ready(function(){
+        const $input = $("#writedos");
+        moveCursorToEnd($input[0]);
+        $input.on('keypress', function(event){
+            if(event.keyCode == "13") {
+                var o = $input.val();
+                o = o.replace(/^\[.*?@localhost ~\]# /, "");
+                $.post("?m=ut-cac&p=cli", {o: o}, function(result){
+                    const escaped = String(result)
+                        .replace(/&/g, '&amp;')
+                        .replace(/</g, '&lt;')
+                        .replace(/>/g, '&gt;');
+                    $("#doslist").append(
+                        "[<{$admin_user}>@localhost ~]# " + o + " <pre>" + escaped + "</pre>"
+                    );
+                    $input.val("[<{$admin_user}>@localhost ~]# ");
+                    const $dosbody = $("#dosbody");
+                    $dosbody.scrollTop($dosbody[0].scrollHeight);
+                    moveCursorToEnd($input[0]);
+                });
+            }
+        });
     });
-    $("input").focus();
-});
 })(jQuery);
 </script>
