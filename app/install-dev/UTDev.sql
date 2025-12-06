@@ -6,7 +6,7 @@ CREATE TABLE `cms_admin` (
   `password` varchar(50) NOT NULL,
   `salts` varchar(20) NOT NULL,
   `avatar` varchar(250) DEFAULT NULL,
-  `addtime` timestamp NOT NULL,
+  `addtime` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 DROP TABLE IF EXISTS `cms_admin_log`;
