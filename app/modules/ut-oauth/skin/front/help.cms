@@ -11,7 +11,7 @@
         session_start();<br/>
 define('CLIENT_ID',     'testapp');<br/>
 define('CLIENT_SECRET', 'xxxxxxxxxxxxxx');<br/>
-define('REDIRECT_URI',  'http://locahost/?p=callback');<br/>
+define('REDIRECT_URI',  urlencode('http://locahost/?p=callback'));<br/>
 define('OAUTH_SERVER',  '<{$appurl}>/?m=oauth&p=oauth');<br/>
 $state = bin2hex(random_bytes(16));<br/>
 $_SESSION['oauth_state'] = $state;<br/>
@@ -36,7 +36,7 @@ exit;
 session_start();<br/>
 define('CLIENT_ID',     'testapp');<br/>
 define('CLIENT_SECRET', 'xxxxxxxxxxxxxx');<br/>
-define('REDIRECT_URI',  'http://locahost/?p=callback');<br/>
+define('REDIRECT_URI',  urlencode('http://locahost/?p=callback'));<br/>
 define('OAUTH_SERVER',  '<{$appurl}>/?m=oauth&p=oauth');<br/>
 if (!isset($_GET['state']) || !hash_equals($_GET['state'], $_SESSION['oauth_state'] ?? '')) {<br/>
     http_response_code(400);<br/>
