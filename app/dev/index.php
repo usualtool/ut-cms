@@ -21,7 +21,14 @@ $app->Runin(array("ver","update","develop","lock"),array($ver,$config["UPDATEURL
 /**
  * 接收官方消息
  */
-$app->Runin("message",explode("|",UTInc::Auth($config["UTCODE"],$config["UTFURL"],"message")));
+$webmsg=UTF_ROOT."/log/usualtool.log";
+$msgdata=file_exists($webmsg) ? json_decode(file_get_contents($webmsg),true) : null;
+if(!$msgdata || time()-strtotime($msgdata["time"])>86400):
+    $msg=UTInc::Auth($config["UTCODE"],$config["UTFURL"],"message");
+    file_put_contents($webmsg, json_encode(["time"=>date("Y-m-d"),"message"=>$msg],JSON_UNESCAPED_UNICODE));
+else:
+    $app->Runin("message", explode("|", $msgdata["message"]));
+endif;
 /**
  * 写入底层模块
  * 除开UT-FRAME公共模块
