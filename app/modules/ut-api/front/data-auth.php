@@ -1,8 +1,8 @@
 <?php
 use library\UsualToolInc\UTInc;
 use library\UsualToolData\UTData;
-use library\UsualToolWechat\UTWechat;
-use library\UsualToolAliopen\UTAliopen;
+use usualtool\Wechat\Wechat;
+use usualtool\Aliopen\Aliopen;
 require'data-verify.php';
 if(UTData::ModTable("cms_routine")):
     $set=UTData::QueryData("cms_routine","","","","1")["querydata"][0];
@@ -15,7 +15,7 @@ if(UTData::ModTable("cms_routine")):
         $iv=$_POST["iv"];
         $openid=UTInc::SqlCheck($_POST["openid"]);
         $thirdkey=$_POST["thirdkey"];
-        $wxin=new UTWechat($set["wxappline"],$set["wxrteid"],$set["wxrtesecret"]);
+        $wxin=new Wechat($set["wxrteid"],$set["wxrtesecret"]);
         $errcode=$wxin->DecryptData($thirdkey,$encrypteddata,$iv,$data);
         if($errcode==0):
             $result=$data;
@@ -23,7 +23,7 @@ if(UTData::ModTable("cms_routine")):
             $result=$errcode;
         endif;
     elseif($action=="alipay"):
-        $ali=new UTAliopen($set["alrteid"],$set["alapppubkey"],$set["alpaypubkey"]);
+        $ali=new Aliopen($set["alrteid"],$set["alapppubkey"],$set["alpaypubkey"]);
         $result=$ali->ApiRequest("alipay.system.oauth.token",array("grant_type"=>"authorization_code","code"=>$code));
     else:
         $appid="";

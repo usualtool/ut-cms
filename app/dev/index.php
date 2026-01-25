@@ -17,7 +17,10 @@ use library\UsualToolData\UTData;
  * 获取版本号并载入应用部分设置
  */
 $ver=substr(file_get_contents(UTF_ROOT."/UTVer.ini"),-6);
-$app->Runin(array("ver","update","develop","lock"),array($ver,$config["UPDATEURL"],$config["DEVELOP"],$config["LOCKSCREEN"]));
+$app->Runin(
+    array("ver","update","develop","lock"),
+    array($ver,$config["UPDATEURL"],$config["DEVELOP"],$config["LOCKSCREEN"])
+);
 /**
  * 接收官方消息
  */
@@ -25,7 +28,7 @@ $webmsg=UTF_ROOT."/log/usualtool.log";
 $msgdata=file_exists($webmsg) ? json_decode(file_get_contents($webmsg),true) : null;
 if(!$msgdata || time()-strtotime($msgdata["time"])>86400):
     $msg=UTInc::Auth($config["UTCODE"],$config["UTFURL"],"message");
-    file_put_contents($webmsg, json_encode(["time"=>date("Y-m-d"),"message"=>$msg],JSON_UNESCAPED_UNICODE));
+    file_put_contents($webmsg,json_encode(["time"=>date("Y-m-d"),"message"=>$msg],JSON_UNESCAPED_UNICODE));
 else:
     $app->Runin("message", explode("|", $msgdata["message"]));
 endif;
@@ -43,7 +46,10 @@ $app->Runin("custmods",UTData::QueryData("cms_module","","bid<>3")["querydata"])
  * befoitem前端地址集，backtem后端栏目集
  */
 $thismod=UTData::QueryData("cms_module","","mid='$m'","","")["querydata"][0];
-$app->Runin(array("title","befoitem","backitem"),array($thismod["modname"],$thismod["befoitem"],$thismod["backitem"]));
+$app->Runin(
+    array("title","befoitem","backitem"),
+    array($thismod["modname"],$thismod["befoitem"],$thismod["backitem"])
+);
 /**
  * 写入后端公共模板路径
  * 公共使用的模板可以放在公共模块ut-frame/skin/下
