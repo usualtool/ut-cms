@@ -70,7 +70,7 @@ endif;
                     </p>
                     <p class="mb-3">
                         <b>你需要仔细阅读以上2份文书，在理解和同意的前提下，方可使用本软件。</b><br/><br/>
-                        <b>Made in China , github.com/usualtool/ut-cms , HuangDou</b>
+                        <b>Made in China , github.com/usualtool/ut-cms , HuangHui</b>
                     </p>
                     <p class="mb-2">
                         <input type="submit" class="btn btn-info" value="请查阅以上文书（60）" id="btn"/> 
@@ -112,6 +112,7 @@ endif;
                         <div class="form-group col-md-6">
                             <p>与UT通讯状态：<?php echo$httpcode;?> <?php echo $httpcode=="200" ? "" : "， 因通讯障碍，安装将有极大几率失败。";?></p>
                             <p>PHP版本：<?php echo$sysinfo["PHP"];?></p>
+									          <p><a target="_blank" href="//frame.usualtool.com/baike/index.php?do=%E5%AE%89%E5%85%A8">生产环境安全配置建议</a></p>
                         </div>
                     </div>
                     <div class="row">
