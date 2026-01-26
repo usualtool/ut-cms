@@ -112,7 +112,7 @@ endif;
                         <div class="form-group col-md-6">
                             <p>与UT通讯状态：<?php echo$httpcode;?> <?php echo $httpcode=="200" ? "" : "， 因通讯障碍，安装将有极大几率失败。";?></p>
                             <p>PHP版本：<?php echo$sysinfo["PHP"];?></p>
-									          <p><a target="_blank" href="//frame.usualtool.com/baike/index.php?do=%E5%AE%89%E5%85%A8">生产环境安全配置建议</a></p>
+                            <p><a target="_blank" href="//frame.usualtool.com/baike/index.php?do=%E5%AE%89%E5%85%A8">生产环境安全配置建议</a></p>
                         </div>
                     </div>
                     <div class="row">
