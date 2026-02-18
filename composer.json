@@ -1,16 +1,12 @@
 {
-    "name":             "usualtool/ut-cms",
-    "description":      "UTCMS-V10是基于UT框架构建的内容管理系统，支持快速创建多种类型的应用。（不兼容V8/V9版本）",
-    "keywords":         ["UTCMS", "UsualToolCMS", "UT Framework"],
+    "name":             "usualtool/develop",
+    "description":      "UsualTool Framework visualization development kit.",
+    "keywords":         ["UTDev", "UsualTool Framework", "UT Framework"],
     "homepage":         "https://github.com/usualtool",
     "license": "Apache-2.0",
     "authors": [{
         "name":         "Huang Hui",
         "email":        "usualtool@qq.com"
     }],
-    "require": {},
-    "scripts": {
-        "post-install-cmd": "php usualtool composer",
-        "post-update-cmd": "php usualtool composer"
-    }
+    "require": {}
 }

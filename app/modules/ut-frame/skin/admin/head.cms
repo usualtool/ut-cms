@@ -21,7 +21,7 @@
 			<!-- Logo Header -->
 			<div class="logo-header">
 				<a href="./" class="logo">
-					<font class="navbar-brand" style="color:white;">UTCMS V10</font>
+					<font class="navbar-brand" style="color:white;">UT Develop</font>
 				</a>
 				<button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon">
@@ -59,12 +59,15 @@
 							</a>
 						</li>						
 						<li class="nav-item dropdown hidden-caret submenu">
-							<a href="?p=update">
+							<a href="?p=update" title="系统更新">
 							<div class="custom-toggle"><i class="fas fa-sync-alt"></i></div>
 							</a>
 						</li>
+						<li class="nav-item hidden-caret">
+						    <a class="nav-link" title="在建项目" href="?p=task"><i class="fas fa-history"></i></a>
+						</li>
                         <li class="nav-item dropdown hidden-caret" style="margin-right:20px;">
-							<a class="nav-link dropdown-toggle" href="#" id="notifDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<a class="nav-link dropdown-toggle" href="#" title="官方消息" id="notifDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 								<i class="fa fa-bell"></i>
 								<!--<span class="notification">0</span>-->
 							</a>
@@ -192,7 +195,7 @@
 						<{if !empty($custmods)}>
 						<!--自定义模块-->
 						<li class="nav-section">
-							<h4 class="text-section">内容管理</h4>
+							<h4 class="text-section">自定义模块</h4>
 						</li>
 						<{loop=>$custmods as $rows}>	
 						<{if empty($rows["backitem"])}>		
@@ -232,7 +235,7 @@
 						<!--底层模块-->	 
 						<{if $develop==1}>
 						<li class="nav-section">
-							<h4 class="text-section">系统管理</h4>
+							<h4 class="text-section">底层模块</h4>
 						</li>
 						<{loop=>$modules as $rows}>	
 						<{if empty($rows["backitem"])}>		

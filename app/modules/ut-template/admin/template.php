@@ -44,9 +44,6 @@ if($do=="install"){
             UTInc::GoUrl("-1","安装权限不足!");
         endif;
     endif;
-    if(is_dir(APP_ROOT."/template/".$tid."/move")):
-        UTInc::MoveDir(APP_ROOT."/template/".$tid."/move",UTF_ROOT);
-    endif;
     $template=file_get_contents(APP_ROOT."/template/".$tid."/usualtool.config");
     $md=UTInc::StrSubstr("<module>","</module>",$template);
     $dir_data=UTInc::DirList(APP_ROOT."/modules");
@@ -54,6 +51,17 @@ if($do=="install"){
     if(UTInc::InArray($md_data,$dir_data)==0):
         UTInc::DelDir(APP_ROOT."/template/".$tid);
         UTInc::GoUrl("-1","模板工程依赖的模块缺失!模块如下：".$md);
+    endif;
+    if(is_dir(APP_ROOT."/template/".$tid."/move")):
+        UTInc::MoveDir(APP_ROOT."/template/".$tid."/move",UTF_ROOT);
+    endif;
+    if(is_dir(APP_ROOT."/template/".$tid."/assets")):
+		    $assets_dir=OPEN_ROOT."/assets/template/".$tid;
+        if(!is_dir($assets_dir)):
+			      UTInc::MakeDir($assets_dir);
+		    endif;
+		    UTInc::MoveDir(APP_ROOT."/template/".$tid."/assets",$assets_dir);
+				UTInc::DelDir(APP_ROOT."/template/".$tid."/assets");
     endif;
     $id=UTInc::StrSubstr("<id>","</id>",$template);
     $type=UTInc::StrSubstr("<type>","</type>",$template);
@@ -82,6 +90,9 @@ if($do=="uninstall"){
     $tid=str_replace(".","",UTInc::SqlCheck($_GET["tid"]));
     if(UTData::DelData("cms_template","tid='$tid'")){
         UTInc::DelDir(APP_ROOT."/template/".$tid);
+		    if(is_dir(OPEN_ROOT."/assets/template/".$tid)):
+            UTInc::DelDir(OPEN_ROOT."/assets/template/".$tid);
+				endif;
         UTInc::GoUrl("?m=ut-template&p=template","模板删除成功!");
     }else{
         UTInc::GoUrl("-1","模板删除失败!");

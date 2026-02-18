@@ -13,13 +13,16 @@ $do=UTInc::SqlCheck($_GET["do"]);
  * 封装备份数据方法
  */
 function backup(){
-    global$m;
     $data=array();
     $fileArr = array();
-    $handle = opendir("../modules/".$m."/backup/"); 
-    while(($file=readdir($handle))<>""){
+    $backupdir = UTF_ROOT."/log/sql";
+    if(!is_dir($backupdir)){ 
+        return [];
+    }else{
+    $handle = opendir($backupdir);
+    while(($file=readdir($handle))!=false){
         if($file !== '.' && $file != '..'){
-            $filedate = filemtime("../modules/".$m."/backup/".$file.""); 
+            $filedate = filemtime($backupdir."/".$file.""); 
             $fileArr[$file] = $filedate;
         }
     }
@@ -30,12 +33,13 @@ function backup(){
         $thisName = $thisFile[0];
         $data[]=array(
             "name"=>$thisName,
-            "size"=>UTInc::ForBytes(filesize("../modules/".$m."/backup/".$thisName."")),
-            "time"=>date('Y-m-d H:i:s',filemtime("../modules/".$m."/backup/".$thisName.""))
+            "size"=>UTInc::ForBytes(filesize($backupdir."/".$thisName."")),
+            "time"=>date('Y-m-d H:i:s',filemtime($backupdir."/".$thisName.""))
         );
     }
     closedir($handle);   
     return $data;  
+    }
 }
 $app->Runin("data",backup());
 /**
@@ -46,7 +50,10 @@ $app->Open("backup.cms");
  * SQL查询
  */
 if($do=="sql-backup"){
-    $to_file_name = "../modules/".$m."/backup/".UTInc::GetRandomString(16).".sql";
+    $to_file_name = UTF_ROOT."/log/sql/".UTInc::GetRandomString(16).".sql";
+    if(!is_dir(UTF_ROOT."/log/sql/")){
+        UTInc::MakeDir(UTF_ROOT."/log/sql/");
+    }
     $tables = mysqli_query($db,"show tables");
     $tabList = array();
     while($row = mysqli_fetch_row($tables)){
@@ -89,30 +96,30 @@ if($do=="sql-backup"){
         mysqli_free_result($res);
         file_put_contents($to_file_name,"\r\n",FILE_APPEND);
     }
-    echo "<script>alert('SQL备份成功!');window.location.href='?m=ut-data&p=backup'</script>";
+    UTInc::GoUrl("?m=ut-data&p=backup","SQL备份成功!");
 }
 /**
  * SQL文件还原
  */
 if($do=="sql-rev"){
-    $sqlfile="../modules/".$m."/backup/".$_GET['sql']; 
+    $sqlfile=UTF_ROOT."/log/sql/".$_GET['sql']; 
     $sql=file_get_contents($sqlfile);
     $arr=explode('|UTSQL|', $sql);
     foreach ($arr as $value){
         $db->query($value.';');
     }
-    echo "<script>alert('SQL还原执行成功!');window.location.href='?m=ut-data&p=backup'</script>";  
+    UTInc::GoUrl("?m=ut-data&p=backup","SQL还原执行成功!");
 }
 /**
  * SQL文件删除
  */
 if($do=="sql-del"){
 	$sql=str_replace("..","",$_GET['sql']);
-    $sqlbak="../modules/".$m."/backup/".$sql."";
-		if(UTInc::Contain($m."/backup",$sqlbak)):
+    $sqlbak=UTF_ROOT."/log/sql/".$sql;
+        if(file_exists($sqlbak)):
 			UTInc::UnlinkFile($sqlbak);
-            echo "<script>alert('SQL文件删除成功!');window.location.href='?m=ut-data&p=backup'</script>";
+			UTInc::GoUrl("?m=ut-data&p=backup","SQL文件删除成功!");
 		else:
-			echo "<script>alert('SQL文件删除失败!');window.location.href='?m=ut-data&p=backup'</script>";
+			UTInc::GoUrl("-1","SQL文件删除失败!");
 		endif;
 }

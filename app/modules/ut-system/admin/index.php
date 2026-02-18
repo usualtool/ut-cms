@@ -1,4 +1,5 @@
 <?php
+use library\UsualToolInc\UTInc;
 $do=$_GET["do"];
 /**
  * 加载全局配置信息
@@ -14,5 +15,5 @@ if($do=="setup"){
         $info = preg_replace("/{$k}=(.*)/","{$k}={$v}",$info); 
     }
     file_put_contents(UTF_ROOT."/.ut.config",$info);
-    echo'<script>swal("", "保存配置成功!");setTimeout(function(){window.location.href="?m=ut-system";},2000)</script>';
+		UTInc::GoUrl("?m=ut-system","保存配置成功!");
 }

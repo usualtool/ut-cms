@@ -24,13 +24,19 @@ if($do=="uninstall"){
     endforeach;
     if($uninstallsql=='0'):
         UTInc::DelDir(APP_ROOT."/modules/".$mid);
-        echo"<script>alert('成功卸载模块!');window.location.href='?m=ut-module'</script>";
+		    if(is_dir(OPEN_ROOT."/assets/modules/".$mid)):
+            UTInc::DelDir(OPEN_ROOT."/assets/modules/".$mid);
+				endif;
+		    UTInc::GoUrl("?m=ut-module","成功卸载模块!");
     else:
         if(UTData::RunSql($uninstallsql)):
             UTInc::DelDir(APP_ROOT."/modules/".$mid);
-            echo"<script>alert('成功卸载模块!');window.location.href='?m=ut-module'</script>";
+		        if(is_dir(OPEN_ROOT."/assets/modules/".$mid)):
+                UTInc::DelDir(OPEN_ROOT."/assets/modules/".$mid);
+				    endif;
+		        UTInc::GoUrl("?m=ut-module","成功卸载模块!");
         else:
-            echo"<script>alert('模块卸载失败!');window.location.href='?m=ut-module'</script>";
+		        UTInc::GoUrl("-1","模块卸载失败!");
         endif;   
     endif;
 }

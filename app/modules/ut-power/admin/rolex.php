@@ -31,9 +31,9 @@ if($do=="add"){
         if(UTData::InsertData("cms_admin_role",array(
             "role"=>UTInc::SqlCheck($_POST["role"]),
             "module"=>UTInc::SqlCheck(implode(",",$_POST["module"]))))):
-            echo "<script>alert('创建成功!');window.location.href='?m=ut-power&p=role'</script>";
+            UTInc::GoUrl("?m=ut-power&p=role","创建成功!");
         else:
-            echo "<script>alert('创建失败!');window.location.href='?m=ut-power&p=rolex'</script>";
+            UTInc::GoUrl("-1","创建失败!");
         endif;
 }
 if($do=="mon"){
@@ -41,19 +41,19 @@ if($do=="mon"){
         if(UTData::UpdateData("cms_admin_role",array(
             "role"=>UTInc::SqlCheck($_POST["role"]),
             "module"=>UTInc::SqlCheck(implode(",",$_POST["module"]))),"id='$id'")):
-            echo "<script>alert('编辑成功!');window.location.href='?m=ut-power&p=role'</script>";
+            UTInc::GoUrl("?m=ut-power&p=role","编辑成功!");
         else:
-            echo "<script>alert('编辑失败!');window.location.href='?m=ut-power&p=rolex&id=$id'</script>";
+            UTInc::GoUrl("-1","编辑失败!");
         endif;
 }
 if($do=="del"){
     if($id==1):
-        echo "<script>alert('删除失败,第一条记录不可删除!');window.location.href='?m=ut-power&p=role'</script>";
+        UTInc::GoUrl("?m=ut-power&p=role","删除失败,第一条记录不可删除!");
     else:
         if(UTData::DelData("cms_admin_role","id='$id'")):
-            echo "<script>alert('删除成功!');window.location.href='?m=ut-power&p=role'</script>";
+            UTInc::GoUrl("?m=ut-power&p=role","删除成功!");
         else:
-            echo "<script>alert('删除失败!');window.location.href='?m=ut-power&p=role'</script>";
+            UTInc::GoUrl("-1","删除失败!");
         endif;
     endif;
 }

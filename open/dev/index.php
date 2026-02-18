@@ -10,13 +10,13 @@
        *  |    Applicable to Apache 2.0 protocol.           |           
        * --------------------------------------------------------       
 */
-require dirname(dirname(__FILE__)).'/'.'config.php';
+require dirname(__DIR__).'/'.'config.php';
 use library\UsualToolInc\UTInc;
 use library\UsualToolData\UTData;
 /**
  * 获取版本号并载入应用部分设置
  */
-$ver=substr(file_get_contents(UTF_ROOT."/UTVer.ini"),-6);
+$ver=substr(file_get_contents(UTF_ROOT."/.version.ini"),-6);
 $app->Runin(
     array("ver","update","develop","lock"),
     array($ver,$config["UPDATEURL"],$config["DEVELOP"],$config["LOCKSCREEN"])
@@ -68,13 +68,13 @@ $app->Runin("template",$adminwork."/skin/".$config["DEFAULT_MOD"]."/admin");
  * 数组形式Contain($p,array("login","captcha"))，判断数组中是否包含页面名$p
  * 字符形式Contain("login",$p)，判断页面名$p中是否包含login
  */
-if(!UTInc::Contain($p,array("login","captcha"))){
+if(!UTInc::Contain($p,array("login","captcha"))):
     /**
      * 加载自定义权限文件
      * 该文件亦可封装为函数让autoload自动加载
      */
     require PUB_PATH.'/admin/session.php';
-}
+endif;
 /**
  * 拼接当前文件
  */
@@ -82,18 +82,16 @@ $modfile=$modpath."/admin/".$p.".php";
 /**
  * 判断文件真实性
  */
-if(library\UsualToolInc\UTInc::SearchFile($modfile)){
+if(library\UsualToolInc\UTInc::SearchFile($modfile)):
     /**
      * 引用后端模板
      */
     require_once $modfile;
-}else{
+else:
     /**
      * 配置公共错误提示
      */
     require_once PUB_PATH.'/front/error.php';
     exit();
-}
-if($config["DEBUG"]){
-    library\UsualToolDebug\UTDebug::Debug($config["DEBUG_BAR"]);
-}
+endif;
+$config["DEBUG"] && UTDebug::Debug($config["DEBUG_BAR"]);

@@ -30,7 +30,7 @@ if($_GET["do"]=="update"){
                 "pages"=>$pagex[$s]),"id='".$idx[$s]."'");
         }
         UTData::RunSql($sql);
-        }
+    }
     UTInc::GoUrl("?m=ut-system&p=search","设置成功!");
 }
 if($_GET["do"]=="del"){

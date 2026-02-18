@@ -18,13 +18,19 @@ if($do=="uninstall"){
     UTData::DelData("cms_plugin","pid='$pid'");
     if($uninstallsql=='0'):
         UTInc::DelDir(APP_ROOT."/plugins/".$pid);
-        echo"<script>alert('成功卸载插件!');window.location.href='?m=ut-plugin'</script>";
+		    if(is_dir(OPEN_ROOT."/assets/plugins/".$pid)):
+            UTInc::DelDir(OPEN_ROOT."/assets/plugins/".$pid);
+				endif;
+        UTInc::GoUrl("?m=ut-plugin","成功卸载插件!");
     else:
         if(UTData::RunSql($uninstallsql)):
             UTInc::DelDir(APP_ROOT."/plugins/".$pid);
-            echo"<script>alert('成功卸载插件!');window.location.href='?m=ut-plugin'</script>";
+		        if(is_dir(OPEN_ROOT."/assets/plugins/".$pid)):
+                UTInc::DelDir(OPEN_ROOT."/assets/plugins/".$pid);
+				    endif;
+            UTInc::GoUrl("?m=ut-plugin","成功卸载插件!");
         else:
-            echo"<script>alert('插件卸载失败!');window.location.href='?m=ut-plugin'</script>";
+            UTInc::GoUrl("-1","插件卸载失败!");
         endif;   
     endif;
 }

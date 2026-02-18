@@ -14,7 +14,7 @@ require_once dirname(dirname(dirname(__FILE__))).'/'.'autoload.php';
 use library\UsualToolInc\UTInc;
 use library\UsualToolMysql\UTMysql;
 use library\UsualToolCli\UTCli;
-if(UTInc::SearchFile(APP_ROOT."/install-dev/usualtool.lock")):
+if(UTInc::SearchFile(OPEN_ROOT."/install-dev/usualtool.lock")):
    header("location:../");
    exit();
 endif;
@@ -36,10 +36,10 @@ endif;
     <title>UTCMS安装</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="//cdn.staticfile.org/bootstrap/4.6.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="//cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.min.css">
-    <script src="//cdn.staticfile.org/jquery/3.1.0/jquery.min.js"></script>
-    <script src="//cdn.staticfile.org/bootstrap/4.5.3/js/bootstrap.min.js"></script>
+    <link href="//cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="//cdn.bootcdn.net/ajax/libs/font-awesome/4.7.0/css/fontawesome.min.css" rel="stylesheet">
+    <script src="//cdn.bootcdn.net/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="//cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
     <style>
     body{font-size:0.8rem;}
     a{color:black;text-decoration:underline;}
@@ -180,7 +180,7 @@ endif;
                     <?php
                     else:
                         if($_GET["t"]=="db-sql"):
-                            $sql=file_get_contents("./UTDev.sql");
+                            $sql=file_get_contents("./develop.sql");
                             $arr=explode(';',$sql);
                             $total=count($arr)-1;
                             $c=0;

@@ -3,7 +3,7 @@ use library\UsualToolInc\UTInc;
 if(UTInc::SqlCheck($_GET['do'])=="del"){
     $img=UTInc::SqlCheck(str_replace("..","",$_GET['img']));
     if(in_array(substr($img,-4),array(".jpg",".png",".gif"))):
-        $img=str_replace($config["APPURL"],APP_ROOT,$img);
+        $img=str_replace($config["APPURL"]."/app",APP_ROOT,$img);
         UTInc::UnlinkFile($img);
         echo json_encode(array("error"=>0));
     else:

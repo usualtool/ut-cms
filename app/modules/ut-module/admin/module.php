@@ -38,13 +38,19 @@ if($do=="install"){
                 $zip->close();
                 unlink(APP_ROOT."/modules/".$filename);
             else:
-                echo "<script>alert('modules目录775权限不足!');window.location.href='?m=ut-module&p=module'</script>";
-               exit();
+						   UTInc::GoUrl("-1","modules目录775权限不足!");
             endif;
         else:
-            echo "<script>alert('安装权限不足!');window.location.href='?m=ut-module&p=module'</script>";
-            exit();
+            UTInc::GoUrl("-1","安装权限不足!");
         endif;
+    endif;
+    if(is_dir(APP_ROOT."/modules/".$mid."/assets")):
+		    $assets_dir=OPEN_ROOT."/assets/modules/".$mid;
+        if(!is_dir($assets_dir)):
+			      UTInc::MakeDir($assets_dir);
+		    endif;
+		    UTInc::MoveDir(APP_ROOT."/modules/".$mid."/assets",$assets_dir);
+				UTInc::DelDir(APP_ROOT."/modules/".$mid."/assets");
     endif;
     $modconfig=APP_ROOT."/modules/".$mid."/usualtool.config";
     $mods=file_get_contents($modconfig);
@@ -81,12 +87,12 @@ if($do=="install"){
             "backitem"=>$backitem));
     endif;
     if($installsql=='0'):
-        echo"<script>alert('成功安装模块!');window.location.href='?m=ut-module&p=module'</script>";
+        UTInc::GoUrl("?m=ut-module&p=module","成功安装模块!");
     else:
         if(UTData::RunSql($installsql)):
-            echo"<script>alert('成功安装模块!');window.location.href='?m=ut-module&p=module'</script>";
+            UTInc::GoUrl("?m=ut-module&p=module","成功安装模块!");
         else:
-            echo"<script>alert('模块安装失败!');window.location.href='?m=ut-module&p=module'</script>";
+            UTInc::GoUrl("-1","模块安装失败!");
         endif;   
     endif;
 }
