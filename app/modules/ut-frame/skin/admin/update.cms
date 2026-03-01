@@ -31,13 +31,13 @@
 										  <div class="col-md-3">
 											<a target="_blank" href="<{$update}>/<{split=>$rows,"^",1}>.zip">下载</a> | 
 											<{php=>
-											$thisver=explode("^",return=>$rows)[1];
-											if(return=>$ver>=$thisver):
+											$thisver_time=explode("^",return=>$rows)[1];
+											if(return=>$version_time>=$thisver_time):
 											}>
 											已更新
 											<{php=>
 											else:
-											  $updatenum=library\UsualToolData\UTData::queryData("cms_update","","updateid='".$thisver."'","","","0")["querynum"];
+											  $updatenum=library\UsualToolData\UTData::queryData("cms_update","","updateid='".$thisver_time."'","","","0")["querynum"];
 											  if($updatenum>0):
 											}>
 											    已更新

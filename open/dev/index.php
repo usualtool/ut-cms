@@ -16,10 +16,12 @@ use library\UsualToolData\UTData;
 /**
  * 获取版本号并载入应用部分设置
  */
-$ver=substr(file_get_contents(UTF_ROOT."/.version.ini"),-6);
+$framework=file_get_contents(UTF_ROOT."/.version.ini");
+$version=substr($frame_version,0,5);
+$version_time=substr($frame_version,-6);
 $app->Runin(
-    array("ver","update","develop","lock"),
-    array($ver,$config["UPDATEURL"],$config["DEVELOP"],$config["LOCKSCREEN"])
+    array("version","version_time","update","develop","lock"),
+    array($version,$version_time,$config["UPDATEURL"],$config["DEVELOP"],$config["LOCKSCREEN"])
 );
 /**
  * 接收官方消息
