@@ -13,6 +13,11 @@
 require dirname(__DIR__).'/'.'config.php';
 use library\UsualToolInc\UTInc;
 use library\UsualToolData\UTData;
+use library\UsualToolDebug\UTDebug;
+/**
+ * 控制方向
+ */
+$controlform="admin";
 /**
  * 获取版本号并载入应用部分设置
  */
@@ -35,16 +40,16 @@ else:
     $app->Runin("message", explode("|", $msgdata["message"]));
 endif;
 /**
- * 写入底层模块
+ * 底层模块
  * 除开UT-FRAME公共模块
  */
 $app->Runin("modules",UTData::QueryData("cms_module","","bid=3 and mid<>'".$config["DEFAULT_MOD"]."'","","")["querydata"]);
 /**
- * 写入自定义模块
+ * 自定义模块
  */
 $app->Runin("custmods",UTData::QueryData("cms_module","","bid<>3")["querydata"]);
 /**
- * 写入当前运行模块名称及栏目
+ * 当前运行模块及栏目
  * befoitem前端地址集，backtem后端栏目集
  */
 $thismod=UTData::QueryData("cms_module","","mid='$m'","","")["querydata"][0];
@@ -59,11 +64,11 @@ $app->Runin(
  * 当前示例表示后端共用头部模板
  * 以下设置/admin表示后端，/front表示前端
  */
-$app->Runin("pubtemp",PUB_TEMP."/admin");
+$app->Runin("pubtemp",PUB_TEMP."/".$controlform);
 /**
  * 写入模板工程后端公共路径
  */
-$app->Runin("template",$adminwork."/skin/".$config["DEFAULT_MOD"]."/admin");
+$app->Runin("template",$adminwork."/skin/".$config["DEFAULT_MOD"]."/".$controlform);
 /**
  * 权限验证机制
  * 排除不需要验证的页面
@@ -75,24 +80,35 @@ if(!UTInc::Contain($p,array("login","captcha"))):
      * 加载自定义权限文件
      * 该文件亦可封装为函数让autoload自动加载
      */
-    require PUB_PATH.'/admin/session.php';
+    require PUB_PATH.'/'.$controlform.'/session.php';
 endif;
 /**
  * 拼接当前文件
  */
-$modfile=$modpath."/admin/".$p.".php";
+$modfile=$modpath."/".$controlform."/".$p.".php";
 /**
  * 判断文件真实性
  */
-if(library\UsualToolInc\UTInc::SearchFile($modfile)):
-    /**
-     * 引用后端模板
-     */
+if(UTInc::SearchFile($modfile)):
     require_once $modfile;
-else:
+    $classname=UTInc::GetClassName($modfile);
     /**
-     * 配置公共错误提示
+     * 分层模式
      */
+    if($classname):
+        $action=UTInc::SqlCheck($_GET["action"]) ?? "index";
+        if(!preg_match('/^[a-zA-Z0-9_]+$/',$action)):
+            $action="index"; 
+        endif;
+        $controller=new $classname();
+        /**
+         * 执行动作
+         */
+        if(method_exists($controller,$action) || method_exists($controller,'__call')):
+            $controller->$action();
+        endif;
+    endif;
+else:
     require_once PUB_PATH.'/front/error.php';
     exit();
 endif;
