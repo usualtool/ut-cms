@@ -15,9 +15,13 @@ use library\UsualToolInc\UTInc;
 use library\UsualToolData\UTData;
 use library\UsualToolDebug\UTDebug;
 /**
- * 控制方向
+ * 控制目录
  */
-$controlform="admin";
+$_form_="admin";
+/**
+ * 模板目录
+ */
+$_temp_="admin";
 /**
  * 获取版本号并载入应用部分设置
  */
@@ -64,11 +68,11 @@ $app->Runin(
  * 当前示例表示后端共用头部模板
  * 以下设置/admin表示后端，/front表示前端
  */
-$app->Runin("pubtemp",PUB_TEMP."/".$controlform);
+$app->Runin("pubtemp",PUB_TEMP."/".$_temp_);
 /**
  * 写入模板工程后端公共路径
  */
-$app->Runin("template",$adminwork."/skin/".$config["DEFAULT_MOD"]."/".$controlform);
+$app->Runin("template",$adminwork."/skin/".$config["DEFAULT_MOD"]."/".$_temp_);
 /**
  * 权限验证机制
  * 排除不需要验证的页面
@@ -80,27 +84,33 @@ if(!UTInc::Contain($p,array("login","captcha"))):
      * 加载自定义权限文件
      * 该文件亦可封装为函数让autoload自动加载
      */
-    require PUB_PATH.'/'.$controlform.'/session.php';
+    require PUB_PATH.'/'.$_form_.'/session.php';
 endif;
 /**
- * 拼接当前文件
+ * 路由分发控制
  */
-$modfile=$modpath."/".$controlform."/".$p.".php";
+$_map_=$modpath."/route.php";
+$_file_=$p;
+if(UTInc::SearchFile($_map_)):
+    $_route=include $_map_;
+    $_file_=$_route[$p] ?? $p;
+endif;
+$_file_path_=$modpath."/".$_form_."/".$_file_.".php";
 /**
  * 判断文件真实性
  */
-if(UTInc::SearchFile($modfile)):
-    require_once $modfile;
-    $classname=UTInc::GetClassName($modfile);
+if(UTInc::SearchFile($_file_path_)):
+    require_once $_file_path_;
+    $_class_=UTInc::GetClassName($_file_path_);
     /**
      * 分层模式
      */
-    if($classname):
+    if($_class_):
         $action=UTInc::SqlCheck($_GET["action"]) ?? "index";
         if(!preg_match('/^[a-zA-Z0-9_]+$/',$action)):
             $action="index"; 
         endif;
-        $controller=new $classname();
+        $controller=new $_class_();
         /**
          * 执行动作
          */
@@ -109,7 +119,6 @@ if(UTInc::SearchFile($modfile)):
         endif;
     endif;
 else:
-    require_once PUB_PATH.'/front/error.php';
-    exit();
+    UTDebug::Error("module",str_replace(APP_ROOT."/modules","",$modfile));
 endif;
 $config["DEBUG"] && UTDebug::Debug($config["DEBUG_BAR"]);
