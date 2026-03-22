@@ -15,11 +15,11 @@ use library\UsualToolInc\UTInc;
 use library\UsualToolData\UTData;
 use library\UsualToolDebug\UTDebug;
 /**
- * 控制目录
+ * 控制终端
  */
 $_form_="admin";
 /**
- * 模板目录
+ * 模板终端
  */
 $_temp_="admin";
 /**
