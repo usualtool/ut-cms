@@ -30,7 +30,7 @@ $version=substr($frame_version,0,5);
 $version_time=substr($frame_version,-6);
 $app->Runin(
     array("version","version_time","update","develop","lock"),
-    array($version,$version_time,$config["UPDATEURL"],$config["DEVELOP"],$config["LOCKSCREEN"])
+    array($version,$version_time,$config["UPDATEURL"],$config["DEVELOP_OPEN"],$config["LOCKSCREEN"])
 );
 /**
  * 接收官方消息
