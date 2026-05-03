@@ -1,0 +1,158 @@
+<{include "$pubtemp/head.cms"}>
+        <div class="main-panel">
+			<div class="content">
+				<div class="page-inner">
+					<div class="page-header">
+						<h4 class="page-title"><{$title}></h4>
+						<ul class="breadcrumbs">
+							<li class="nav-home">
+								<a href="./">
+									<i class="fa fa-home"></i>
+								</a>
+							</li>
+							<li class="separator">
+								<i class="fa fa-angle-double-right"></i>
+							</li>
+							<li class="nav-item">
+								<a href="?m=<{$module}>"><{$title}></a>
+							</li>
+							<li class="separator">
+								<i class="fa fa-angle-double-right"></i>
+							</li>
+							<li class="nav-item">
+								在线调试
+							</li>
+							<li class="nav-item pl-3 pr-3">
+                                <{item=>$module,$backitem}>
+                            </li>
+						</ul>
+					</div>
+					    <div class="row">
+					        <div class="col-md-7">
+							<div class="card">
+								<div class="card-body">
+									<div class="form-group">
+										<label for="largeInput"><strong>data-<{$do}></strong></label><br>
+                                        <{if $do=="handle"}>
+                                            成功返回<code>[{"error":0}]</code>,失败返回<code>[{"error":1}]</code><br>
+                                            验证参数：<br>
+                                            secret:<input type="text" class="form-control input-square" id="secret" value="admin,c3b9abe23e14140fa882b8f7bc637d49917145ef"><br>
+                                            POST数据:<br>
+                                            action:<input type="text" class="form-control input-square" id="action" value="add"><br>
+                                            table:<input type="text" class="form-control input-square" id="table" value="cms_article"><br>
+                                            where(选填):<input type="text" class="form-control input-square" id="where"><br>
+                                            POST模拟数据字符串:<br>
+                                            <textarea class="form-control" id="postdata" rows="5">catid=1&title=test&content=testdata&addtime=2021-01-01 01:01:01</textarea>
+                                        <{else if $do=="query"}>
+                                            成功返回数据,失败返回<code>[{"error":1}]</code><br>
+                                            POST数据:<br>
+                                            table:<input type="text" class="form-control input-square" id="table" value="cms_article"><br>
+                                            field(选填):<input type="text" class="form-control input-square" id="field"><br>
+                                            where(选填):<input type="text" class="form-control input-square" id="where"><br>
+                                            order(选填):<input type="text" class="form-control input-square" id="order" value="addtime desc"><br>
+                                            limit(选填):<input type="text" class="form-control input-square" id="limit"><br>
+                                            lang(选填):<input type="text" class="form-control input-square" id="lang" value="0">
+                                        <{else if $do=="search"}>
+                                            成功返回数据,失败返回<code>[{"error":1}]</code><br>
+                                            使用该接口需要提前进行 <a target="_blank" href="?m=ut-system&p=search">搜索设置</a><br>
+                                            GET数据:<br>
+                                            keyword:<input type="text" class="form-control input-square" id="keyword" value="test">
+                                        <{else if $do=="lang"}>
+                                            成功返回数据,失败返回<code>[{"error":1}]</code><br>
+                                            GET数据:<br>
+                                            word(多个参数以半角逗号分隔):<input type="text" class="form-control input-square" id="word" value="goods"><br>
+                                            lang(选填):<input type="text" class="form-control input-square" id="lang" value="zh">
+                                            module(选填):<input type="text" class="form-control input-square" id="module" value="goods">
+                                        <{else if $do=="auth"}>
+                                            成功返回数据,失败返回<code>[{"error":1}]</code><br>
+                                            使用该接口需要安装小程序模块<br>
+                                            GET数据:<br>
+                                            action:<br>
+                                            wechat:获取微信用户基础信息<br>
+                                            wechat-cryp:获取微信用户敏感信息，如手机号<br>
+                                            alipay:获取支付宝用户基础信息
+                                            <input type="text" class="form-control input-square" id="action" value="wechat"><br>
+                                            code(第三方返回令牌)<input type="text" class="form-control input-square" id="code">
+                                        <{/if}>
+									</div>
+								</div>
+							</div>
+							</div>
+							<div class="col-md-5">
+							<div class="card">
+                                <div class="card-action border-bottom" style="padding:15px;">
+									<button class="btn btn-info" onclick="runtest()">执行调试</button>
+								</div>
+								<div class="card-body">
+								<p class="border-bottom">返回结果</p>
+                                <p id="result"></p>
+								</div>
+							</div>
+							</div>
+						</div>	
+					</div>
+				</div>
+			</div>
+		</div>
+    <{include "$pubtemp/foot.cms"}>
+    <script>
+    function runtest(){
+        var postdata;
+        if($("#postdata").length>0){
+            postdata=$("#postdata").val();
+        }else{
+            postdata="";
+        }
+        var jsonstr;
+        var token=md5("cfcd208495d565ef66e7dff9f98764da"+gettimestamp());
+        <{if $do=="handle"}>
+            var action=$("#action").val();
+            var table=$("#table").val();
+            var where=$("#where").val();
+            jsonstr="action="+action+"&table="+table+"&where="+where;
+        <{else if $do=="query"}>
+            var table=$("#table").val();
+            var field=$("#field").val();
+            var where=$("#where").val();
+            var order=$("#order").val();
+            var limit=$("#limit").val();
+            var lang=$("#lang").val();
+            jsonstr="table="+table+"&field="+field+"&where="+where+"&order="+order+"&limit="+limit+"&lang="+lang;
+        <{else if $do=="search"}>
+            var keyword=$("#keyword").val();
+            jsonstr="keyword="+keyword;
+        <{else if $do=="lang"}>
+            var word=$("#word").val();
+            var module=$("#module").val();
+            var lang=$("#lang").val();
+            jsonstr="word="+word+"&module="+module+"&lang="+lang;
+        <{else if $do=="auth"}>
+            var action=$("#action").val();
+            var code=$("#code").val();
+            jsonstr="action="+action+"&code="+code;
+        <{/if}>
+        var posturl="<{$appurl}>/?m=ut-api&p=data-<{$do}>";
+        $.ajax({
+            url: posturl,
+            <{if $do=="handle" || $do=="query"}>
+            type: "post",
+            <{else}>
+            type: "get",
+            <{/if}>
+            dataType: "json",
+            data: jsonstr+"&"+postdata,
+            contentType: "application/x-www-form-urlencoded",
+            async:false,
+            beforeSend: function(XMLHttpRequest){
+                XMLHttpRequest.setRequestHeader("time",getnowdate());
+                XMLHttpRequest.setRequestHeader("token",token);
+                <{if $do=="handle"}>
+                XMLHttpRequest.setRequestHeader("secret",$("#secret").val());
+                <{/if}>
+            },
+            success: function(res){
+                $("#result").html("<code>"+JSON.stringify(res)+"</code>");
+            }
+        })
+    }
+</script>

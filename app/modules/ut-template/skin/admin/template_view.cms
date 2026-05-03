@@ -1,0 +1,48 @@
+<{include "$pubtemp/head.cms"}> 
+        <div class="main-panel">
+			<div class="content">
+				<div class="page-inner">
+					<div class="page-header">
+						<h4 class="page-title"><{$title}></h4>
+						<ul class="breadcrumbs">
+							<li class="nav-home">
+								<a href="./">
+									<i class="fa fa-home"></i>
+								</a>
+							</li>
+							<li class="separator">
+								<i class="fa fa-angle-double-right"></i>
+							</li>
+							<li class="nav-item">
+								<a href="?m=ut-template"><{$title}></a>
+							</li>
+							<li class="separator">
+								<i class="fa fa-angle-double-right"></i>
+							</li>
+							<li class="nav-item">
+								编辑模板
+							</li>
+							<li class="nav-item pl-3 pr-3">
+                                <{item=>$module,$backitem}>
+                            </li>
+						</ul>
+					</div>
+							<div class="card">
+								<div class="card-body">
+                                <form action="?m=ut-template&p=template_view&do=save" method="post">
+                                   <input type="hidden" name="filename" value="<{$d}>">
+								   <{if is_file($file)}>
+                                       <div class="mb-2"><{$d}></div>
+								       <textarea class="form-control" name="content" rows="15"><{$html}></textarea>
+                                       <div class="mt-2"><button class="btn btn-success">更新模板</button></div>
+								   <{else}>
+								       <div class="mb-2"><{$d}>文件不存在</div>
+								   <{/if}>
+                                </form>
+								</div>
+							</div>
+					</div>
+				</div>
+			</div>
+		</div>
+<{include "$pubtemp/foot.cms"}>

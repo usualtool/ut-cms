@@ -1,0 +1,56 @@
+<{include "$pubtemp/head.cms"}>
+        <div class="main-panel">
+			<div class="content">
+				<div class="page-inner">
+					<div class="page-header">
+						<h4 class="page-title"><{$title}></h4>
+						<ul class="breadcrumbs">
+							<li class="nav-home">
+								<a href="./">
+									<i class="fa fa-home"></i>
+								</a>
+							</li>
+							<li class="separator">
+								<i class="fa fa-angle-double-right"></i>
+							</li>
+							<li class="nav-item">
+								语言
+							</li>
+							<li class="nav-item pl-3 pr-3">
+                                                            <{item=>$module,$backitem}>
+                                                        </li>
+						</ul>
+					</div>
+							<form action="?m=ut-system&p=lang&do=setup" method="post" name="form">
+							<div class="card">
+								<div class="card-body">
+									<div class="form-check">
+										<label>前端语言</label><br>
+                                        <{loop=>$lang $row}>
+										<label class="form-radio-label">
+											<input class="form-radio-input" type="radio" name="lang_default" value="<{$row}>" <{if $row==$lang_default}>checked<{/if}>>
+											<span class="form-radio-sign"><{$row}></span>
+										</label>
+                                        <{/loop}>
+									</div>
+									<div class="form-check">
+										<label>语言选项</label><br>
+                                        <{loop=>$lang $row}>
+										<label class="form-check-label">
+											<input class="form-check-input" type="checkbox" name="lang_option[]" value="<{$row}>" 
+											<{php=>if(library\UsualToolInc\UTInc::Contain(return=>$row,return=>$lang_option)):echo"checked";endif;}>>
+											<span class="form-check-sign"><{$row}></span>
+										</label>
+                                        <{/loop}>
+									</div>
+								</div>
+								<div class="card-action">
+									<button class="btn btn-info">保存设置</button>
+								</div>
+							</div>
+							</form>
+					</div>
+				</div>
+			</div>
+		</div>
+<{include "$pubtemp/foot.cms"}>		

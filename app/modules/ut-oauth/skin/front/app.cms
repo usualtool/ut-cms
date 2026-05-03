@@ -1,0 +1,76 @@
+<{include "head.cms"}>
+    <div class="card">
+        <div class="card-header">
+            <h5>我的应用</h5>
+            <div class="text-right" data-toggle="modal" data-target="#add">创建应用</div>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th>应用ID</th>
+                    <th>应用密钥</th>
+                    <th>回调地址</th>
+                    <th>权限</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <{if empty($data)}>
+                  <tr><td>无数据</td></tr>
+                  <{else}>
+                  <{loop=>$data $rows}>
+                  <tr>
+					<td><{$rows->client_id}></td>
+					<td><{$rows->client_secret}></td>
+					<td><{$rows->redirect_uri}></td>
+					<td><{$rows->scope}></td>
+                  </tr>
+                  <{/loop}>
+                  <{/if}>
+                </tbody>
+            </table> 
+          </div>
+            <div>
+                <{page=>total,curpage,listnum,pagelink}>
+            </div>
+        </div>
+    </div>
+<div class="modal fade" id="add">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">创建应用</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+          <form action="?m=ut-oauth&p=app&do=creat" method="post">
+          <div class="form-group row">
+            <div class="col-6">
+            <label>应用ID（英文名）</label>
+            <input type="text" class="form-control" name="client_id">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>回调地址</label>
+            <input type="text" class="form-control" name="redirect_uri">
+          </div>
+          <div class="form-group">
+            <label>申请权限</label>
+            <div class="row">
+              <{loop=>$role $rows}>
+                  <div class="col-3">
+                  <input type="checkbox" value="<{$rows->scope}>" name="scope[]"> <{$rows->title}>
+                  </div>
+              <{/loop}>
+            </div>
+          </div>
+          <div class="form-group border-top pt-3">
+            <button type="submit" class="btn btn-primary">确定</button>
+          </div>
+          </form>
+      </div>
+    </div>
+  </div>
+</div>
+<{include "foot.cms"}>

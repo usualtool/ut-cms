@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<title>锁屏页</title>
+	<meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport' />
+	<link rel="stylesheet" href="<{$appurl}>/assets/css/bootstrap.min.css">
+	<link rel="stylesheet" href="<{$appurl}>/assets/css/buttons.min.css"/>
+	<link rel="stylesheet" href="<{$appurl}>/assets/css/fontawesome.min.css">
+	<link rel="stylesheet" href="<{$appurl}>/assets/css/style.css">
+    <script src="<{$appurl}>/assets/js/jquery.min.js"></script>
+    <script src="<{$appurl}>/assets/js/popper.min.js"></script>
+    <script src="<{$appurl}>/assets/js/bootstrap.min.js"></script>
+</head>
+<body>
+	<div class="container" id="wrapper">
+		<div class="row">
+			<main class="col-lg-6 m-auto ">
+				<div class="text-center mt-5">
+					<h1 class="mb-0 no-border">已锁屏</h1>
+					<h3 class="mt-0 mb-5 text-muted">Locked screen</h3>
+					<p>由于您（<strong><{$admin_user}></strong>）在5分钟内无任何操作，系统已自动锁屏，您需要重新验证登录密码。<Br>Since you have not operated within 5 minutes, the system has automatically locked the screen. You need to re verify the account login password.</p>
+					<form action="?p=lock&do=login&u=<{php=>echo$_GET["u"];}>" method="post">
+						    <div class="input-group mt-5">
+							<input type="password" placeholder="Enter <{$admin_user}> Password" name="password" class="form-control">
+							<div class="input-group-btn ml-2">
+								<button type="submit" class="btn btn-default" tabindex="-1">
+								<i class="fa fa-key" aria-hidden="true"></i> 
+								解锁
+								</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</main>
+		</div>
+	</div>
+</body>
+</html>

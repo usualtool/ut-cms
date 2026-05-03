@@ -1,0 +1,72 @@
+<{include "$pubtemp/head.cms"}> 
+        <div class="main-panel">
+			<div class="content">
+				<div class="page-inner">
+					<div class="page-header">
+						<h4 class="page-title"><{$title}></h4>
+						<ul class="breadcrumbs">
+							<li class="nav-home">
+								<a href="./">
+									<i class="fa fa-home"></i>
+								</a>
+							</li>
+							<li class="separator">
+								<i class="fa fa-angle-double-right"></i>
+							</li>
+							<li class="nav-item">
+								<a href="?m=<{$module}>"><{$title}></a>
+							</li>
+							<li class="separator">
+								<i class="fa fa-angle-double-right"></i>
+							</li>
+							<li class="nav-item">
+								授权记录
+							</li>
+							<li class="nav-item pl-3 pr-3">
+                                <{item=>$module,$backitem}>
+                            </li>
+						</ul>
+					</div>
+							<div class="card">
+                                <div class="card-header">
+									<div class="d-flex align-items-center">
+										<h4 class="card-title">授权列表</h4>
+									</div>
+								</div>
+								<div class="card-body">
+                                    <div class="table-responsive" id="ut-auto">
+                                    <table class="display table table-striped table-hover">
+										<thead>
+											<tr class="bg-light">
+												<th>TOKEN</th>
+												<th>用户ID</th>
+												<th>应用ID</th>
+												<th>过期时间</th>
+                                                <th>授权权限</th>
+											</tr>
+										</thead>
+										<tbody>
+										    <{loop=>$data $rows}>
+											<tr>
+												<td><{$rows->access_token}></td>
+												<td><{$rows->user_id}></td>
+												<td><{$rows->client_id}></td>
+												<td><{$rows->expires}></td>
+												<td><{$rows->scope}></td>
+											</tr>
+											<{/loop}>
+										</tbody>
+									</table>
+									</div>
+									<div class="row mb-2">
+										<div class="col-sm-12 right">
+										    <{page=>total,curpage,listnum,pagelink}>
+										</div>
+									</div>
+								</div>
+							</div>
+					</div>
+				</div>
+			</div>
+		</div>
+<{include "$pubtemp/foot.cms"}>

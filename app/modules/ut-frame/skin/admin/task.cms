@@ -1,0 +1,43 @@
+<{include "head.cms"}>
+<style>
+.card .card-body{padding:0.25rem 1.25rem}
+#ad{line-height:0.5rem}
+</style>
+		<div class="main-panel">
+			<div class="content">
+				<div class="page-inner">
+					<div class="row">
+						<div class="col-md-7">
+							<div class="card">
+								<div class="card-header">
+									<div class="card-title">在建项目</div>
+								</div>
+								<div class="card-body">
+									<{loop=>$task $rows}>
+										<{$rows}>	
+									<{/loop}>
+								</div>
+							</div>
+						</div>
+						<style>#ad img{width:100%;}</style>
+						<div class="col-md-5">
+                            <div class="card card-info bg-info-gradient bubble-shadow">
+								<div class="card-header">
+									<div class="card-title" style="font-size:1.2rem"><strong>AD</strong></div>
+									<div class="card-category">为了UT开源项目继续发展，欢迎捐赠我们。</div>
+									<div><img src="/assets/ut-logo.png"></div>
+								</div>
+								<div class="card-body pb-0">
+									<div class="mb-4">
+										<{loop=>$ad $rows}>
+										    <p id="ad"><{$rows}></p>
+										<{/loop}>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+<{include "foot.cms"}>

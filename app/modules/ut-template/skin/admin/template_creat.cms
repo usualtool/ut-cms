@@ -1,0 +1,70 @@
+<{include "$pubtemp/head.cms"}> 
+        <div class="main-panel">
+			<div class="content">
+				<div class="page-inner">
+					<div class="page-header">
+						<h4 class="page-title"><{$title}></h4>
+						<ul class="breadcrumbs">
+							<li class="nav-home">
+								<a href="./">
+									<i class="fa fa-home"></i>
+								</a>
+							</li>
+							<li class="separator">
+								<i class="fa fa-angle-double-right"></i>
+							</li>
+							<li class="nav-item">
+								<a href="?m=ut-template"><{$title}></a>
+							</li>
+							<li class="separator">
+								<i class="fa fa-angle-double-right"></i>
+							</li>
+							<li class="nav-item">
+								创建模板
+							</li>
+							<li class="nav-item pl-3 pr-3">
+                                                            <{item=>$module,$backitem}>
+                                                        </li>
+						</ul>
+					</div>
+							<div class="card">
+								<div class="card-body">
+                                <form action="?m=ut-template&p=template_creat&do=save" method="post">
+                                    <div class="form-group form-group-default">
+										<label>所属模块</label>
+										<select class="form-control" name="module">
+										<{loop=>$modules $rows}>
+											<option value="<{$rows->mid}>"><{$rows->mid}>:<{$rows->modname}></option>
+										<{/loop}>
+										</select>
+									</div>
+								    <div class="form-check">
+										<label>所属端</label><br>
+										<label class="form-radio-label">
+											<input class="form-radio-input" type="radio" name="skin" value="front" checked="">
+											<span class="form-radio-sign">front:前端</span>
+										</label>
+										<label class="form-radio-label ml-3">
+											<input class="form-radio-input" type="radio" name="skin" value="admin">
+											<span class="form-radio-sign">admin:后端</span>
+										</label>
+									</div>
+									<div class="form-group form-group-default">
+										<label>页名</label>
+										<input id="Name" type="text" class="form-control" name="page" value=".cms">
+									</div>
+									<div class="form-group form-group-default">
+									<label>详细代码</label>
+                                        <textarea class="form-control" name="content" rows="10"></textarea>
+									</div>
+								    <div class="mt-2">
+									<button class="btn btn-success">创建模板</button>
+								    </div>
+                                </form>
+								</div>
+							</div>
+					</div>
+				</div>
+			</div>
+		</div>
+<{include "$pubtemp/foot.cms"}>

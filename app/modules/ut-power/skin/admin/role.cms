@@ -1,0 +1,62 @@
+<{include "$pubtemp/head.cms"}>
+        <div class="main-panel">
+			<div class="content">
+				<div class="page-inner">
+					<div class="page-header">
+						<h4 class="page-title"><{$title}></h4>
+						<ul class="breadcrumbs">
+							<li class="nav-home">
+								<a href="./">
+									<i class="fa fa-home"></i>
+								</a>
+							</li>
+							<li class="separator">
+								<i class="fa fa-angle-double-right"></i>
+							</li>
+							<li class="nav-item">
+								角色
+							</li>
+							<li class="nav-item pl-3 pr-3">
+                                                            <{item=>$module,$backitem}>
+                                                        </li>
+						</ul>
+					</div>
+							<div class="card">
+                                <div class="card-header">
+									<div class="card-title">
+                                    <a class="btn btn-warning" href="?m=ut-power&p=rolex">创建角色</a>
+                                    </div>
+								</div>
+								<div class="card-body">
+								<div id="ut-auto">
+                                    <table class="table table-hover">
+										<thead>
+											<tr>
+												<th scope="col">角色ID</th>
+												<th scope="col">角色名称</th>
+												<th scope="col" width="40%">模块权限</th>
+												<th scope="col">操作</th>
+											</tr>
+										</thead>
+										<tbody>
+										    <{loop=>$datalist $rows}>
+											<tr>
+												<td><{$rows->id}></td>
+												<td><{$rows->role}></td>
+												<td><{$rows->module}></td>
+												<td>
+												<a href="?m=ut-power&p=rolex&id=<{$rows->id}>">编辑</a> | 
+												<a href="?m=ut-power&p=rolex&id=<{$rows->id}>&do=del">删除</a>
+												</td>
+											</tr>
+											<{/loop}>
+										</tbody>
+									</table>
+								</div>
+								</div>
+							</div>
+					</div>
+				</div>
+			</div>
+		</div>
+<{include "$pubtemp/foot.cms"}>

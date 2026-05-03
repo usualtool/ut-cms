@@ -1,0 +1,109 @@
+<{include "$pubtemp/head.cms"}>
+        <div class="main-panel">
+			<div class="content">
+				<div class="page-inner">
+					<div class="page-header">
+						<h4 class="page-title"><{$title}></h4>
+						<ul class="breadcrumbs">
+							<li class="nav-home">
+								<a href="./">
+									<i class="fa fa-home"></i>
+								</a>
+							</li>
+							<li class="separator">
+								<i class="fa fa-angle-double-right"></i>
+							</li>
+							<li class="nav-item">
+								模板管理器
+							</li>
+							<li class="nav-item pl-3 pr-3">
+                                <{item=>$module,$backitem}>
+                            </li>
+						</ul>
+					</div>
+							<div class="card">
+								<div class="card-body">
+								模板引擎方式：
+								<a href="?m=ut-template&p=index&do=module">模块化模板</a> | 
+								<a href="?m=ut-template&p=index&do=template">整站模板工程</a>
+								</div>
+							</div>
+					<div class="row">
+					<{if empty($do) || $do=="module"}>
+						<div class="col-md-6">
+							<div class="card">
+								<div class="card-header">
+									<div class="card-title">前端模板</div>
+								</div>
+								<div class="card-body">
+									<ol class="activity-feed">
+                                    <{loop=>$front $key->$val}> 
+                                    <li class="feed-item feed-item-warning">
+                                        <time class="date"><{$key}></time>
+                                        <{loop=>$val $v}>
+                                            <span class="text"><a href="?m=ut-template&p=template_view&d=<{php=>echo return=>$key."|skin|front|".str_replace(".cms","_cms",return=>$v);}>"><{$v}></a></span>
+                                        <{/loop}>
+                                    </li>
+                                    <{/loop}>
+									</ol>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="card">
+								<div class="card-header">
+									<div class="card-title">后端模板</div>
+								</div>
+								<div class="card-body">
+									<ol class="activity-feed">
+                                    <{loop=>$admin $key->$val}> 
+                                    <li class="feed-item feed-item-warning">
+                                        <time class="date"><{$key}></time>
+                                        <{loop=>$val $v}>
+                                            <span class="text"><a href="?m=ut-template&p=template_view&d=<{php=>echo return=>$key."|skin|admin|".str_replace(".cms","_cms",return=>$v);}>"><{$v}></a></span>
+                                        <{/loop}>
+                                    </li>
+                                    <{/loop}>
+									</ol>
+								</div>
+							</div>
+						</div>
+					<{else if $do=="template"}>
+						<div class="col-md-12">
+							<div class="card">
+								<div class="card-header">
+									<div class="card-title">模板工程列表</div>
+								</div>
+								<div class="card-body">
+									<ol class="activity-feed">
+                                    <{loop=>$tempdata $rows}> 
+                                    <li class="feed-item feed-item-warning">
+                                        <time class="date"></time>
+                                        <span class="text">
+										/app/template/<{$rows->tid}><br/>
+										<{$rows->title}>(<{$rows->lang}>)<br/>
+										<font class="mr-2">
+										<{if $rows["makefront"]==0}>
+										<a href="?m=ut-template&p=index&do=front&tempid=<{$rows->tid}>">设为前端</a>
+										<{else}>
+										<a href="?m=ut-template&p=index&do=unfront&tempid=<{$rows->tid}>" style="color:red;">取消前端</a>
+										<{/if}></font> | 
+										<font class="mr-2">
+										<{if $rows["makeadmin"]==0}>
+										<a href="?m=ut-template&p=index&do=admin&tempid=<{$rows->tid}>">设为后端</a>
+										<{else}>
+										<a href="?m=ut-template&p=index&do=unadmin&tempid=<{$rows->tid}>" style="color:red;">取消后端</a>
+										<{/if}></font>
+										</span>
+                                    </li>
+                                    <{/loop}>
+									</ol>
+								</div>
+							</div>
+						</div>
+					<{/if}>
+					</div>
+				</div>
+			</div>
+		</div>
+<{include "$pubtemp/foot.cms"}>

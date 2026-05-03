@@ -1,0 +1,38 @@
+<{include "head.cms"}>
+    <div class="card">
+        <div class="card-header">
+            <h5>授权记录</h5>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table">
+                <thead>
+                  <tr>
+					<th>TOKEN</th>
+					<th>应用ID</th>
+					<th>过期时间</th>
+                    <th>授权权限</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <{if empty($data)}>
+                  <tr><td>无数据</td></tr>
+                  <{else}>
+                  <{loop=>$data $rows}>
+                  <tr>
+					<td><{$rows->access_token}></td>
+					<td><{$rows->client_id}></td>
+					<td><{$rows->expires}></td>
+					<td><{$rows->scope}></td>
+                  </tr>
+                  <{/loop}>
+                  <{/if}>
+                </tbody>
+            </table> 
+          </div>
+            <div>
+                <{page=>total,curpage,listnum,pagelink}>
+            </div>
+        </div>
+    </div>
+<{include "foot.cms"}>

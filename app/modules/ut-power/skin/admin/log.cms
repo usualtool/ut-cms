@@ -1,0 +1,55 @@
+<{include "$pubtemp/head.cms"}> 
+        <div class="main-panel">
+			<div class="content">
+				<div class="page-inner">
+					<div class="page-header">
+						<h4 class="page-title"><{$title}></h4>
+						<ul class="breadcrumbs">
+							<li class="nav-home">
+								<a href="./">
+									<i class="fa fa-home"></i>
+								</a>
+							</li>
+							<li class="separator">
+								<i class="fa fa-angle-double-right"></i>
+							</li>
+							<li class="nav-item">
+								登录日志
+							</li>
+							<li class="nav-item pl-3 pr-3">
+                                                            <{item=>$module,$backitem}>
+                                                        </li>
+						</ul>
+					</div>
+							<div class="card">
+								<div class="card-body">
+                                    <div class="table-responsive" id="ut-auto">
+                                    <table class="display table table-striped table-hover" id="ut-table">
+										<thead>
+											<tr>
+												<th>ID</th>
+												<th>管理者</th>
+												<th>IP地址</th>
+												<th>登录时间</th>
+											</tr>
+										</thead>
+										<tbody>
+										    <{loop=>$datalist $rows}>
+											<tr>
+												<td><{$rows->id}></td>
+												<td><{$rows->username}></td>
+												<td><{$rows->ip}></td>
+												<td><{$rows->logintime}></td>
+											</tr>
+											<{/loop}>
+										</tbody>
+									</table>
+									</div>
+                                    <{page=>total,curpage,listnum,pagelink}>
+								</div>
+							</div>
+					</div>
+				</div>
+			</div>
+		</div>
+<{include "$pubtemp/foot.cms"}>

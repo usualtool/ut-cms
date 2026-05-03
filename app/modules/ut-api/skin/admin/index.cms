@@ -1,0 +1,159 @@
+<{include "$pubtemp/head.cms"}>
+        <div class="main-panel">
+			<div class="content">
+				<div class="page-inner">
+					<div class="page-header">
+						<h4 class="page-title"><{$title}></h4>
+						<ul class="breadcrumbs">
+							<li class="nav-home">
+								<a href="./">
+									<i class="fa fa-home"></i>
+								</a>
+							</li>
+							<li class="separator">
+								<i class="fa fa-angle-double-right"></i>
+							</li>
+							<li class="nav-item">
+								<a href="?m=<{$module}>"><{$title}></a>
+							</li>
+							<li class="separator">
+								<i class="fa fa-angle-double-right"></i>
+							</li>
+							<li class="nav-item">
+								接口配置
+							</li>
+							<li class="nav-item pl-3 pr-3">
+                                <{item=>$module,$backitem}>
+                            </li>
+						</ul>
+					</div>
+					    <div class="row">
+					        <div class="col-md-7">
+							<div class="card">
+								<div class="card-body">
+								<div class="border-bottom pb-2">
+								<{loop=>$data $row}>
+                                <form name="form1" action="?m=<{$module}>&do=config" method="post">
+                                <input type="hidden" name="id" value="<{$row->id}>">
+                                  <div class="form-group">
+                                  <label for="email"><b>应用ApiKey</b></label>
+                                  <{$apikey}>
+                                  </div>								
+                                  <div class="form-group row">
+                                  <div class="col-md-6">
+                                  <label>请求白名单（主机域名如：abc.abc.com）</label>
+                                  <textarea class="form-control" rows="3" name="white"><{$row->white}></textarea>
+                                  </div>
+                                  <div class="col-md-6">
+                                  <label>允许请求表（逗号分割）</label>
+                                  <textarea class="form-control" rows="3" name="opentable"><{$row->opentable}></textarea>
+                                  </div>
+                                  </div>
+                                  <div class="form-group row">
+                                  <div class="col-md-6">
+                                  <label>权限验证表</label>
+                                  <input type="text" class="form-control" name="authtable" value="<{$row->authtable}>">
+                                  </div>
+                                  <div class="col-md-6">
+                                  <label>验证查询条件</label>
+                                  <input type="text" class="form-control" name="authquery" value="<{inc=>DeSqlCheck($row["authquery"])}>">
+                                  </div>
+                                  </div>
+                                  <div class="form-group">
+                                  <button type="submit" class="btn btn-primary">保存</button>
+                                  </div>
+                                </form>
+                                <{/loop}>
+								</div>
+                                <a id="handle">
+									<div class="form-group">
+										<label for="largeInput"><strong>操作数据</strong></label><br>
+										<span style="color:blue;">接口地址：/?m=ut-api&p=data-handle</span> <a class="ml-2 ut-button" href="?m=<{$module}>&p=test&do=handle">调试</a><br/>
+                                        该接口默认不开放。<br/>
+                                        该接口建议在封闭状态下使用，并需要传递headers参数secret进行验证。<br>
+                                        验证权限的数据表（验证表）及验证条件在数据接口后端设置。<br>
+                                        URL:?m=ut-api&p=data-handle<br>
+                                        headers携带time<br/>
+                                        headers携带token<br/>
+                                        headers携带secret（secret即验证条件参数值，多个参数值用半角逗号拼接）<br/>
+                                        <span style="color:blue">POST参数:</span><br>
+                                        action 必填，add增/mon改/del/删<br>
+                                        table 必填，操作数据表<br>
+                                        where 选填，条件如：id=1<br>
+                                        其他操作数据表的参数，与操作数据表字段对应即可。可以使用：application/x-www-form-urlencoded
+                                        
+									</div>
+                                </a>
+                                <a id="query">
+									<div class="form-group">
+										<label for="largeInput"><strong>查询数据</strong></label><br>
+										<span style="color:blue;">接口地址：/?m=ut-api&p=data-query</span> <a class="ml-2 ut-button" href="?m=<{$module}>&p=test&do=query">调试</a><br/>
+                                        URL:?m=ut-api&p=data-query<br>
+                                        headers携带time<br/>
+                                        headers携带token<br/>
+                                        <span style="color:blue">POST参数:</span><br>
+                                        table 必填，数据表<br>
+                                        field 选填，查询字段<br>
+                                        where 选填，查询条件格式：id=1<br>
+                                        order 选填，排序方式格式id desc或id asc<br>
+                                        limit 选填，获取数量开始截止数格式：0,10，<br>
+                                        lang 选填，语言编码，值为zh,en等时指定<br/>
+									</div>
+                                </a>
+                                <a id="search">
+									<div class="form-group">
+										<label for="largeInput"><strong>搜索数据</strong></label><br>
+										<span style="color:blue;">接口地址：/?m=ut-api&p=data-search</span> <a class="ml-2 ut-button" href="?m=<{$module}>&p=test&do=search">调试</a><br/>
+                                        URL:?m=ut-api&p=data-search<br>
+                                        headers携带time<br/>
+                                        headers携带token<br/>
+                                        GET参数:<br>
+                                        keyword 必填，关键词。
+									</div>
+                                </a>
+                                <a id="lang">
+									<div class="form-group">
+										<label for="largeInput"><strong>语言解析</strong></label><br>
+										<span style="color:blue;">接口地址：/?m=ut-api&p=data-lang</span> <a class="ml-2 ut-button" href="?m=<{$module}>&p=test&do=lang">调试</a><br/>
+                                        URL:?m=ut-api&p=data-lang<br>
+                                        headers携带time<br/>
+                                        headers携带token<br/>
+                                        GET参数:<br>
+                                        word 必填，语言参数。多个参数使用半角逗号分割<br>
+                                        module 选填，模块标志名称，填写该项将直接解析该模块下的语言包<br>
+                                        lang 选填，语言编码，值为zh,en等时指定，值为空时默认语言
+									</div>
+                                </a>
+                                <a id="auth">
+									<div class="form-group">
+										<label for="largeInput"><strong>授权解析（小程序）</strong></label><br>
+										<span style="color:blue;">接口地址：/?m=ut-api&p=data-auth</span> <a class="ml-2 ut-button" href="?m=<{$module}>&p=test&do=auth">调试</a><br/>
+                                        URL:?m=ut-api&p=data-auth<br>
+                                        headers携带time<br/>
+                                        headers携带token<br/>
+                                        GET参数:<br>
+                                        action 必填，wechat（获取微信用户基础信息）、wechat-crypt（获取微信用户敏感信息，如手机号）、alipay（获取支付宝用户基础信息）<br>
+                                        code 必填，第三方code码，当type为wechat、alipay时必填
+									</div>
+                                </a>
+								</div>
+							</div>
+							</div>
+							<div class="col-md-5">
+							<div class="card" style="margin-bottom:15px;">
+								<div class="card-body">
+								<p class="border-bottom">接口导航</p>
+                                <p><a href="?m=<{$module}>#handle">操作数据:data-handle</a></p>
+                                <p><a href="?m=<{$module}>#query">查询数据:data-query</a></p>
+                                <p><a href="?m=<{$module}>#search">搜索数据:data-search</a></p>
+                                <p><a href="?m=<{$module}>#lang">语言解析:data-lang</a></p>
+                                <p><a href="?m=<{$module}>#auth">授权解析(小程序):data-auth</a></p>
+								</div>
+							</div>
+							</div>
+						</div>	
+					</div>
+				</div>
+			</div>
+		</div>
+<{include "$pubtemp/foot.cms"}>

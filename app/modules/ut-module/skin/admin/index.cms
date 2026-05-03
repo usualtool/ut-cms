@@ -1,0 +1,72 @@
+<{include "$pubtemp/head.cms"}>
+        <div class="main-panel">
+			<div class="content">
+				<div class="page-inner">
+					<div class="page-header">
+						<h4 class="page-title"><{$title}></h4>
+						<ul class="breadcrumbs">
+							<li class="nav-home">
+								<a href="./">
+									<i class="fa fa-home"></i>
+								</a>
+							</li>
+							<li class="separator">
+								<i class="fa fa-angle-double-right"></i>
+							</li>
+							<li class="nav-item">
+								管理模块
+							</li>
+							<li class="nav-item pl-3 pr-3">
+                                <{item=>$module,$backitem}>
+                            </li>
+						</ul>
+					</div>
+							<div class="card">
+							    <div class="card-header">
+									<h4 class="card-title">已安装模块</h4>
+								</div>
+								<div class="card-body">
+                                <div class="row">
+                                    <{loop=>$module_ $rows}>
+                                        <div class="col-sm-6 col-md-3">
+                                            <div class="card card-stats card-round">
+								            <div class="card-body">
+									            <div class="row align-items-center">
+										            <div class="col-icon">
+											            <div class="icon-big text-center <{if $rows["bid"]==3}>icon-danger<{else}>icon-primary<{/if}> bubble-shadow-small" style="font-size:12px;color:white;">
+												            <{$rows->mid}>											                
+														</div>
+										            </div>
+										        <div class="col col-stats ml-3 ml-sm-0">
+											        <div class="numbers">
+												        <h5 class="card-title" style="font-size:16px;font-weight:bold;"><{$rows->modname}></h5>
+														<p class="card-category">
+                                                        <{if $rows["bid"]==1}>
+                                                            内容模块
+                                                        <{elseif $rows["bid"]==2}>
+                                                            交互模块
+                                                        <{elseif $rows["bid"]==3}>
+                                                            底层模块
+                                                        <{/if}>
+                                                        </p>
+														<p class="card-category">
+														<a href="?m=<{$rows->mid}>&p=<{$rows->modurl}>">使用</a> 
+                                                        <{if $rows["bid"]!=3}>| 
+                                                        <a href="?m=ut-module&do=uninstall&mid=<{$rows->mid}>">卸载</a>
+                                                        <{/if}>
+														</p>
+											        </div>
+										        </div>
+									            </div>
+								                </div>
+							                </div>
+						                </div>
+                                    <{/loop}>
+                                </div>
+								</div>
+							</div>
+					</div>
+				</div>
+			</div>
+		</div>
+<{include "$pubtemp/foot.cms"}>		

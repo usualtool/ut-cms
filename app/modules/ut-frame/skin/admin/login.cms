@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<title>UT Develop</title>
+	<meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport' />
+	<link rel="stylesheet" href="<{$appurl}>/assets/css/bootstrap.min.css">
+	<link rel="stylesheet" href="<{$appurl}>/assets/css/buttons.min.css"/>
+	<link rel="stylesheet" href="<{$appurl}>/assets/css/fontawesome.min.css">
+	<link rel="stylesheet" href="<{$appurl}>/assets/css/style.css">
+        <script src="<{$appurl}>/assets/js/jquery.min.js"></script>
+        <script src="<{$appurl}>/assets/js/popper.min.js"></script>
+        <script src="<{$appurl}>/assets/js/bootstrap.min.js"></script>
+</head>
+<body class="login">
+    <form action="?p=login&do=login" method="post">
+	<div class="wrapper wrapper-login">
+		<div class="container container-login animated fadeIn">
+			<h3 class="text-center">UT可视化管理</h3>
+			<div class="login-form">
+				<div class="form-group">
+					<label for="username" class="placeholder"><b>账户</b></label>
+					<input id="username" name="username" type="text" class="form-control">
+				</div>
+				<div class="form-group">
+					<label for="password" class="placeholder"><b>密码</b></label>
+					<div class="position-relative">
+						<input id="password" name="password" type="password" class="form-control">
+						<div class="show-password">
+							<i class="flaticon-interface"></i>
+						</div>
+					</div>
+				</div>
+				<div class="form-group form-horizontal">
+					<label for="code" class="control-label"><img onclick='this.src=this.src+"&"+Math.random()' src="?p=captcha"></label>
+					<input id="code" name="code" type="text" class="form-control">
+				</div>
+				<div class="form-group">
+					<div class="position-relative">
+						<button class="btn btn-primary col-md-5 mt-3 mt-sm-0 fw-bold">登 录</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</form>
+	<script src="<{$appurl}>/assets/js/plugin/jquery-ui/jquery.ui.min.js"></script>
+	<script src="<{$appurl}>/assets/js/jquery.ready.js"></script>
+</body>
+</html>

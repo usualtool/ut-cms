@@ -1,0 +1,81 @@
+<{include "$pubtemp/head.cms"}> 
+        <div class="main-panel">
+			<div class="content">
+				<div class="page-inner">
+					<div class="page-header">
+						<h4 class="page-title"><{$title}></h4>
+						<ul class="breadcrumbs">
+							<li class="nav-home">
+								<a href="./">
+									<i class="fa fa-home"></i>
+								</a>
+							</li>
+							<li class="separator">
+								<i class="fa fa-angle-double-right"></i>
+							</li>
+							<li class="nav-item">
+								<a href="?m=ut-power&p=role">角色</a>
+							</li>
+							<li class="separator">
+								<i class="fa fa-angle-double-right"></i>
+							</li>
+							<li class="nav-item">
+								创建/编辑角色
+							</li>
+							<li class="nav-item pl-3 pr-3">
+                                                            <{item=>$module,$backitem}>
+                                                        </li>
+						</ul>
+					</div>
+							<div class="card">
+								<div class="card-body">
+                                <{if empty($id)}>
+                                <form action="?m=ut-power&p=rolex&do=add" method="post" name="form">
+									<div class="form-group">
+										<label for="disableinput">角色名称</label>
+										<input type="text" class="form-control" name="role">
+									</div>
+									<div class="form-check">
+										<label>模块权限</label><br>
+                                        <{loop=>$module $row}>
+										<label class="form-check-label">
+											<input class="form-check-input" type="checkbox" name="module[]" value="<{$row->mid}>">
+											<span class="form-check-sign"><{$row->modname}></span>
+										</label>
+                                        <{/loop}>
+									</div>
+								</div>
+                                <div class="card-action">
+									<button class="btn btn-info">创建</button>
+								</div>
+                                </form>
+                                <{else}>
+                                <form action="?m=ut-power&p=rolex&do=mon" method="post" name="form">
+                                <{loop=>$data $rows}>
+                                <input type="hidden" name="id" value="<{$rows->id}>">
+									<div class="form-group">
+										<label for="disableinput">角色名称</label>
+										<input type="text" class="form-control" name="role" value="<{$rows->role}>">
+									</div>
+									<div class="form-check">
+										<label>模块权限</label><br>
+                                        <{loop=>$module $row}>
+										<label class="form-check-label">
+											<input class="form-check-input" type="checkbox" name="module[]" value="<{$row->mid}>" <{if strpos($rows["module"],$row["mid"])!==false}>checked<{/if}>>
+											<span class="form-check-sign"><{$row->modname}></span>
+										</label>
+                                        <{/loop}>
+									</div>
+								</div>
+                                <div class="card-action">
+									<button class="btn btn-info">编辑</button>
+								</div>
+                                <{/loop}>
+                                </form>
+                                <{/if}>
+							</div>
+					</div>
+				</div>
+			</div>
+		</div>
+<{include "$pubtemp/foot.cms"}>

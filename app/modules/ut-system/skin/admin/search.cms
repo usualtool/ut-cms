@@ -1,0 +1,87 @@
+<{include "$pubtemp/head.cms"}>
+        <div class="main-panel">
+			<div class="content">
+				<div class="page-inner">
+					<div class="page-header">
+						<h4 class="page-title"><{$title}></h4>
+						<ul class="breadcrumbs">
+							<li class="nav-home">
+								<a href="./">
+									<i class="fa fa-home"></i>
+								</a>
+							</li>
+							<li class="separator">
+								<i class="fa fa-angle-double-right"></i>
+							</li>
+							<li class="nav-item">
+								<a href="?m=<{$module}>"><{$title}></a>
+							</li>
+							<li class="separator">
+								<i class="fa fa-angle-double-right"></i>
+							</li>
+							<li class="nav-item">
+								搜索
+							</li>
+						</ul>
+					</div>
+					<div class="card">
+						<div class="card-body">   
+       <form action="?m=ut-system&p=search&do=update" method="post" name="form">  
+            <div class="form-group">
+				<label for="largeInput"><strong>全库搜索设置说明</strong></label><br>
+				  表名即加入搜索的表<br>
+        		  字段即需要查询的字段（此处不写id,id为查询默认字段，字段以逗号分割）<br>
+        		  条件即查询条件（固定条件样式：字段 like [keyword]）<br>
+        		  路径即详情访问路径，如xxx.com/?m=goods&p=pro&id=1，填写m=goods&p=pro（即包含模块名及页面名）<br>
+                  示例：<br>
+                  <code>
+                  表名：cms_goods<br>
+                  字段：title,content<br>
+                  条件：title like [keyword] or content like [keyword]<br>
+                  路径：m=goods&p=pro<br>
+                  </code>
+                  前端：<br>
+                  <code>
+                  use library\UsualToolData\UTData;<br>
+                  print_r(UTData::SearchData("关键字"));<br>
+                  </code>
+			</div>
+            <div class="form-group">
+				<label for="largeInput"><strong>搜索设置</strong></label><br>
+        <table width="100%" border="0" cellpadding="0" cellspacing="0">
+          <tr>
+          <td>
+          <{loop=>$data $rows}>
+            <p id="t<{$rows->id}>">
+		      <input type="hidden" name="sid[]" value="<{$rows->id}>" />
+              <a href="?m=<{$module}>&p=search&do=del&id=<{$rows->id}>")>删除</a> 表名: <input type="text" name="sdb[]" class="inpMain" style="width:15%;" value="<{$rows->dbs}>"> - 
+              字段: <input type="text" name="sfield[]" class="inpMain" style="width:15%;" value="<{$rows->fields}>"> - 
+              条件: <input type="text" name="swhere[]" class="inpMain" style="width:15%;" value="<{$rows->wheres}>"> - 
+              路径: <input type="text" name="spage[]" class="inpMain" style="width:15%;" value="<{$rows->pages}>"><br>
+            </p>
+          <{/loop}>
+          <span id="thesearch"></span>
+          </td>
+         </tr>
+         <tr><td><input type="button" value="增加搜索设置" class="ut-button" onclick="addtablev('thesearch')" /></td></tr>
+        </table>
+        </div>
+								</div>
+								<div class="card-action">
+									<button class="btn btn-info">保存设置</button>
+								</div>
+							</div>
+							</form>
+					</div>
+				</div>
+			</div>
+		</div>
+<{include "$pubtemp/foot.cms"}>
+	<script type="text/javascript">
+	var k=9999;	
+        function addtablev(table){  
+            var table;
+            k++;
+            document.getElementById(""+table+"").innerHTML+="<p id='t"+k+"'><a onclick=delitem('t"+k+"')><u>删除</u></a> <input type='hidden' name='sid[]' value='x'>表名: <input type='text' name='sdb[]' class='inpMain' style='width:15%;'> - 字段: <input type='text' name='sfield[]' class='inpMain' style='width:15%;'> - 条件: <input type='text' name='swhere[]' class='inpMain' style='width:15%;'> - 路径: <input type='text' name='spage[]' class='inpMain' style='width:15%;'></p>";
+        }
+	</script>

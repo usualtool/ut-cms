@@ -1,0 +1,38 @@
+<{include "$pubtemp/head.cms"}>
+<{loop=>$plugin $row}>
+        <div class="main-panel">
+			<div class="content">
+				<div class="page-inner">
+					<div class="page-header">
+						<h4 class="page-title"><{$title}></h4>
+						<ul class="breadcrumbs">
+							<li class="nav-home">
+								<a href="./">
+									<i class="fa fa-home"></i>
+								</a>
+							</li>
+							<li class="separator">
+								<i class="fa fa-angle-double-right"></i>
+							</li>
+							<li class="nav-item">
+								<{$row->title}>
+							</li>
+							<li class="nav-item pl-3 pr-3">
+                                                            <{item=>$module,$backitem}>
+                                                        </li>
+						</ul>
+					</div>
+							<div class="card">
+							    <div class="card-header">
+									<h4 class="card-title"><{$row->title}>后端视窗</h4>
+								</div>
+								<div class="card-body">
+                                   <{eval=>$plugin_code}>
+								</div>
+							</div>
+					</div>
+				</div>
+			</div>
+		</div>
+<{/loop}>
+<{include "$pubtemp/foot.cms"}>		

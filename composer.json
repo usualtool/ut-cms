@@ -1,0 +1,12 @@
+{
+    "name":             "usualtool/develop",
+    "description":      "UsualTool Framework visualization development kit.",
+    "keywords":         ["UTDev", "UsualTool Framework", "UT Framework"],
+    "homepage":         "https://github.com/usualtool",
+    "license": "Apache-2.0",
+    "authors": [{
+        "name":         "Huang Hui",
+        "email":        "usualtool@qq.com"
+    }],
+    "require": {}
+}
