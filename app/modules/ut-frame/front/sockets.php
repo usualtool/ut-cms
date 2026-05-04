@@ -1,5 +1,4 @@
 <?php
-require dirname(dirname(dirname(dirname(__FILE__)))).'/'.'config.php';
 use library\UsualToolInc\UTInc;
 use library\UsualToolSockets\UTSockets;
 $config=UTInc::GetConfig();
