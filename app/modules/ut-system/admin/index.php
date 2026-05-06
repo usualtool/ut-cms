@@ -1,10 +1,33 @@
 <?php
 use library\UsualToolInc\UTInc;
+$parsedConfig = [];
+$currentSection = 'default';
+$lines = explode("\n", file_get_contents(UTF_ROOT."/.ut.config"));
+foreach ($lines as $line) {
+    $line = trim($line);
+    if (empty($line)) continue;
+    if (preg_match('/\/\*(.+)\*\//', $line, $matches)) {
+        $currentSection = trim($matches[1]);
+        if (!isset($parsedConfig[$currentSection])) {
+            $parsedConfig[$currentSection] = [];
+        }
+        continue;
+    }
+    if (strpos($line, '=') !== false) {
+        list($key, $value) = explode('=', $line, 2);
+        $key = trim($key);
+        $value = trim($value);
+        if (!isset($parsedConfig[$currentSection])) {
+            $parsedConfig[$currentSection] = [];
+        }
+        $parsedConfig[$currentSection][$key] = $value;
+    }
+}
 $do=$_GET["do"];
 /**
  * 加载全局配置信息
  */
-$app->Runin("config",$config);
+$app->Runin("config",$parsedConfig);
 /**
  * 载入模板
  */

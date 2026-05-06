@@ -14,37 +14,38 @@
 								<i class="fa fa-angle-double-right"></i>
 							</li>
 							<li class="nav-item">
-								配置
+								全局配置
 							</li>
 							<li class="nav-item pl-3 pr-3">
-                                                            <{item=>$module,$backitem}>
-                                                        </li>
+                                <{item=>$module,$backitem}>
+                            </li>
 						</ul>
 					</div>
-							<form action="?m=ut-system&do=setup" method="post" name="form">
-							<div class="card">
-							    <div class="card-header">
-									<div class="card-title">具体说明参考.ut.config配置文件</div>
-								</div>
-								<div class="card-body">
-								<div class="row">
-								<{loop=>$config $key->$val}>
-								<div class="col-md-4">
-									<div class="form-group">
-										<label for="largeInput"><{$key}></label>
-										<input type="text" name="<{$key}>" value="<{$val}>" class="form-control form-control" id="defaultInput">
-									</div>
-								</div>
-								<{/loop}>
-								</div>
-								</div>
-								<div class="card-action">
-									<button class="btn btn-info">保存设置</button>
-								</div>
-							</div>
-							</form>
+					<form action="?m=ut-system&do=setup" method="post" name="form">
+					<div class="card">
+						<div class="card-body">
+						<{foreach=>$config as $groupName->$groupData}>
+					        <div class="card-header">
+							    <div class="card-title text-center"><{$groupName}></div>
+						    </div>
+    						<div class="row">
+     						    <{foreach=>$groupData as $key->$val}>
+      						        <div class="col-md-4">
+        						        <div class="form-group">
+             						        <label for="input_<{$key}>"><{$key}></label>
+               						        <input type="text" name="<{$key}>" value="<{$val}>" class="form-control" id="input_<{$key}>">
+               						    </div>
+          						    </div>
+       						    <{/foreach}>
+   						    </div>
+						<{/foreach}>
+						</div>
+						<div class="card-action">
+							<button class="btn btn-info">保存设置</button>
+						</div>
 					</div>
+					</form>
 				</div>
 			</div>
 		</div>
-<{include "$pubtemp/foot.cms"}>		
+<{include "$pubtemp/foot.cms"}>
