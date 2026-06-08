@@ -64,6 +64,9 @@
 							</a>
 						</li>
 						<li class="nav-item hidden-caret">
+						    <a class="nav-link" title="系统日志" href="?p=syslog"><i class="fas fa-location-arrow"></i></a>
+						</li>
+						<li class="nav-item hidden-caret">
 						    <a class="nav-link" title="在建项目" href="?p=task"><i class="fas fa-history"></i></a>
 						</li>
                         <li class="nav-item dropdown hidden-caret" style="margin-right:20px;">
@@ -241,8 +244,12 @@
 						<{if empty($rows["backitem"])}>		
 						<li class="nav-item <{php=>if($_COOKIE["Nav"]==return=>$rows->mid):echo"active";endif;}>">
 						<a href="?m=<{$rows->mid}>" onclick="clicknav('<{$rows->mid}>')">
-								<i class="fas fa-sort"></i>
-								<p><{$rows->modname}></p>
+                            <{if $rows["mid"]=="ut-cac"}>
+                                <i class="fas fa-chalkboard"></i>
+                            <{else}>
+                                <i class="fas fa-th-large"></i>
+                            <{/if}>
+                            <p><{$rows->modname}></p>
 						</a>
 						</li>
 						<{else}>	
@@ -258,6 +265,10 @@
 								<i class="fa fa-cogs"></i>
 								<{else if $rows["mid"]=="ut-data"}>
 								<i class="fa fa-database"></i>
+								<{else if $rows["mid"]=="ut-oauth"}>
+								<i class="fa fa-hands-helping"></i>
+								<{else if $rows["mid"]=="ut-api"}>
+								<i class="fa fa-code-branch"></i>
 								<{else if $rows["mid"]=="ut-power"}>
 								<i class="fas fa-user-secret"></i>
 								<{else}>

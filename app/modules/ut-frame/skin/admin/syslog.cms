@@ -1,0 +1,33 @@
+<{include "head.cms"}>
+		<div class="main-panel">
+			<div class="content">
+				<div class="page-inner">
+					<div class="row">
+						<div class="col-md-12">
+							<div class="card">
+								<div class="card-header">
+									<div class="card-title">
+                                        PHP错误日志
+									</div>
+								</div>
+								<div class="card-body">
+                                    <table class="table">
+                                        <tr class="bg-light">
+                                            <td width="20%"><b>日期</b></td>
+                                            <td><b>错误内容</b></td>
+                                        </tr>
+									    <{loop=>$log_error $rows}>
+										    <tr>
+                                                <td><{$rows->time}></td>
+                                                <td><{$rows->content}></td>
+                                            </tr>
+									    <{/loop}>
+                                    </table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+<{include "foot.cms"}>
