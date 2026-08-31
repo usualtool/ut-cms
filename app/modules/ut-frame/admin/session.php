@@ -9,8 +9,8 @@ if(isset($_SESSION['admin'])&&isset($_SESSION['admin_id'])&&!empty($_SESSION['ad
     $version=substr($frame_version,0,5);
     $version_time=substr($frame_version,-6);
     $app->Runin(
-        array("version","version_time","update","develop","lock","editor"),
-        array($version,$version_time,$config["UPDATEURL"],$config["DEVELOP_OPEN"],$config["LOCKSCREEN"],$config["EDITOR"])
+        array("version","version_time","update","develop","develop_open","lock","editor"),
+        array($version,$version_time,$config["UPDATEURL"],$config["DEVELOP"],$config["DEVELOP_OPEN"],$config["LOCKSCREEN"],$config["EDITOR"])
     );
     /**
      * 接收官方消息
