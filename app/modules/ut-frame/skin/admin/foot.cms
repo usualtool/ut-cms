@@ -44,6 +44,6 @@
         }
         </script>
     <{/if}>
-    <{php=>library\UsualToolInc\UTInc::Robot()}>
+    <{inc=>Robot()}>
 </body>
 </html>
