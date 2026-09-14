@@ -19,6 +19,9 @@ if($do=="login"){
             if($data["querynum"]==1){
                 $rows=$data["querydata"][0];
                 if(password_verify($password,$rows['password'])){
+                    if($rows["state"]==1):
+                        UTInc::GoUrl("-1","账户状态异常!");
+                    endif;
                     UTData::InsertData("cms_admin_log",array("username"=>$username,"ip"=>$ip,"logintime"=>date('Y-m-d H:i:s',time())));
                     $_SESSION['admin']=$rows['username'];
                     $_SESSION['admin_id']=$rows['id'];
