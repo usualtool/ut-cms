@@ -4,7 +4,7 @@ use library\UsualToolData\UTData;
 $do=$_GET["do"];
 if($do=="out"){
     unset($_SESSION['admin']);
-    unset($_SESSION['adminid']);
+    unset($_SESSION['admin_id']);
     setcookie("Nav","ut-frame");
     echo"<script>alert('登出UT Develop成功!');window.location.href='?p=login'</script>";
 }
@@ -18,8 +18,7 @@ if($do=="login"){
             $data=UTData::QueryData("cms_admin","","username='$username'","","");
             if($data["querynum"]==1){
                 $rows=$data["querydata"][0];
-                $shaupass=sha1($rows['salts'].$password);
-                if($shaupass==$rows['password']){
+                if(password_verify($password,$rows['password'])){
                     UTData::InsertData("cms_admin_log",array("username"=>$username,"ip"=>$ip,"logintime"=>date('Y-m-d H:i:s',time())));
                     $_SESSION['admin']=$rows['username'];
                     $_SESSION['admin_id']=$rows['id'];
@@ -28,18 +27,18 @@ if($do=="login"){
                     session_regenerate_id(TRUE);
                     setcookie("Nav","ut-frame");
                     setcookie("Lock",0);
-                    echo"<script>alert('登陆UT Develop成功!');window.location.href='?p=index'</script>";
+                    UTInc::GoUrl("?p=index","登陆UT Develop成功!");
                 }else{
-                    echo"<script>alert('账户或密码不匹配!');window.history.go(-1);</script>";
+                    UTInc::GoUrl("-1","账户或密码不匹配!");
                 }
             }else{
-                echo"<script>alert('账户不存在!');window.history.go(-1);</script>";
+                UTInc::GoUrl("-1","账户不存在!");
             }
         }else{
-        echo"<script>alert('账户或密码不能为空!');window.history.go(-1);</script>";
+            UTInc::GoUrl("-1","账户或密码不能为空!");
         }
     }else{
-    echo"<script>alert('验证码不正确!');window.history.go(-1);</script>";
+        UTInc::GoUrl("-1","验证码不正确!");
     }    
 }
 $app->Open("login.cms");
