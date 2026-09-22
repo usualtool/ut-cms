@@ -160,7 +160,7 @@ endif;
                     </form>
                 <?php
                     else:
-                        echo"<p>请将根目录权限临时设置为可写（755），并在此处 <a onclick='Refresh()' class='text-danger'>刷新页面</a></p>";
+                        echo"<p>请将/app、/log、/update、/open/assets权限设置为可写（755），并在此处 <a onclick='Refresh()' class='text-danger'>刷新页面</a></p>";
                     endif;
                 elseif($do=="sql"):?>
                     <div class="row">
