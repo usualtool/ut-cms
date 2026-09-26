@@ -1,14 +1,14 @@
 <?php
-use library\UsualToolInc\UTInc;
-use library\UsualToolData\UTData;
+use usualtool\Lib\Inc;
+use usualtool\Lib\Data;
 /**
  * 连接数据库
  */
-$db=UTData::GetDatabase();
+$db=Data::GetDatabase();
 /**
  * 传递参数过程
  */
-$do=UTInc::SqlCheck($_GET["do"]);
+$do=Inc::SqlCheck($_GET["do"]);
 /**
  * 封装备份数据方法
  */
@@ -29,11 +29,11 @@ function backup(){
     arsort($fileArr);
     $numberOfFiles = sizeOf($fileArr);
     for($i=0;$i<$numberOfFiles;$i++){  
-        $thisFile = UTInc::NewEach($fileArr);
+        $thisFile = Inc::NewEach($fileArr);
         $thisName = $thisFile[0];
         $data[]=array(
             "name"=>$thisName,
-            "size"=>UTInc::ForBytes(filesize($backupdir."/".$thisName."")),
+            "size"=>Inc::ForBytes(filesize($backupdir."/".$thisName."")),
             "time"=>date('Y-m-d H:i:s',filemtime($backupdir."/".$thisName.""))
         );
     }
@@ -50,9 +50,9 @@ $app->Open("backup.cms");
  * SQL查询
  */
 if($do=="sql-backup"){
-    $to_file_name = UTF_ROOT."/log/sql/".UTInc::GetRandomString(16).".sql";
+    $to_file_name = UTF_ROOT."/log/sql/".Inc::GetRandomString(16).".sql";
     if(!is_dir(UTF_ROOT."/log/sql/")){
-        UTInc::MakeDir(UTF_ROOT."/log/sql/");
+        Inc::MakeDir(UTF_ROOT."/log/sql/");
     }
     $tables = mysqli_query($db,"show tables");
     $tabList = array();
@@ -96,7 +96,7 @@ if($do=="sql-backup"){
         mysqli_free_result($res);
         file_put_contents($to_file_name,"\r\n",FILE_APPEND);
     }
-    UTInc::GoUrl("?m=ut-data&p=backup","SQL备份成功!");
+    Inc::GoUrl("?m=ut-data&p=backup","SQL备份成功!");
 }
 /**
  * SQL文件还原
@@ -108,18 +108,18 @@ if($do=="sql-rev"){
     foreach ($arr as $value){
         $db->query($value.';');
     }
-    UTInc::GoUrl("?m=ut-data&p=backup","SQL还原执行成功!");
+    Inc::GoUrl("?m=ut-data&p=backup","SQL还原执行成功!");
 }
 /**
  * SQL文件删除
  */
 if($do=="sql-del"){
-	$sql=str_replace("..","",$_GET['sql']);
+    $sql=str_replace("..","",$_GET['sql']);
     $sqlbak=UTF_ROOT."/log/sql/".$sql;
         if(file_exists($sqlbak)):
-			UTInc::UnlinkFile($sqlbak);
-			UTInc::GoUrl("?m=ut-data&p=backup","SQL文件删除成功!");
-		else:
-			UTInc::GoUrl("-1","SQL文件删除失败!");
-		endif;
+            Inc::UnlinkFile($sqlbak);
+            Inc::GoUrl("?m=ut-data&p=backup","SQL文件删除成功!");
+        else:
+            Inc::GoUrl("-1","SQL文件删除失败!");
+        endif;
 }

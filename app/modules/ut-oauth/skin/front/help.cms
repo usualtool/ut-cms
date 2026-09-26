@@ -8,7 +8,7 @@
         1.生成授权地址<br/>
         <div class="border p-3" style="height:200px;overflow-y:auto;font-size:0.8rem;">
         <code>
-        session_start();<br/>
+session_start();<br/>
 define('CLIENT_ID',     'testapp');<br/>
 define('CLIENT_SECRET', 'xxxxxxxxxxxxxx');<br/>
 define('REDIRECT_URI',  urlencode('http://locahost/?p=callback'));<br/>

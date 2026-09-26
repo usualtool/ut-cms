@@ -1,5 +1,5 @@
 <?php
-use library\UsualToolInc\UTInc;
-use library\UsualToolSockets\UTSockets;
-$config=UTInc::GetConfig();
-$socket=new UTSockets($config["SOCKETS_HOST"],$config["SOCKETS_PORT"]);
+use usualtool\Lib\Inc;
+use usualtool\Lib\Sockets;
+$config=Inc::GetConfig();
+$socket=new Sockets($config["SOCKETS_HOST"],$config["SOCKETS_PORT"]);

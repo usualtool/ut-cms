@@ -10,24 +10,24 @@
        *  |    Applicable to Apache 2.0 protocol.           |           
        * --------------------------------------------------------       
 */
-require_once dirname(dirname(dirname(__FILE__))).'/'.'autoload.php';
-use library\UsualToolInc\UTInc;
-use library\UsualToolMysql\UTMysql;
-use library\UsualToolCli\UTCli;
-if(UTInc::SearchFile(OPEN_ROOT."/install-dev/usualtool.lock")):
+require dirname(__DIR__).'/'.'config.php';
+use usualtool\Lib\Inc;
+use usualtool\Lib\Mysql;
+use usualtool\Lib\Cli;
+if(Inc::SearchFile(OPEN_ROOT."/install-dev/usualtool.lock")):
    header("location:../");
    exit();
 endif;
-$httpcode=UTInc::HttpCode($config["UTFURL"]);
-$sysinfo=UTInc::GetSystemInfo();
-$do=UTInc::SqlCheck($_GET["do"]);
+$httpcode=Inc::HttpCode($config["UTFURL"]);
+$sysinfo=Inc::GetSystemInfo();
+$do=Inc::SqlCheck($_GET["do"]);
 if($do=="db-save"):
    $info = file_get_contents(UTF_ROOT."/.ut.config"); 
    foreach($_POST as $k=>$v):
        $info = preg_replace("/{$k}=(.*)/","{$k}={$v}",$info); 
    endforeach;
    file_put_contents(UTF_ROOT."/.ut.config",$info);
-   UTInc::GoUrl("?do=sql","配置成功!");
+   Inc::GoUrl("?do=sql","配置成功!");
 endif;
 ?>
 <!DOCTYPE html>
@@ -96,7 +96,7 @@ endif;
                     </script>
                 <?php
                 elseif($do=="config"):
-                    if(UTInc::FileMode(UTF_ROOT)):
+                    if(Inc::FileMode(UTF_ROOT)):
                 ?>
                     <div class="row">
                         <div class="col-7">
@@ -173,7 +173,7 @@ endif;
                     </div>
                     <hr/>
                     <?php
-                    if(UTMysql::ModTable("cms_admin")):?>
+                    if(Mysql::ModTable("cms_admin")):?>
                         <p>已创建过数据，若要重新创建，请清除表后刷新本页。</p>
                         <p class="mb-3">不建议的方式：<a href="?do=sql&t=db-sql">强制性更新</a> 数据结构。</p>
                         <p><a class="btn btn-warning" href="?do=app">跳过，下一步</a></p>
@@ -186,7 +186,7 @@ endif;
                             $c=0;
                             for($i=0;$i<$total;$i++):
                                 $k=$i+1;
-                                $result=UTMysql::RunSql($arr[$i]);
+                                $result=Mysql::RunSql($arr[$i]);
                                 if($result):
                                     echo"<p class='fontsmall'>第".$k."条SQL执行成功!</p>";
                                 else:
@@ -194,7 +194,7 @@ endif;
                                     echo"<p class='fontsmall' style='color:red;'>第".$k."条SQL执行失败:".$arr[$i]."</p>";
                                 endif;
                                 if($k==$total && $c==0):
-                                    UTInc::GoUrl("?do=app","创建数据成功!");
+                                    Inc::GoUrl("?do=app","创建数据成功!");
                                 endif;
                             endfor;
                         endif;
@@ -220,25 +220,25 @@ endif;
                             for($i=0;$i<count($mods);$i++):
                                 $k=$i+1;
                                 echo"<br/>安装模块：".$mods[$i]."<br/>";
-                                UTCli::Install(array("usualtool","install","module",$mods[$i],"-1"));
+                                Cli::Install(array("usualtool","install","module",$mods[$i],"-1"));
                             endfor;
                             if($k==count($mods)):
                                 echo"<br/>安装模板：".$temp."<br/>";
-                                UTCli::Install(array("usualtool","install","template",$temp,"-1"));
+                                Cli::Install(array("usualtool","install","template",$temp,"-1"));
                                 if(is_dir(APP_ROOT."/template/".$temp)):
-                                    UTMysql::UpdateData("cms_template",array("makefront"=>1),"tid='$temp'");
+                                    Mysql::UpdateData("cms_template",array("makefront"=>1),"tid='$temp'");
                                     $info=preg_replace("/TEMPFRONT=(.*)/","TEMPFRONT={$temp}",file_get_contents(UTF_ROOT."/.ut.config"));
                                     file_put_contents(UTF_ROOT."/.ut.config",$info);
-                                    UTInc::GoUrl("?do=finish","快速搭建应用成功!");
+                                    Inc::GoUrl("?do=finish","快速搭建应用成功!");
                                 endif;
                             endif;
                         else:
-                            UTInc::GoUrl("-1","请选择模型!");
+                            Inc::GoUrl("-1","请选择模型!");
                         endif;
                     else:?>
                         <div class="row">
                         <?php
-                        $data=UTInc::Gettemplate(1);
+                        $data=Inc::Gettemplate(1);
                         foreach($data as $rows):
                             if(strpos($rows["isfree"],'公开使用')!==false):
                                 echo"<div class='col-md-3 mb-2'><img src='".$rows["picurl"]."' style='width:100%;' class='mb-2'><br/><input type='radio' name='app' value='".$rows["tid"]."__".$rows["module"]."' class='mr-1'>".$rows["title"]."</div>";
@@ -255,7 +255,7 @@ endif;
                     endif;
                 elseif($do=="finish"):
                     file_put_contents("./usualtool.lock","lock");
-                    UTInc::GoUrl("../dev/","后端初始账号密码为“admin”请及时修改!");
+                    Inc::GoUrl("../dev/","后端初始账号密码为“admin”请及时修改!");
                 endif;
                 ?>
                 </div>

@@ -1,15 +1,15 @@
 <?php
-use library\UsualToolInc\UTInc;
-use library\UsualToolData\UTData;
+use usualtool\Lib\Inc;
+use usualtool\Lib\Data;
 require'data-verify.php';
-$table=UTInc::SqlCheck($_POST["table"]);
-$field=empty($_POST["field"]) ? "" : UTInc::SqlCheck($_POST["field"]);
+$table=Inc::SqlCheck($_POST["table"]);
+$field=empty($_POST["field"]) ? "" : Inc::SqlCheck($_POST["field"]);
 $where=empty($_POST["where"]) ? "" : $_POST["where"];
-$limit=empty($_POST["limit"]) ? "" : UTInc::SqlCheck($_POST["limit"]);
-$order=empty($_POST["order"]) ? "" : UTInc::SqlCheck($_POST["order"]);
-$lg=empty($_POST["lang"]) ? 0 : UTInc::SqlCheck($_POST["lang"]);
-if(UTData::ModTable($table)):
-    $data=UTData::QueryData(
+$limit=empty($_POST["limit"]) ? "" : Inc::SqlCheck($_POST["limit"]);
+$order=empty($_POST["order"]) ? "" : Inc::SqlCheck($_POST["order"]);
+$lg=empty($_POST["lang"]) ? 0 : Inc::SqlCheck($_POST["lang"]);
+if(Data::ModTable($table)):
+    $data=Data::QueryData(
         $table,
         $field,
         $where,

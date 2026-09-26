@@ -1,7 +1,7 @@
 <?php
-use library\UsualToolInc\UTInc;
-use library\UsualToolData\UTData;
-$data=UTData::QueryData("cms_search_set","","","","")["querydata"];
+use usualtool\Lib\Inc;
+use usualtool\Lib\Data;
+$data=Data::QueryData("cms_search_set","","","","")["querydata"];
 $app->Runin("data",$data);
 $app->Open("search.cms");
 if($_GET["do"]=="update"){
@@ -17,27 +17,27 @@ if($_GET["do"]=="update"){
     $pagex=explode("-UT-",$pages);
     for($s=0;$s<=count($dbx);$s++){
         if($idx[$s]=="x"){
-            UTData::InsertData("cms_search_set",array(
+            Data::InsertData("cms_search_set",array(
                 "dbs"=>$dbx[$s],
                 "fields"=>$fieldx[$s],
                 "wheres"=>$wherex[$s],
                 "pages"=>$pagex[$s]));
         }else{
-            UTData::UpdateData("cms_search_set",array(
+            Data::UpdateData("cms_search_set",array(
                 "dbs"=>$dbx[$s],
                 "fields"=>$fieldx[$s],
                 "wheres"=>$wherex[$s],
                 "pages"=>$pagex[$s]),"id='".$idx[$s]."'");
         }
-        UTData::RunSql($sql);
+        Data::RunSql($sql);
     }
-    UTInc::GoUrl("?m=ut-system&p=search","设置成功!");
+    Inc::GoUrl("?m=ut-system&p=search","设置成功!");
 }
 if($_GET["do"]=="del"){
-    $id=UTInc::SqlCheck($_GET["id"]);
-    if(UTData::DelData("cms_search_set","id='$id'")){
-        UTInc::GoUrl("?m=ut-system&p=search","删除成功!");
+    $id=Inc::SqlCheck($_GET["id"]);
+    if(Data::DelData("cms_search_set","id='$id'")){
+        Inc::GoUrl("?m=ut-system&p=search","删除成功!");
     }else{
-        UTInc::GoUrl("?m=ut-system&p=search","删除失败!");
+        Inc::GoUrl("?m=ut-system&p=search","删除失败!");
     }
 }

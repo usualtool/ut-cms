@@ -8,7 +8,7 @@
     <link href="/assets/css/fontawesome.min.css" rel="stylesheet">
     <script src="/assets/js/jquery.min.js"></script>
     <script src="/assets/js/bootstrap.min.js"></script>
-  <style>
+    <style>
     .login-card {
       max-width: 400px;
       margin: 5rem auto;
@@ -20,41 +20,41 @@
       border-color: #007bff;
       box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
     }
-  </style>
+    </style>
 </head>
 <body class="bg-light">
-  <div class="container">
-    <div class="login-card bg-white">
-      <h3 class="text-center mb-4">OAuth2.0 登录</h3>
-      <form action="?m=ut-oauth&p=login&do=login" method="post">
-        <input type="hidden" name="gourl" value="<{$redirect}>">
-        <div class="form-group">
-          <label for="username">账户</label>
-          <input type="text" 
-                 class="form-control" 
-                 id="username" 
-                 name="username" 
-                 placeholder="请输入用户名或邮箱"
-                 required>
+    <div class="container">
+        <div class="login-card bg-white">
+            <h3 class="text-center mb-4">OAuth2.0 登录</h3>
+            <form action="?m=ut-oauth&p=login&do=login" method="post">
+            <input type="hidden" name="gourl" value="<{$redirect}>">
+                <div class="form-group">
+                  <label for="username">账户</label>
+                  <input type="text" 
+                         class="form-control" 
+                         id="username" 
+                         name="username" 
+                         placeholder="请输入用户名或邮箱"
+                         required>
+                </div>
+                <div class="form-group">
+                  <label for="password">密码</label>
+                  <input type="password" 
+                         class="form-control" 
+                         id="password" 
+                         name="password" 
+                         placeholder="请输入密码"
+                         required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">登录</button>
+            </form>
+            <hr class="my-4">
+            <div class="text-center">
+                <p class="mb-0" style="font-size:0.8rem">
+                  不支持申请账户？请联系客服创建
+                </p>
+            </div>
         </div>
-        <div class="form-group">
-          <label for="password">密码</label>
-          <input type="password" 
-                 class="form-control" 
-                 id="password" 
-                 name="password" 
-                 placeholder="请输入密码"
-                 required>
-        </div>
-        <button type="submit" class="btn btn-primary btn-block">登录</button>
-      </form>
-      <hr class="my-4">
-      <div class="text-center">
-        <p class="mb-0" style="font-size:0.8rem">
-          不支持申请账户？请联系客服创建
-        </p>
-      </div>
     </div>
-  </div>
 </body>
 </html>

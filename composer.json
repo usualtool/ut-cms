@@ -8,5 +8,7 @@
         "name":         "Huang Hui",
         "email":        "usualtool@qq.com"
     }],
-    "require": {}
+    "require": {
+        "usualtool/ut-lib": "^1.0"
+    }
 }

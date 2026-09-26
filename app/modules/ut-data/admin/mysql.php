@@ -1,17 +1,17 @@
 <?php
-use library\UsualToolInc\UTInc;
-use library\UsualToolData\UTData;
+use usualtool\Lib\Inc;
+use usualtool\Lib\Data;
 /**
  * 连接数据库
  */
-$db=UTData::GetDatabase();
+$db=Data::GetDatabase();
 /**
  * 传递参数过程
  */
-$do=UTInc::SqlCheck($_GET["do"]);
+$do=Inc::SqlCheck($_GET["do"]);
 if($do=="mysql-sql"){
     $sql=$_POST['sql'];
-    $res=UTData::RunSql($sql);
+    $res=Data::RunSql($sql);
     echo 1;
 }
 if($do=="mysql-edit"){
@@ -46,7 +46,7 @@ if($do=="mysql-edit"){
             $theext="";
         }
         $sql="ALTER TABLE `".$table."` CHANGE `".$oldcol[$i]."` `".$col[$i]."` ".strtoupper($type[$i])." ".$thenull." ".$thedef." ".$theext.";";
-        UTData::RunSql($sql);
+        Data::RunSql($sql);
     }
     echo 1;    
 }
@@ -72,7 +72,7 @@ if($do=="mysql-add"){
             $thedef="";
         }
         $sql="ALTER TABLE `".$table."` ADD `".$col[$i]."` ".strtoupper($type[$i])." ".$thenull." ".$thedef.";";
-        UTData::RunSql($sql);
+        Data::RunSql($sql);
     }
     echo 1;
 }

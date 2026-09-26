@@ -226,14 +226,14 @@ function ut_gate(array $CONFIG): bool{
         return false;
     }
     if (!isset($config) || !is_array($config) || empty($config['UTCODE'])
-        || !class_exists('library\\UsualToolData\\UTData')) {
+        || !class_exists('usualtool\\Lib\\Data')) {
         $utWhy = [];
         if (!isset($config) || !is_array($config)) {
             $utWhy[] = 'config未加载';
         } elseif (empty($config['UTCODE'])) {
             $utWhy[] = 'UTCODE为空';
         }
-        if (!class_exists('library\\UsualToolData\\UTData')) {
+        if (!class_exists('usualtool\\Lib\\Data')) {
             $utWhy[] = 'UTData类未加载';
         }
         ut_respond_json(500, [
@@ -599,7 +599,7 @@ try {
     $GLOBALS['__ut_cfg_src'] = 'native($config)';
     $GLOBALS['config'] = (isset($config) && is_array($config) && !empty($config))
         ? $config
-        : (class_exists('library\\UsualToolInc\\UTInc') ? \library\UsualToolInc\UTInc::GetConfig() : null);
+        : (class_exists('usualtool\\Lib\\Inc') ? \usualtool\Lib\Inc::GetConfig() : null);
     $ut_msgs = null;
     if (strtoupper((string) ($_SERVER['REQUEST_METHOD'] ?? 'GET')) === 'POST') {
         $ut_msgs = ut_parse_body($CONFIG);

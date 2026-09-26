@@ -1,100 +1,100 @@
 <?php
-use library\UsualToolInc\UTInc;
-use library\UsualToolData\UTData;
+use usualtool\Lib\Inc;
+use usualtool\Lib\Data;
 $do=$_GET["do"];
 /**
  * 载入私有模板
  */
-$app->Runin("private_template",UTInc::Gettemplate());
+$app->Runin("private_template",Inc::Gettemplate());
 /**
  * 载入第三方模板
  */
-$app->Runin("pubilc_template",UTInc::Gettemplate(1));
+$app->Runin("pubilc_template",Inc::Gettemplate(1));
 /**
  * 载入订购模板
  */
-$app->Runin("buy_template",UTInc::Gettemplate(2));
+$app->Runin("buy_template",Inc::Gettemplate(2));
 /**
  * 载入模板
  */
 $app->Open("template.cms");
 if($do=="install"){
     $t=$_GET["t"];
-    $tid=str_replace(".","",UTInc::SqlCheck($_GET["tid"]));
+    $tid=str_replace(".","",Inc::SqlCheck($_GET["tid"]));
     if($t!="s"):
         if($t=="g"):
-            $down=UTInc::Auth($config["UTCODE"],$config["UTFURL"],"temp_".$tid);
+            $down=Inc::Auth($config["UTCODE"],$config["UTFURL"],"temp_".$tid);
         elseif($t=="b"):  
-            $down=UTInc::Auth($config["UTCODE"],$config["UTFURL"],"temporder_".$tid);
+            $down=Inc::Auth($config["UTCODE"],$config["UTFURL"],"temporder_".$tid);
         endif;
-        $downurl=UTInc::StrSubstr("<downurl>","</downurl>",$down);
+        $downurl=Inc::StrSubstr("<downurl>","</downurl>",$down);
         $filename=basename($downurl);
-        $res=UTInc::SaveFile($downurl,APP_ROOT."/template",$filename,1);
+        $res=Inc::SaveFile($downurl,APP_ROOT."/template",$filename,1);
         if(!empty($res)):
-            UTInc::Auth($config["UTCODE"],$config["UTFURL"],"tempdel_".str_replace(".zip","",$filename)."");
+            Inc::Auth($config["UTCODE"],$config["UTFURL"],"tempdel_".str_replace(".zip","",$filename)."");
             $zip=new ZipArchive;
             if($zip->open(APP_ROOT."/template/".$filename)===TRUE): 
                 $zip->extractTo(APP_ROOT."/template/");
                 $zip->close();
                 unlink(APP_ROOT."/template/".$filename);
             else:
-                UTInc::GoUrl("-1","template目录775权限不足!");
+                Inc::GoUrl("-1","template目录775权限不足!");
             endif;
         else:
-            UTInc::GoUrl("-1","安装权限不足!");
+            Inc::GoUrl("-1","安装权限不足!");
         endif;
     endif;
     $template=file_get_contents(APP_ROOT."/template/".$tid."/usualtool.config");
-    $md=UTInc::StrSubstr("<module>","</module>",$template);
-    $dir_data=UTInc::DirList(APP_ROOT."/modules");
+    $md=Inc::StrSubstr("<module>","</module>",$template);
+    $dir_data=Inc::DirList(APP_ROOT."/modules");
     $md_data=explode(",",$md);
-    if(UTInc::InArray($md_data,$dir_data)==0):
-        UTInc::DelDir(APP_ROOT."/template/".$tid);
-        UTInc::GoUrl("-1","模板工程依赖的模块缺失!模块如下：".$md);
+    if(Inc::InArray($md_data,$dir_data)==0):
+        Inc::DelDir(APP_ROOT."/template/".$tid);
+        Inc::GoUrl("-1","模板工程依赖的模块缺失!模块如下：".$md);
     endif;
     if(is_dir(APP_ROOT."/template/".$tid."/move")):
-        UTInc::MoveDir(APP_ROOT."/template/".$tid."/move",UTF_ROOT);
+        Inc::MoveDir(APP_ROOT."/template/".$tid."/move",UTF_ROOT);
     endif;
     if(is_dir(APP_ROOT."/template/".$tid."/assets")):
-		    $assets_dir=OPEN_ROOT."/assets/template/".$tid;
+        $assets_dir=OPEN_ROOT."/assets/template/".$tid;
         if(!is_dir($assets_dir)):
-			      UTInc::MakeDir($assets_dir);
-		    endif;
-		    UTInc::MoveDir(APP_ROOT."/template/".$tid."/assets",$assets_dir);
-				UTInc::DelDir(APP_ROOT."/template/".$tid."/assets");
+            Inc::MakeDir($assets_dir);
+        endif;
+        Inc::MoveDir(APP_ROOT."/template/".$tid."/assets",$assets_dir);
+        Inc::DelDir(APP_ROOT."/template/".$tid."/assets");
     endif;
-    $id=UTInc::StrSubstr("<id>","</id>",$template);
-    $type=UTInc::StrSubstr("<type>","</type>",$template);
-    $lang=UTInc::StrSubstr("<lang>","</lang>",$template);
-    $auther=UTInc::StrSubstr("<auther>","</auther>",$template);
-    $title=UTInc::StrSubstr("<title>","</title>",$template);
-    $ver=UTInc::StrSubstr("<ver>","</ver>",$template);
-    $description=UTInc::StrSubstr("<description>","</description>",$template);
-    $installsql=UTInc::StrSubstr("<installsql><![CDATA[","]]></installsql>",$template);
-    if(UTData::QueryData("cms_template","","tid='$tid'","","1")["querynum"]>0):
-        UTData::UpdateData("cms_template",array("tid"=>$tid,"lang"=>$lang,"title"=>$title),"tid='$tid'");
+    $id=Inc::StrSubstr("<id>","</id>",$template);
+    $type=Inc::StrSubstr("<type>","</type>",$template);
+    $lang=Inc::StrSubstr("<lang>","</lang>",$template);
+    $auther=Inc::StrSubstr("<auther>","</auther>",$template);
+    $title=Inc::StrSubstr("<title>","</title>",$template);
+    $ver=Inc::StrSubstr("<ver>","</ver>",$template);
+    $description=Inc::StrSubstr("<description>","</description>",$template);
+    $installsql=Inc::StrSubstr("<installsql><![CDATA[","]]></installsql>",$template);
+    if(Data::QueryData("cms_template","","tid='$tid'","","1")["querynum"]>0):
+        Data::UpdateData("cms_template",array("tid"=>$tid,"lang"=>$lang,"title"=>$title),"tid='$tid'");
     else:
-        UTData::InsertData("cms_template",array("tid"=>$tid,"lang"=>$lang,"title"=>$title));
+        Data::InsertData("cms_template",array("tid"=>$tid,"lang"=>$lang,"title"=>$title));
     endif;
     if($installsql=='0'):
-        UTInc::GoUrl("?m=ut-template&p=template","成功安装模板!");
+        Inc::GoUrl("?m=ut-template&p=template","成功安装模板!");
     else:
-        if(UTData::RunSql($installsql)):
-            UTInc::GoUrl("?m=ut-template&p=template","成功安装模板!");
+        if(Data::RunSql($installsql)):
+            Inc::GoUrl("?m=ut-template&p=template","成功安装模板!");
         else:
-            UTInc::GoUrl("-1","模板安装失败!");
+            Inc::GoUrl("-1","模板安装失败!");
         endif;   
     endif;
 }
 if($do=="uninstall"){
-    $tid=str_replace(".","",UTInc::SqlCheck($_GET["tid"]));
-    if(UTData::DelData("cms_template","tid='$tid'")){
-        UTInc::DelDir(APP_ROOT."/template/".$tid);
-		    if(is_dir(OPEN_ROOT."/assets/template/".$tid)):
-            UTInc::DelDir(OPEN_ROOT."/assets/template/".$tid);
-				endif;
-        UTInc::GoUrl("?m=ut-template&p=template","模板删除成功!");
+    $tid=str_replace(".","",Inc::SqlCheck($_GET["tid"]));
+    if(Data::DelData("cms_template","tid='$tid'")){
+        Inc::DelDir(APP_ROOT."/template/".$tid);
+        if(is_dir(OPEN_ROOT."/assets/template/".$tid)):
+            Inc::DelDir(OPEN_ROOT."/assets/template/".$tid);
+        endif;
+        Inc::GoUrl("?m=ut-template&p=template","模板删除成功!");
     }else{
-        UTInc::GoUrl("-1","模板删除失败!");
+        Inc::GoUrl("-1","模板删除失败!");
     }
 }

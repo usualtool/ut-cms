@@ -1,10 +1,10 @@
 <?php
-use library\UsualToolInc\UTInc;
-use library\UsualToolData\UTData;
+use usualtool\Lib\Inc;
+use usualtool\Lib\Data;
 /**
  * 传递参数过程
  */
-$do=UTInc::SqlCheck($_GET["do"]);
+$do=Inc::SqlCheck($_GET["do"]);
 /**
  * 载入模板
  */
@@ -15,7 +15,7 @@ $app->Open("sql.cms");
 if($do=="sql"){
     $sql=$_POST['sql'];
     if(!empty($sql)){
-        $res=UTData::RunSql($sql);
+        $res=Data::RunSql($sql);
         if($res){
             echo "<script>alert('SQL执行成功!');window.location.href='?m=ut-data&p=sql'</script>";	
         }else{

@@ -1,11 +1,11 @@
 <?php
-use library\UsualToolInc\UTInc;
-use library\UsualToolData\UTData;
+use usualtool\Lib\Inc;
+use usualtool\Lib\Data;
 require 'data-verify.php';
 date_default_timezone_set('Asia/Shanghai');
 $debug = false;
 $framework = trim((string)@file_get_contents(UTF_ROOT . "/.version.ini"));
-$sys = UTInc::GetSystemInfo();
+$sys = Inc::GetSystemInfo();
 $diskPath   = !empty($_SERVER['DOCUMENT_ROOT']) ? $_SERVER['DOCUMENT_ROOT'] : UTF_ROOT;
 $diskTotalN = (float)@disk_total_space($diskPath);
 $diskFreeN  = (float)@disk_free_space($diskPath);
@@ -105,7 +105,7 @@ if (!function_exists('MysqlInfo')) {
                 FROM information_schema.TABLES
                 WHERE TABLE_SCHEMA = DATABASE()";
         try {
-            $res = UTData::JoinQuery($sql);
+            $res = Data::JoinQuery($sql);
         } catch (Throwable $e) {
             $out['error'] = $e->getMessage();
             return $out;

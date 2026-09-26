@@ -1,26 +1,26 @@
 <?php
-use library\UsualToolInc\UTInc;
-use library\UsualToolData\UTData;
+use usualtool\Lib\Inc;
+use usualtool\Lib\Data;
 require'data-verify.php';
-$table=UTInc::SqlCheck($_POST["table"]);
+$table=Inc::SqlCheck($_POST["table"]);
 $where=$_POST["where"];
-$action=UTInc::SqlCheck($_POST["action"]);
+$action=Inc::SqlCheck($_POST["action"]);
 $data=array_diff_key($_POST,array("table"=>$table,"where"=>$where,"action"=>$action));
-if(UTData::ModTable($table)):
+if(Data::ModTable($table)):
 	if(empty($action) || $action=="add"):
-		if(UTData::InsertData($table,$data)):
+		if(Data::InsertData($table,$data)):
 			echo'[{"error":0}]';
 		else:
 			echo'[{"error":1}]';
 		endif;
 	elseif($action=="mon"):
-		if(UTData::UpdateData($table,$data,$where)):
+		if(Data::UpdateData($table,$data,$where)):
 			echo'[{"error":0}]';
 		else:
 			echo'[{"error":1}]';
 		endif;
 	elseif($action=="del"):
-		if(UTData::DelData($table,$where)):
+		if(Data::DelData($table,$where)):
 			echo'[{"error":0}]';
 		else:
 			echo'[{"error":1}]';

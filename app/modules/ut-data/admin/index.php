@@ -1,10 +1,10 @@
 <?php
-use library\UsualToolInc\UTInc;
-use library\UsualToolData\UTData;
+use usualtool\Lib\Inc;
+use usualtool\Lib\Data;
 /**
  * 连接数据库
  */
-$db=UTData::GetDatabase();
+$db=Data::GetDatabase();
 /**
  * 传递参数过程
  */

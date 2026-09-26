@@ -196,7 +196,7 @@
                         <{php=>
                             if(!empty($_COOKIE["Nav"]) && $_COOKIE["Nav"]!="ut-frame"):
                                 $this_nav=$_COOKIE["Nav"];
-                                $this_nav_data=library\UsualToolData\UTData::QueryData("cms_module","","mid='$this_nav'")["querydata"][0];
+                                $this_nav_data=usualtool\Lib\Data::QueryData("cms_module","","mid='$this_nav'")["querydata"][0];
                                 echo"<li class=\"nav-item\" style=\"border:1px dashed #eee;width:90%;margin:auto;\">";
                                     echo"<a class=\"text-danger border-bottom bg-light\"><span class=\"text-dark mr-2\">当前</span>".$this_nav_data["modname"]."<span class=\"fas fa-eraser
                              text-dark ml-auto\" title=\"清除\" onclick=\"clearnav()\"></span></a>";

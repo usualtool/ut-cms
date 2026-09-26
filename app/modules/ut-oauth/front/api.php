@@ -1,6 +1,6 @@
 <?php
+use usualtool\Lib\Data;
 use usualtool\Oauth\Oauth;
-use library\UsualToolData\UTData;
 $scope=$_POST['scope'];
 $where=$_POST['where'];
 $order=$_POST['order'];
@@ -18,7 +18,7 @@ if(!in_array($scope,$scope_arr)):
     echo json_encode(['error' => 'Insufficient scope: "'.$scope.'" required']);
     exit;
 else:
-    $dbtable=UTData::QueryData("oauth_scopes","","scope='$scope'")["querydata"][0]["dbtable"];
-    $data=UTData::QueryData($dbtable,"",$where,$order,$limit);
+    $dbtable=Data::QueryData("oauth_scopes","","scope='$scope'")["querydata"][0]["dbtable"];
+    $data=Data::QueryData($dbtable,"",$where,$order,$limit);
 endif;
 echo json_encode($data);

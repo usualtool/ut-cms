@@ -33,6 +33,7 @@
                                 <tr>
                                     <th scope="col">ID</th>
                                     <th scope="col">管理者</th>
+                                    <th scope="col">角色</th>
                                     <th scope="col">状态</th>
                                     <th scope="col">头像</th>
                                     <th scope="col">时间</th>
@@ -44,6 +45,7 @@
                                 <tr>
                                     <td><{$rows->id}></td>
                                     <td><{$rows->username}></td>
+                                    <td><{db=>QueryData("cms_admin_role","","id='".$rows["roleid"]."'")["querydata"][0]["role"]}></td>
                                     <td>
                                     <{if $rows["state"]==0}>
                                         <a href="?m=ut-power&do=update&id=<{$rows->id}>&state=1"><span class="text-success">正常</span></a>

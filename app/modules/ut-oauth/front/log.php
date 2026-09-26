@@ -1,12 +1,12 @@
 <?php
-use library\UsualToolInc\UTInc;
-use library\UsualToolData\UTData;
+use usualtool\Lib\Inc;
+use usualtool\Lib\Data;
 require_once 'session.php';
 $pagelink="?m=".$m."&p=".$p;
 $page=empty($_GET["page"]) ? 1 : $_GET["page"];
 $pagenum=10;
 $minid=$pagenum*($page-1);
-$data=UTData::QueryData("oauth_access_tokens","","user_id='$oauth_uid'","id desc","$minid,$pagenum");
+$data=Data::QueryData("oauth_access_tokens","","user_id='$oauth_uid'","id desc","$minid,$pagenum");
 $querynum=$data["querynum"];
 $querydata=$data["querydata"];
 $totalpage=ceil($querynum/$pagenum);
