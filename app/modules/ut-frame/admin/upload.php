@@ -1,8 +1,12 @@
 <?php
 use usualtool\Lib\Inc;
-if($_GET['do']=="del"){
-    $img=Inc::SqlCheck(str_replace("..","",$_GET['img']));
-    if(in_array(substr($img,-4),array(".jpg",".png",".gif"))):
+$do=empty($_GET["do"]) ? $_POST["do"] :$_GET["do"];
+if($do=="del"){
+    $img=Inc::SqlCheck(str_replace("..","",$_POST['img']));
+    if(in_array(substr($img,-4),array(
+        ".jpg",
+        ".png",
+        ".gif"))):
         $img=str_replace($config["APPURL"],OPEN_ROOT,$img);
         Inc::UnlinkFile($img);
         echo json_encode(array("error"=>0));
@@ -21,16 +25,43 @@ if($_GET['do']=="del"){
     $type = strtolower(substr($name,strrpos($name,'.')+1));
     $fname=date('Ymd').str_pad(mt_rand(1, 99999),5,'0',STR_PAD_LEFT).".".$type;
     $picurl = $path . $fname;
-    $allow_type = array('jpg','jpeg','gif','png','zip','rar','mp4','mp3','m3u8','lrc','ico','doc','docx','xls','xlsx');
+    $allow_type = array(
+        'jpg',
+        'jpeg',
+        'gif',
+        'png',
+        'zip',
+        'rar',
+        'mp4',
+        'mp3',
+        'm3u8',
+        'lrc',
+        'ico',
+        'doc',
+        'docx',
+        'xls',
+        'xlsx'
+    );
     if(!in_array($type, $allow_type)){
-        echo json_encode(array("error"=>"The file format is incorrect!"));
+        echo json_encode(array(
+            "error"=>"The file format is incorrect!")
+        );
     }elseif(!is_uploaded_file($file['tmp_name'])){
-        echo json_encode(array("error"=>"Illegal source of documents!<br>|-|Illegal source of documents!"));
+        echo json_encode(array(
+            "error"=>"Illegal source of documents!<br>|-|Illegal source of documents!")
+        );
     }else{
         if(move_uploaded_file($file['tmp_name'],$picurl)){
-            echo json_encode(array("error"=>"0","pic"=>str_replace(OPEN_ROOT,$config["APPURL"],$picurl),"name"=>$fname,"post"=>$config["APPURL"]));
+            echo json_encode(array(
+                "error"=>"0",
+                "pic"=>str_replace(OPEN_ROOT,$config["APPURL"],$picurl),
+                "name"=>$fname,
+                "post"=>$config["APPURL"])
+            );
         }else{
-            echo json_encode(array("error"=>"File upload failed!"));
+            echo json_encode(array(
+                "error"=>"File upload failed!")
+            );
         }
     }
 }
