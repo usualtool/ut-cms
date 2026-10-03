@@ -54,9 +54,9 @@ if($do=="install"){
     endif;
     $modconfig=APP_ROOT."/modules/".$mid."/usualtool.config";
     $mods=file_get_contents($modconfig);
-    $modname=Inc::StrSubstr("<modname>","</modname>",$mods);
-    $ordernum=Inc::StrSubstr("<ordernum>","</ordernum>",$mods);
-    $modurl=Inc::StrSubstr("<modurl>","</modurl>",$mods);
+    $title=Inc::StrSubstr("<title>","</title>",$mods);
+    $sorting=Inc::StrSubstr("<sorting>","</sorting>",$mods);
+    $starturl=Inc::StrSubstr("<starturl>","</starturl>",$mods);
     $befoitem=Inc::StrSubstr("<befoitem>","</befoitem>",$mods);
     $backitem=Inc::StrSubstr("<backitem>","</backitem>",$mods);
     $itemid=Inc::StrSubstr("<itemid>","</itemid>",$mods);
@@ -70,19 +70,19 @@ if($do=="install"){
     if(Data::QueryData("cms_module","","mid='$mid'","","1")["querynum"]>0):
         Data::UpdateData("cms_module",array(
             "bid"=>$itemid,
-            "modname"=>$modname,
-            "modurl"=>$modurl,
+            "modname"=>$title,
+            "modurl"=>$starturl,
             "befoitem"=>$befoitem,
             "backitem"=>$backitem),"mid='$mid'");
     else:
         Data::InsertData("cms_module",array(
             "bid"=>$itemid,
             "mid"=>$mid,
-            "modname"=>$modname,
-            "modurl"=>$modurl,
+            "modname"=>$title,
+            "modurl"=>$starturl,
             "isopen"=>1,
             "look"=>1,
-            "ordernum"=>$ordernum,
+            "ordernum"=>$sorting,
             "befoitem"=>$befoitem,
             "backitem"=>$backitem));
     endif;

@@ -64,7 +64,7 @@ if($do=="install"){
         Inc::DelDir(APP_ROOT."/template/".$tid."/assets");
     endif;
     $id=Inc::StrSubstr("<id>","</id>",$template);
-    $type=Inc::StrSubstr("<type>","</type>",$template);
+    $cate=Inc::StrSubstr("<cate>","</cate>",$template);
     $lang=Inc::StrSubstr("<lang>","</lang>",$template);
     $auther=Inc::StrSubstr("<auther>","</auther>",$template);
     $title=Inc::StrSubstr("<title>","</title>",$template);

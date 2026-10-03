@@ -10,7 +10,7 @@ $app->Runin("plugin",Data::QueryData("cms_plugin","","pid='$pid'","","")["queryd
  * 插件后台转化，兼容2018版本插件
  */
 $plugin=file_get_contents(APP_ROOT."/plugins/".$pid."/usualtool.config");
-$plugin_code=Inc::StrSubstr("<plugincode><![CDATA[","]]></plugincode>",$plugin);
+$plugin_code=Inc::StrSubstr("<code><![CDATA[","]]></code>",$plugin);
 $app->Runin("plugin_code",$plugin_code);
 /**
  * 载入模板
