@@ -38,7 +38,7 @@ if($do=="install"){
                 $zip->close();
                 unlink(APP_ROOT."/modules/".$filename);
             else:
-						   Inc::GoUrl("-1","modules目录775权限不足!");
+                Inc::GoUrl("-1","modules目录775权限不足!");
             endif;
         else:
             Inc::GoUrl("-1","安装权限不足!");
@@ -52,8 +52,21 @@ if($do=="install"){
 		    Inc::MoveDir(APP_ROOT."/modules/".$mid."/assets",$assets_dir);
 				Inc::DelDir(APP_ROOT."/modules/".$mid."/assets");
     endif;
-    $modconfig=APP_ROOT."/modules/".$mid."/usualtool.config";
-    $mods=file_get_contents($modconfig);
+    $mods=file_get_contents(APP_ROOT."/modules/".$mid."/usualtool.config");
+    $md=Inc::StrSubstr("<module>","</module>",$mods);
+    $dir_md=Inc::DirList(APP_ROOT."/modules");
+    $md_data=explode(",",$md);
+    if(Inc::InArray($md_data,$dir_md)==0):
+        Inc::DelDir(APP_ROOT."/template/".$tid);
+        Inc::GoUrl("-1","模块依赖的前置模块缺失!模块如下：".$md);
+    endif;
+    $pl=Inc::StrSubstr("<plugin>","</plugin>",$mods);
+    $dir_pl=Inc::DirList(APP_ROOT."/plugins");
+    $pl_data=explode(",",$pl);
+    if(Inc::InArray($pl_data,$dir_pl)==0):
+        Inc::DelDir(APP_ROOT."/template/".$tid);
+        Inc::GoUrl("-1","模块依赖的前置插件缺失!插件如下：".$pl);
+    endif;
     $title=Inc::StrSubstr("<title>","</title>",$mods);
     $sorting=Inc::StrSubstr("<sorting>","</sorting>",$mods);
     $starturl=Inc::StrSubstr("<starturl>","</starturl>",$mods);
