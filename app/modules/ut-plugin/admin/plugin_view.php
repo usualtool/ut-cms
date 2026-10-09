@@ -10,7 +10,12 @@ $app->Runin("plugin",Data::QueryData("cms_plugin","","pid='$pid'","","")["queryd
  * 插件后台转化，兼容2018版本插件
  */
 $plugin=file_get_contents(APP_ROOT."/plugins/".$pid."/usualtool.config");
-$plugin_code=Inc::StrSubstr("<code><![CDATA[","]]></code>",$plugin);
+$code=Inc::StrSubstr("<code><![CDATA[","]]></code>",$plugin);
+if(empty($code) || $code=="0"){
+    $plugin_code="此插件无管理端<br/>This plugin has no management end";
+}else{
+    $plugin_code=$code;
+}
 $app->Runin("plugin_code",$plugin_code);
 /**
  * 载入模板
