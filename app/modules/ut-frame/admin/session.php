@@ -6,8 +6,8 @@ if(isset($_SESSION['admin'])&&isset($_SESSION['admin_id'])&&!empty($_SESSION['ad
     * 获取版本号并载入应用部分设置
     */
     $framework=file_get_contents(UTF_ROOT."/.version.ini");
-    $version=substr($frame_version,0,5);
-    $version_time=substr($frame_version,-6);
+    $version=substr($framework,0,5);
+    $version_time=substr($framework,-6);
     $app->Runin(
         array("version","version_time","update","develop","develop_open","lock","editor"),
         array($version,$version_time,$config["UPDATEURL"],$config["DEVELOP"],$config["DEVELOP_OPEN"],$config["LOCKSCREEN"],$config["EDITOR"])
