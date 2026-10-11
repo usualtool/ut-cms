@@ -10,7 +10,7 @@
 						<div class="col-md-7">
 							<div class="card">
 								<div class="card-header">
-									<div class="card-title">在线更新<span style="float:right;font-size:12px;">当前版本: <{$ver}></span></div>
+									<div class="card-title">在线更新<span style="float:right;font-size:12px;">当前版本: <{$version}></span></div>
 								</div>
 								<div class="card-body">
 									<ol class="activity-feed">
