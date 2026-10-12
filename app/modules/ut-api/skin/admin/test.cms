@@ -35,8 +35,6 @@
                                     <label for="largeInput"><strong>data-<{$do}></strong></label><br>
                                     <{if $do=="handle"}>
                                         成功返回<code>[{"error":0}]</code>,失败返回<code>[{"error":1}]</code><br>
-                                        验证参数：<br>
-                                        secret:<input type="text" class="form-control input-square" id="secret" value="admin,c3b9abe23e14140fa882b8f7bc637d49917145ef"><br>
                                         POST数据:<br>
                                         action:<input type="text" class="form-control input-square" id="action" value="add"><br>
                                         table:<input type="text" class="form-control input-square" id="table" value="cms_article"><br>
@@ -103,7 +101,7 @@
             postdata="";
         }
         var jsonstr;
-        var token=md5("cfcd208495d565ef66e7dff9f98764da"+gettimestamp());
+        var token=md5("<{$key}>"+gettimestamp());
         <{if $do=="handle"}>
             var action=$("#action").val();
             var table=$("#table").val();
@@ -146,7 +144,7 @@
                 XMLHttpRequest.setRequestHeader("time",getnowdate());
                 XMLHttpRequest.setRequestHeader("token",token);
                 <{if $do=="handle"}>
-                XMLHttpRequest.setRequestHeader("secret",$("#secret").val());
+                XMLHttpRequest.setRequestHeader("secret","<{$secret}");
                 <{/if}>
             },
             success: function(res){
