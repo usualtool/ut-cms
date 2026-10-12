@@ -1,9 +1,12 @@
 <?php
 declare(strict_types=1);
+if(!isset($config) || !is_array($config) || !$config){
+    $config=class_exists('usualtool\\Lib\\Inc') ? \usualtool\Lib\Inc::GetConfig() : [];
+}
 $CONFIG = [
     // MCP 客户端访问令牌（Authorization: Bearer <token> 或 ?token=<token>）
     // 公网暴露必须设置
-    'token'           => '',
+    'token'           => md5((string)($config['UTCODE'] ?? '')),
     // 允许的浏览器 Origin（可选，空数组 = 不限制）
     'allowed_origins' => [],
     // 单次请求体上限（字节）
@@ -18,6 +21,21 @@ $CONFIG = [
     'server_name'     => 'ut-api-data',
     'server_version'  => '4.5.0',
 ];
+@file_put_contents(dirname(__DIR__, 4).'/log/mcp-trace.log', date('c').' '.json_encode([
+    'method'   => $_SERVER['REQUEST_METHOD'] ?? '',
+    'uri'      => $_SERVER['REQUEST_URI'] ?? '',
+    'get'      => $_GET,
+    'accept'   => $_SERVER['HTTP_ACCEPT'] ?? '',
+    'ua'       => $_SERVER['HTTP_USER_AGENT'] ?? '',
+    'script'   => $_SERVER['SCRIPT_NAME'] ?? '',
+    'docroot'  => $_SERVER['DOCUMENT_ROOT'] ?? '',
+    'cfg_n'    => is_array($config ?? null) ? count($config) : -1,
+    'utcode'   => is_array($config ?? null) ? (string) ($config['UTCODE'] ?? '') : 'NOCFG',
+    'data_cls' => class_exists('usualtool\\Lib\\Data') ? 1 : 0,
+    'mod'      => $_modpath_ ?? '',
+    'form'     => $_form_ ?? '',
+    'regc_n'   => class_exists('usualtool\\Lib\\Inc') ? count((array) \usualtool\Lib\Inc::GetConfig()) : -1,
+], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES).PHP_EOL, FILE_APPEND);
 error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT);
 @ini_set('display_errors', '0');
 @ini_set('log_errors', '1');
@@ -557,7 +575,7 @@ function ut_route(array $CONFIG, $msgs): void{
         header('Allow: POST, GET, OPTIONS');
         ut_respond_json(405, [
             'error' => 'Method Not Allowed',
-            'hint'  => 'MCP 端点请使用 POST 发送 JSON-RPC；浏览器自检请访问 ?health=1 / ?selftest=1 / ?tools=1 / ?dump=data-work',
+            'hint'  => 'MCP 端点请使用 POST 发送 JSON-RPC；浏览器自检请访问 health=1 / selftest=1 / tools=1 / dump=data-work',
         ]);
         return;
     }
