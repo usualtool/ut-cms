@@ -30,7 +30,7 @@ if($do=="login"){
                     session_regenerate_id(TRUE);
                     setcookie("Nav","ut-frame");
                     setcookie("Lock",0);
-                    Inc::GoUrl("?p=index","登陆UT Develop成功!");
+                    Inc::GoUrl(rtrim($config["APPURL"],"/").$config["DEVELOP"]."/?p=index","登陆UT Develop成功!");
                 }else{
                     Inc::GoUrl("-1","账户或密码不匹配!");
                 }
