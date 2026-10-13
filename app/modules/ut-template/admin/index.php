@@ -16,14 +16,16 @@ $app->Runin(array("do","tempdata","front","admin"),array($do,$data,$front_temp,$
 $app->Open("index.cms");
 if($do=="front" || $do=="admin"){
     $tempid=Inc::SqlCheck($_GET["tempid"]);
+    $movedir=APP_ROOT."/template/".$tempid."/move";
     $info = file_get_contents(UTF_ROOT."/.ut.config");
     if($do=="front"){
         if(Data::UpdateData("cms_template",array("makefront"=>0),"id>0")){
             Data::UpdateData("cms_template",array("makefront"=>1),"tid='$tempid'");
             $info = preg_replace("/TEMPFRONT=(.*)/","TEMPFRONT={$tempid}",$info);
             file_put_contents(UTF_ROOT."/.ut.config",$info);
-            if(is_dir(APP_ROOT."/template/".$tempid."/move")):
-                Inc::MoveDir(APP_ROOT."/template/".$tempid."/move",UTF_ROOT);
+            if(is_dir($movedir)):
+                $app->CreatBak($movedir);
+                Inc::MoveDir($movedir,UTF_ROOT);
             endif;
             Inc::GoUrl("?m=ut-template&p=index&do=template","设置成功!");
         }else{
@@ -34,8 +36,9 @@ if($do=="front" || $do=="admin"){
             Data::UpdateData("cms_template",array("makeadmin"=>1),"tid='$tempid'");
             $info = preg_replace("/TEMPADMIN=(.*)/","TEMPADMIN={$tempid}",$info);
             file_put_contents(UTF_ROOT."/.ut.config",$info);
-            if(is_dir(APP_ROOT."/template/".$tempid."/move")):
-                Inc::MoveDir(APP_ROOT."/template/".$tempid."/move",UTF_ROOT);
+            if(is_dir($movedir)):
+                $app->CreatBak($movedir);
+                Inc::MoveDir($movedir,UTF_ROOT);
             endif;
             Inc::GoUrl("?m=ut-template&p=index&do=template","设置成功!");
         }else{
@@ -45,11 +48,13 @@ if($do=="front" || $do=="admin"){
 }
 if($do=="unfront" || $do=="unadmin"){
     $tempid=Inc::SqlCheck($_GET["tempid"]);
+    $movedir=APP_ROOT."/template/".$tempid."/move";
     $info = file_get_contents(UTF_ROOT."/.ut.config");
     if($do=="unfront"){
         if(Data::UpdateData("cms_template",array("makefront"=>0),"tid='$tempid'")){
             $info = preg_replace("/TEMPFRONT=(.*)/","TEMPFRONT=0",$info);
             file_put_contents(UTF_ROOT."/.ut.config",$info);
+            $app->Rollback($movedir);
             Inc::GoUrl("?m=ut-template&p=index&do=template","取消成功!");
         }else{
             Inc::GoUrl("-1","取消失败!");
@@ -58,6 +63,7 @@ if($do=="unfront" || $do=="unadmin"){
         if(Data::UpdateData("cms_template",array("makeadmin"=>0),"tid='$tempid'")){
             $info = preg_replace("/TEMPADMIN=(.*)/","TEMPADMIN=0",$info);
             file_put_contents(UTF_ROOT."/.ut.config",$info);
+            $app->Rollback($movedir);
             Inc::GoUrl("?m=ut-template&p=index&do=template","取消成功!");
         }else{
             Inc::GoUrl("-1","取消失败!");

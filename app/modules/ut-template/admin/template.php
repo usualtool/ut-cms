@@ -52,9 +52,6 @@ if($do=="install"){
         Inc::DelDir(APP_ROOT."/template/".$tid);
         Inc::GoUrl("-1","模板工程依赖的模块缺失!模块如下：".$md);
     endif;
-    if(is_dir(APP_ROOT."/template/".$tid."/move")):
-        Inc::MoveDir(APP_ROOT."/template/".$tid."/move",UTF_ROOT);
-    endif;
     if(is_dir(APP_ROOT."/template/".$tid."/assets")):
         $assets_dir=OPEN_ROOT."/assets/template/".$tid;
         if(!is_dir($assets_dir)):
@@ -76,7 +73,7 @@ if($do=="install"){
     else:
         Data::InsertData("cms_template",array("tid"=>$tid,"lang"=>$lang,"title"=>$title));
     endif;
-    if($installsql=='0'):
+    if(empty(trim($installsql)) || trim($installsql)=="0"):
         Inc::GoUrl("?m=ut-template&p=template","成功安装模板!");
     else:
         if(Data::RunSql($installsql)):
@@ -89,6 +86,7 @@ if($do=="install"){
 if($do=="uninstall"){
     $tid=str_replace(".","",Inc::SqlCheck($_GET["tid"]));
     if(Data::DelData("cms_template","tid='$tid'")){
+        $app->Rollback(APP_ROOT."/template/".$tid."/move");
         Inc::DelDir(APP_ROOT."/template/".$tid);
         if(is_dir(OPEN_ROOT."/assets/template/".$tid)):
             Inc::DelDir(OPEN_ROOT."/assets/template/".$tid);
