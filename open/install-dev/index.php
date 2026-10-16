@@ -12,15 +12,15 @@
 */
 require dirname(__DIR__).'/'.'config.php';
 use usualtool\Lib\Inc;
-use usualtool\Lib\Mysql;
 use usualtool\Lib\Cli;
+use usualtool\Lib\Mysql;
 if(Inc::SearchFile(OPEN_ROOT."/install-dev/usualtool.lock")):
    header("location:../");
    exit();
 endif;
+$do=$_GET["do"];
 $httpcode=Inc::HttpCode($config["UTFURL"]);
 $sysinfo=Inc::GetSystemInfo();
-$do=Inc::SqlCheck($_GET["do"]);
 if($do=="db-save"):
    $info = file_get_contents(UTF_ROOT."/.ut.config"); 
    foreach($_POST as $k=>$v):
@@ -216,6 +216,9 @@ endif;
                         if(!empty($_POST["app"])):
                             $app=explode("__",$_POST["app"]);
                             $temp=$app[0];
+                            if(!preg_match('/^[A-Za-z0-9_-]+$/',$temp)){
+                                Inc::GoUrl("-1","参数非法!");
+                            }
                             $mods=explode(",",$app[1]);
                             for($i=0;$i<count($mods);$i++):
                                 $k=$i+1;

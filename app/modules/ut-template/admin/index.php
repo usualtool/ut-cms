@@ -16,6 +16,9 @@ $app->Runin(array("do","tempdata","front","admin"),array($do,$data,$front_temp,$
 $app->Open("index.cms");
 if($do=="front" || $do=="admin"){
     $tempid=Inc::SqlCheck($_GET["tempid"]);
+    if(!preg_match('/^[A-Za-z0-9_-]+$/',$tempid)){
+        Inc::GoUrl("-1","参数非法!");
+    }
     $movedir=APP_ROOT."/template/".$tempid."/move";
     $info = file_get_contents(UTF_ROOT."/.ut.config");
     if($do=="front"){
@@ -48,6 +51,9 @@ if($do=="front" || $do=="admin"){
 }
 if($do=="unfront" || $do=="unadmin"){
     $tempid=Inc::SqlCheck($_GET["tempid"]);
+    if(!preg_match('/^[A-Za-z0-9_-]+$/',$tempid)){
+        Inc::GoUrl("-1","参数非法!");
+    }
     $movedir=APP_ROOT."/template/".$tempid."/move";
     $info = file_get_contents(UTF_ROOT."/.ut.config");
     if($do=="unfront"){
