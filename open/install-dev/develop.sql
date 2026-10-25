@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS `cms_admin`;
 CREATE TABLE `cms_admin` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `state` int(11) NOT NULL DEFAULT '0',
+  `state` int(11) DEFAULT '0',
   `roleid` int(11) NOT NULL DEFAULT '1',
   `username` varchar(50) NOT NULL,
   `password` varchar(250) NOT NULL,

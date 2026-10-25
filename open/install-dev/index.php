@@ -14,26 +14,26 @@ require dirname(__DIR__).'/'.'config.php';
 use usualtool\Lib\Inc;
 use usualtool\Lib\Cli;
 use usualtool\Lib\Mysql;
-if(Inc::SearchFile(OPEN_ROOT."/install-dev/usualtool.lock")):
+if(Inc::SearchFile(OPEN_ROOT."/install-dev/usualtool.lock")){
    header("location:../");
    exit();
-endif;
+}
 $do=$_GET["do"];
 $httpcode=Inc::HttpCode($config["UTFURL"]);
 $sysinfo=Inc::GetSystemInfo();
-if($do=="db-save"):
+if($do=="db-save"){
    $info = file_get_contents(UTF_ROOT."/.ut.config"); 
-   foreach($_POST as $k=>$v):
-       $info = preg_replace("/{$k}=(.*)/","{$k}={$v}",$info); 
-   endforeach;
+    foreach($_POST as $k=>$v){
+        $info = preg_replace("/{$k}=(.*)/","{$k}={$v}",$info); 
+    }
    file_put_contents(UTF_ROOT."/.ut.config",$info);
    Inc::GoUrl("?do=sql","配置成功!");
-endif;
+}
 ?>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>UTCMS安装</title>
+    <title>安装程序</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="//cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css" rel="stylesheet">
@@ -56,7 +56,7 @@ endif;
             <div class="col-md-12">
                 <div class="border p-4">
                 <?php
-                if(empty($do)):?>
+                if(empty($do)){?>
                     <div>
                     <form name="license" action="?do=config" method="post">
                     <p class="mb-2">
@@ -95,8 +95,8 @@ endif;
                         })
                     </script>
                 <?php
-                elseif($do=="config"):
-                    if(Inc::FileMode(UTF_ROOT)):
+                }elseif($do=="config"){
+                    if(Inc::FileMode(UTF_ROOT)){
                 ?>
                     <div class="row">
                         <div class="col-7">
@@ -159,10 +159,10 @@ endif;
                     </div>
                     </form>
                 <?php
-                    else:
+                    }else{
                         echo"<p>请将/app、/log、/update、/open/assets权限设置为可写（755），并在此处 <a onclick='Refresh()' class='text-danger'>刷新页面</a></p>";
-                    endif;
-                elseif($do=="sql"):?>
+                    }
+                }elseif($do=="sql"){?>
                     <div class="row">
                         <div class="col-7">
                             <h4>构建数据</h4>
@@ -173,34 +173,34 @@ endif;
                     </div>
                     <hr/>
                     <?php
-                    if(Mysql::ModTable("cms_admin")):?>
+                    if(Mysql::ModTable("cms_admin")){?>
                         <p>已创建过数据，若要重新创建，请清除表后刷新本页。</p>
                         <p class="mb-3">不建议的方式：<a href="?do=sql&t=db-sql">强制性更新</a> 数据结构。</p>
                         <p><a class="btn btn-warning" href="?do=app">跳过，下一步</a></p>
                     <?php
-                    else:
-                        if($_GET["t"]=="db-sql"):
+                    }else{
+                        if($_GET["t"]=="db-sql"){
                             $sql=file_get_contents("./develop.sql");
                             $arr=explode(';',$sql);
                             $total=count($arr)-1;
                             $c=0;
-                            for($i=0;$i<$total;$i++):
+                            for($i=0;$i<$total;$i++){
                                 $k=$i+1;
                                 $result=Mysql::RunSql($arr[$i]);
-                                if($result):
+                                if($result){
                                     echo"<p class='fontsmall'>第".$k."条SQL执行成功!</p>";
-                                else:
+                                }else{
                                     $c=$c+1;
                                     echo"<p class='fontsmall' style='color:red;'>第".$k."条SQL执行失败:".$arr[$i]."</p>";
-                                endif;
-                                if($k==$total && $c==0):
+                                }
+                                if($k==$total && $c==0){
                                     Inc::GoUrl("?do=app","创建数据成功!");
-                                endif;
-                            endfor;
-                        endif;
+                                }
+                            }
+                        }
                         echo'<p><a class="btn btn-info" href="?do=sql&t=db-sql">创建数据</a></p>';
-                    endif;
-                elseif($do=="app"):?>
+                    }
+                }elseif($do=="app"){?>
                     <form action="?do=app&t=install" method="post" name="form">
                     <div class="row">
                         <div class="col-7">
@@ -212,41 +212,41 @@ endif;
                     </div>
                     <hr/>
                     <?php
-                    if($_GET["t"]=="install"):
-                        if(!empty($_POST["app"])):
+                    if($_GET["t"]=="install"){
+                        if(!empty($_POST["app"])){
                             $app=explode("__",$_POST["app"]);
                             $temp=$app[0];
                             if(!preg_match('/^[A-Za-z0-9_-]+$/',$temp)){
                                 Inc::GoUrl("-1","参数非法!");
                             }
                             $mods=explode(",",$app[1]);
-                            for($i=0;$i<count($mods);$i++):
+                            for($i=0;$i<count($mods);$i++){
                                 $k=$i+1;
                                 echo"<br/>安装模块：".$mods[$i]."<br/>";
                                 Cli::Install(array("usualtool","install","module",$mods[$i],"-1"));
-                            endfor;
-                            if($k==count($mods)):
+                            }
+                            if($k==count($mods)){
                                 echo"<br/>安装模板：".$temp."<br/>";
                                 Cli::Install(array("usualtool","install","template",$temp,"-1"));
-                                if(is_dir(APP_ROOT."/template/".$temp)):
+                                if(is_dir(APP_ROOT."/template/".$temp)){
                                     Mysql::UpdateData("cms_template",array("makefront"=>1),"tid='$temp'");
                                     $info=preg_replace("/TEMPFRONT=(.*)/","TEMPFRONT={$temp}",file_get_contents(UTF_ROOT."/.ut.config"));
                                     file_put_contents(UTF_ROOT."/.ut.config",$info);
                                     Inc::GoUrl("?do=finish","快速搭建应用成功!");
-                                endif;
-                            endif;
-                        else:
+                                }
+                            }
+                        }else{
                             Inc::GoUrl("-1","请选择模型!");
-                        endif;
-                    else:?>
+                        }
+                    }else{?>
                         <div class="row">
                         <?php
                         $data=Inc::Gettemplate(1);
-                        foreach($data as $rows):
-                            if(strpos($rows["isfree"],'公开使用')!==false):
+                        foreach($data as $rows){
+                            if(strpos($rows["isfree"],'公开使用')!==false){
                                 echo"<div class='col-md-3 mb-2'><img src='".$rows["picurl"]."' style='width:100%;' class='mb-2'><br/><input type='radio' name='app' value='".$rows["tid"]."__".$rows["module"]."' class='mr-1'>".$rows["title"]."</div>";
-                            endif;
-                        endforeach;
+                            }
+                        }
                         ?>
                         </div>
                         <p class="mt-3">
@@ -255,11 +255,32 @@ endif;
                         </p>
                         </form>
                     <?php
-                    endif;
-                elseif($do=="finish"):
-                    file_put_contents("./usualtool.lock","lock");
-                    Inc::GoUrl("../dev/","后端初始账号密码为“admin”请及时修改!");
-                endif;
+                    }
+                }elseif($do=="finish"){
+                     $res=Inc::SaveFile($config["DOWNURL"]."/develop.zip",UTF_ROOT."/update","develop.zip",1);
+                     if(!empty($res)){
+                        $zip=new ZipArchive;
+                        if($zip->open(UTF_ROOT."/update/develop.zip")===TRUE){ 
+                            $zip->extractTo(UTF_ROOT."/update/");
+                            $zip->close();
+                            Inc::MoveDir(UTF_ROOT."/update/develop/",UTF_ROOT);
+                            Inc::DelDir(UTF_ROOT."/update/develop/");
+                            unlink(UTF_ROOT."/update/develop.zip");
+                            file_put_contents("./usualtool.lock","lock");
+                            $info=file_get_contents(UTF_ROOT."/.ut.config"); 
+                            $info = preg_replace("/^DEVELOP=.*/m","DEVELOP=/dev",$info);
+                            $info = preg_replace("/^ADMIN_POWER_PAGE=.*/m","ADMIN_POWER_PAGE=ut-frame/admin/session",$info);
+                            $info = preg_replace("/^ADMIN_POWER_OUT=.*/m","ADMIN_POWER_OUT=ut-frame/admin/login,ut-frame/admin/captcha",$info);
+                            file_put_contents(UTF_ROOT."/.ut.config",$info);
+                            Inc::GoUrl("../dev/","安装成功!后端初始账号密码为“admin”请及时修改!");
+                        }else{
+                            echo "<script>alert('文件夹权限不足!');window.location.href='?do=dev'</script>";
+                           exit();
+                        }
+                     }else{
+                        echo "<script>alert('请检查网络是否通畅!');window.location.href='?do=dev'</script>";
+                     }
+                }
                 ?>
                 </div>
             </div>
