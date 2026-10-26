@@ -15,52 +15,54 @@ ini_set('max_execution_time', '300');
 require dirname(__DIR__).'/'.'config.php';
 use usualtool\Lib\Inc;
 use usualtool\Lib\Cli;
-use usualtool\Lib\Mysql;
+use usualtool\Lib\Data;
 if(Inc::SearchFile(OPEN_ROOT."/install-dev/usualtool.lock")){
    header("location:../");
    exit();
 }
 $do=$_GET["do"];
+if($do=="sql"){
+   header("location:?do=pull");
+   exit();
+}
 if($do=="db-save"){
    $info = file_get_contents(UTF_ROOT."/.ut.config"); 
     foreach($_POST as $k=>$v){
         $info = preg_replace("/{$k}=(.*)/","{$k}={$v}",$info); 
     }
    file_put_contents(UTF_ROOT."/.ut.config",$info);
-   Inc::GoUrl("?do=sql","配置成功!");
+   Inc::GoUrl("?do=pull","配置成功!");
 }
 if($do=="pull"&&isset($_GET["t"])&&$_GET["t"]=="down"){
    while(ob_get_level()>0){@ob_end_flush();}
    header('Content-Type: text/html; charset=utf-8');
    echo'<!DOCTYPE html><html><head><meta charset="utf-8"><script>window.__taskChild=true;</script></head><body>';
-   echo'<span data-status="正在下载可视包，约需1分钟，请耐心等待..."></span>';
+   echo'<span data-status="正在部署可视包（源码 + 数据），约需1分钟，请耐心等待..."></span>';
    echo str_pad('',4096);
    flush();
-   $res=Inc::SaveFile("https://codeload.github.com/usualtool/develop/zip/refs/heads/main",UTF_ROOT."/update","develop.zip",1);
-   if(!empty($res)){
-      echo'<span data-status="下载完成，正在解压可视包..."></span>';
-      flush();
-      $zip=new ZipArchive;
-      if($zip->open(UTF_ROOT."/update/develop.zip")===TRUE){
-         $zip->extractTo(UTF_ROOT."/update/");
-         $zip->close();
-         $pkg=is_dir(UTF_ROOT."/update/develop-main/") ? "develop-main" : "develop";
-         echo'<span data-status="解压完成，正在部署可视包文件..."></span>';
-         flush();
-         Inc::MoveDir(UTF_ROOT."/update/".$pkg."/",UTF_ROOT);
-         Inc::DelDir(UTF_ROOT."/update/".$pkg."/");
-         unlink(UTF_ROOT."/update/develop.zip");
-         $info=file_get_contents(UTF_ROOT."/.ut.config"); 
-         $info = preg_replace("/^DEVELOP=.*/m","DEVELOP=/dev",$info);
-         $info = preg_replace("/^ADMIN_POWER_PAGE=.*/m","ADMIN_POWER_PAGE=ut-frame/admin/session",$info);
-         $info = preg_replace("/^ADMIN_POWER_OUT=.*/m","ADMIN_POWER_OUT=ut-frame/admin/login,ut-frame/admin/captcha",$info);
-         file_put_contents(UTF_ROOT."/.ut.config",$info);
-         echo'<script>if(window.parent&&window.parent.waitDone){window.parent.waitDone("?do=app","可视包拉取成功!");}else{location.href="?do=app";}</script>';
-      }else{
-         echo'<script>if(window.parent&&window.parent.waitFail){window.parent.waitFail("可视包解压失败，请检查update权限!");}else{alert("可视包解压失败，请检查update权限!");history.back();}</script>';
-      }
+   $GLOBALS["dev_done"]=false;
+   register_shutdown_function(function(){
+      if(!empty($GLOBALS["dev_done"])){return;}
+      $tail="";
+      while(ob_get_level()>0){$tail=ob_get_clean().$tail;}
+      $tail=trim(preg_replace("/\s+/"," ",strip_tags($tail)));
+      $msg="部署失败或中断！".($tail!="" ? "信息：".mb_substr($tail,-160) : "请查看服务器日志。");
+      echo'<script>if(window.parent&&window.parent.waitFail){window.parent.waitFail('.json_encode($msg,JSON_UNESCAPED_UNICODE).');}else{alert('.json_encode($msg,JSON_UNESCAPED_UNICODE).');history.back();}</script>';
+      echo'</body></html>';
+   });
+   ob_start();
+   Cli::Install(array("usualtool","install","develop","","-1"));
+   $out=ob_get_clean();
+   $GLOBALS["dev_done"]=true;
+   if(strpos($out,"成功安装可视包")!==false){
+      $info=file_get_contents(UTF_ROOT."/.ut.config"); 
+      $info = preg_replace("/^DEVELOP=.*/m","DEVELOP=/dev",$info);
+      file_put_contents(UTF_ROOT."/.ut.config",$info);
+      echo'<script>if(window.parent&&window.parent.waitDone){window.parent.waitDone("?do=app","可视包部署成功!");}else{location.href="?do=app";}</script>';
    }else{
-      echo'<script>if(window.parent&&window.parent.waitFail){window.parent.waitFail("可视包下载失败，请检查网络后重试!");}else{alert("可视包下载失败，请检查网络后重试!");history.back();}</script>';
+      $log=trim(preg_replace("/\s+/"," ",strip_tags($out)));
+      $msg="部署失败：".mb_substr($log,-160);
+      echo'<script>if(window.parent&&window.parent.waitFail){window.parent.waitFail('.json_encode($msg,JSON_UNESCAPED_UNICODE).');}else{alert('.json_encode($msg,JSON_UNESCAPED_UNICODE).');history.back();}</script>';
    }
    echo'</body></html>';
    exit();
@@ -105,7 +107,7 @@ if($do=="app"&&isset($_GET["t"])&&$_GET["t"]=="install"){
       Cli::Install(array("usualtool","install","template",$temp,"-1"));
       $cliout=trim(ob_get_clean());
       if(is_dir(APP_ROOT."/template/".$temp)){
-         Mysql::UpdateData("cms_template",array("makefront"=>1),"tid='$temp'");
+         Data::UpdateData("cms_template",array("makefront"=>1),"tid='$temp'");
          $info=preg_replace("/TEMPFRONT=(.*)/","TEMPFRONT={$temp}",file_get_contents(UTF_ROOT."/.ut.config"));
          file_put_contents(UTF_ROOT."/.ut.config",$info);
          echo'<script>if(window.parent&&window.parent.waitDone){window.parent.waitDone("?do=finish","快速搭建应用成功!");}else{location.href="?do=finish";}</script>';
@@ -261,60 +263,23 @@ if($do=="app"&&isset($_GET["t"])&&$_GET["t"]=="install"){
                     }else{
                         echo"<p>请将/app、/log、/update、/open/assets权限设置为可写（755），并在此处 <a onclick='Refresh()' class='text-danger'>刷新页面</a></p>";
                     }
-                }elseif($do=="sql"){?>
-                    <div class="row">
-                        <div class="col-7">
-                            <h4>构建数据</h4>
-                        </div>
-                        <div class="col-5 text-end">
-                            <a class="btn btn-warning" href="javascript:history.go(-1)">上一步</a>
-                        </div>
-                    </div>
-                    <hr/>
-                    <?php
-                    if(Mysql::ModTable("cms_admin")){?>
-                        <p>已创建过数据，若要重新创建，请清除表后刷新本页。</p>
-                        <p class="mb-3">不建议的方式：<a href="?do=sql&t=db-sql">强制性更新</a> 数据结构。</p>
-                        <p><a class="btn btn-info" href="?do=pull">下一步</a></p>
-                    <?php
-                    }else{
-                        if($_GET["t"]=="db-sql"){
-                            $sql=file_get_contents("./develop.sql");
-                            $arr=explode(';',$sql);
-                            $total=count($arr)-1;
-                            $c=0;
-                            for($i=0;$i<$total;$i++){
-                                $k=$i+1;
-                                $result=Mysql::RunSql($arr[$i]);
-                                if($result){
-                                    echo"<p class='fontsmall'>第".$k."条SQL执行成功!</p>";
-                                }else{
-                                    $c=$c+1;
-                                    echo"<p class='fontsmall' style='color:red;'>第".$k."条SQL执行失败:".$arr[$i]."</p>";
-                                }
-                                if($k==$total && $c==0){
-                                    Inc::GoUrl("?do=pull","创建数据成功!");
-                                }
-                            }
-                        }
-                        echo'<p><a class="btn btn-info" href="?do=sql&t=db-sql">创建数据</a></p>';
-                    }
                 }elseif($do=="pull"){?>
                     <div class="row">
                         <div class="col-7">
-                            <h4>拉取可视包</h4>
+                            <h4>部署可视包</h4>
                         </div>
                         <div class="col-5 text-end">
-                            <a class="btn btn-warning" href="?do=sql">上一步</a>
+                            <a class="btn btn-warning" href="?do=config">上一步</a>
                         </div>
                     </div>
                     <hr/>
                     <?php
                     if(is_dir(APP_ROOT."/modules/ut-power")){
-                        echo"<p class='mb-3'>可视包已就位，无需重复拉取。</p>";
+                        echo"<p class='mb-3'>可视包已就位，无需重复部署。</p>";
                         echo"<p><a class=\"btn btn-info\" href=\"?do=app\">下一步</a></p>";
                     }else{
-                        echo'<div class="d-flex justify-content-between"><a class="btn btn-info" href="javascript:void(0)" onclick="return runTask(\'正在下载可视包，约需1分钟，请耐心等待...\',\'?do=pull&t=down\')">拉取可视包</a><a class="btn btn-warning" href="?do=app">跳过，下一步</a></div>';
+                        echo'<p class="mb-3">将自动下载可视包源码并安装数据表（develop.sql 随包安装，完成后自动删除）。</p>';
+                        echo'<div class="d-flex justify-content-between"><a class="btn btn-info" href="javascript:void(0)" onclick="return runTask(\'正在部署可视包（源码 + 数据），约需1分钟，请耐心等待...\',\'?do=pull&t=down\')">部署可视包</a><a class="btn btn-warning" href="?do=app">跳过，下一步</a></div>';
                     }
                 }elseif($do=="app"){?>
                     <form action="?do=app&t=install" method="post" name="form" target="taskFrame">
