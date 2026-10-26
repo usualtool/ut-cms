@@ -10,6 +10,8 @@
        *  |    Applicable to Apache 2.0 protocol.           |           
        * --------------------------------------------------------       
 */
+set_time_limit(300);
+ini_set('max_execution_time', '300');
 require dirname(__DIR__).'/'.'config.php';
 use usualtool\Lib\Inc;
 use usualtool\Lib\Cli;
@@ -222,8 +224,9 @@ if($do=="db-save"){
                                 if($zip->open(UTF_ROOT."/update/develop.zip")===TRUE){
                                     $zip->extractTo(UTF_ROOT."/update/");
                                     $zip->close();
-                                    Inc::MoveDir(UTF_ROOT."/update/develop/",UTF_ROOT);
-                                    Inc::DelDir(UTF_ROOT."/update/develop/");
+                                    $pkg=is_dir(UTF_ROOT."/update/develop-main/")?"develop-main":"develop";
+                                    Inc::MoveDir(UTF_ROOT."/update/".$pkg."/",UTF_ROOT);
+                                    Inc::DelDir(UTF_ROOT."/update/".$pkg."/");
                                     unlink(UTF_ROOT."/update/develop.zip");
                                     $info=file_get_contents(UTF_ROOT."/.ut.config"); 
                                     $info = preg_replace("/^DEVELOP=.*/m","DEVELOP=/dev",$info);
