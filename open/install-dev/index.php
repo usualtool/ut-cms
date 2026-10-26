@@ -16,6 +16,23 @@ require dirname(__DIR__).'/'.'config.php';
 use usualtool\Lib\Inc;
 use usualtool\Lib\Cli;
 use usualtool\Lib\Data;
+function task_guard($key,$label){
+   $GLOBALS[$key]=false;
+   register_shutdown_function(function()use($key,$label){
+      if(!empty($GLOBALS[$key])){return;}
+      $tail="";
+      while(ob_get_level()>0){$tail=ob_get_clean().$tail;}
+      $tail=trim(preg_replace("/\s+/"," ",strip_tags($tail)));
+      $tail=trim(preg_replace("/(Fatal error|Parse error|Uncaught \w*Error).*$/su","",$tail));
+      $err=error_get_last();
+      if(!empty($err["message"])&&in_array($err["type"],array(E_ERROR,E_PARSE,E_CORE_ERROR,E_COMPILE_ERROR,E_USER_ERROR))){
+         $tail.=" [PHP ".$err["message"]." @".basename($err["file"]).":".$err["line"]."]";
+      }
+      $msg=$label.($tail!="" ? "信息：".mb_substr($tail,-200) : "请查看服务器日志。");
+      echo'<script>if(window.parent&&window.parent.waitFail){window.parent.waitFail('.json_encode($msg,JSON_UNESCAPED_UNICODE).');}else{alert('.json_encode($msg,JSON_UNESCAPED_UNICODE).');history.back();}</script>';
+      echo'</body></html>';
+   });
+}
 if(Inc::SearchFile(OPEN_ROOT."/install-dev/usualtool.lock")){
    header("location:../");
    exit();
@@ -33,23 +50,14 @@ if($do=="db-save"){
    file_put_contents(UTF_ROOT."/.ut.config",$info);
    Inc::GoUrl("?do=pull","配置成功!");
 }
-if($do=="pull"&&isset($_GET["t"])&&$_GET["t"]=="down"){
+if($do=="pull" && isset($_GET["t"]) && $_GET["t"]=="down"){
    while(ob_get_level()>0){@ob_end_flush();}
    header('Content-Type: text/html; charset=utf-8');
    echo'<!DOCTYPE html><html><head><meta charset="utf-8"><script>window.__taskChild=true;</script></head><body>';
    echo'<span data-status="正在部署可视包（源码 + 数据），约需1分钟，请耐心等待..."></span>';
    echo str_pad('',4096);
    flush();
-   $GLOBALS["dev_done"]=false;
-   register_shutdown_function(function(){
-      if(!empty($GLOBALS["dev_done"])){return;}
-      $tail="";
-      while(ob_get_level()>0){$tail=ob_get_clean().$tail;}
-      $tail=trim(preg_replace("/\s+/"," ",strip_tags($tail)));
-      $msg="部署失败或中断！".($tail!="" ? "信息：".mb_substr($tail,-160) : "请查看服务器日志。");
-      echo'<script>if(window.parent&&window.parent.waitFail){window.parent.waitFail('.json_encode($msg,JSON_UNESCAPED_UNICODE).');}else{alert('.json_encode($msg,JSON_UNESCAPED_UNICODE).');history.back();}</script>';
-      echo'</body></html>';
-   });
+   task_guard("dev_done","部署失败或中断！");
    ob_start();
    Cli::Install(array("usualtool","install","develop","","-1"));
    $out=ob_get_clean();
@@ -67,14 +75,16 @@ if($do=="pull"&&isset($_GET["t"])&&$_GET["t"]=="down"){
    echo'</body></html>';
    exit();
 }
-if($do=="app"&&isset($_GET["t"])&&$_GET["t"]=="install"){
+if($do=="app" && isset($_GET["t"]) && $_GET["t"]=="install"){
    while(ob_get_level()>0){@ob_end_flush();}
    header('Content-Type: text/html; charset=utf-8');
    echo'<!DOCTYPE html><html><head><meta charset="utf-8"><script>window.__taskChild=true;</script></head><body>';
+   task_guard("app_done","安装失败或中断！");
    if(!empty($_POST["app"])){
       $app=explode("__",$_POST["app"]);
       $temp=$app[0];
       if(!preg_match('/^[A-Za-z0-9_-]+$/',$temp)){
+         $GLOBALS["app_done"]=true;
          echo'<script>if(window.parent&&window.parent.waitFail){window.parent.waitFail("参数非法!");}else{alert("参数非法!");history.back();}</script>';
          echo'</body></html>';
          exit();
@@ -85,6 +95,7 @@ if($do=="app"&&isset($_GET["t"])&&$_GET["t"]=="install"){
       $mods=array_values(array_filter(explode(",",$app[1]),'strlen'));
       for($i=0;$i<count($mods);$i++){
          if(!preg_match('/^[A-Za-z0-9_-]+$/',$mods[$i])){
+            $GLOBALS["app_done"]=true;
             echo'<script>if(window.parent&&window.parent.waitFail){window.parent.waitFail("参数非法!");}else{alert("参数非法!");history.back();}</script>';
             echo'</body></html>';
             exit();
@@ -95,6 +106,7 @@ if($do=="app"&&isset($_GET["t"])&&$_GET["t"]=="install"){
          Cli::Install(array("usualtool","install","module",$mods[$i],"-1"));
          $cliout=trim(ob_get_clean());
          if(!is_dir(APP_ROOT."/modules/".$mods[$i])){
+            $GLOBALS["app_done"]=true;
             $msg=json_encode("安装模块 ".$mods[$i]." 失败：".$cliout,JSON_UNESCAPED_UNICODE);
             echo'<script>if(window.parent&&window.parent.waitFail){window.parent.waitFail('.$msg.');}else{alert('.$msg.');history.back();}</script>';
             echo'</body></html>';
@@ -119,6 +131,7 @@ if($do=="app"&&isset($_GET["t"])&&$_GET["t"]=="install"){
       echo'<script>if(window.parent&&window.parent.waitFail){window.parent.waitFail("请选择模板工程!");}else{alert("请选择模板工程!");history.back();}</script>';
    }
    echo'</body></html>';
+   $GLOBALS["app_done"]=true;
    exit();
 }
 ?>
