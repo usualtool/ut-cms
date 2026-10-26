@@ -47,12 +47,19 @@ if($do=="db-save"){
     .fontsmall{font-size:12px;}
     #license p{font-size:11px;
     }
+    .wait-mask{position:fixed;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,.45);z-index:9999;display:none;}
+    .wait-mask.show{display:flex;align-items:center;justify-content:center;}
+    .wait-box{background:#fff;border-radius:8px;padding:24px 36px;text-align:center;box-shadow:0 6px 24px rgba(0,0,0,.25);}
+    .wait-spinner{width:36px;height:36px;margin:0 auto 12px;border:4px solid #e9ecef;border-top-color:#17a2b8;border-radius:50%;animation:waitspin 1s linear infinite;}
+    @keyframes waitspin{to{transform:rotate(360deg);}}
+    .wait-text{font-size:14px;color:#333;}
     </style>
 </head>
 <body>
+    <div class="wait-mask" id="waitMask"><div class="wait-box"><div class="wait-spinner"></div><div class="wait-text" id="waitText"></div></div></div>
     <div class="container">
         <div class="row">
-            <div class="col-md-12 mt-3 mb-3 text-center"><img src="<?php echo$config["APPURL"];?>/assets/logo.png"></div>
+            <div class="col-md-12 mt-3 mb-3 text-center"><img src="<?php echo$config["APPURL"];?>/assets/logo.png?v=2.0"></div>
             <div class="col-md-12">
                 <div class="border rounded p-4">
                 <?php
@@ -217,7 +224,10 @@ if($do=="db-save"){
                         echo"<p><a class=\"btn btn-info\" href=\"?do=app\">下一步</a></p>";
                     }else{
                         if($_GET["t"]=="down"){
+                            echo'<div class="wait-mask show"><div class="wait-box"><div class="wait-spinner"></div><div class="wait-text">正在拉取可视包，请耐心等待约1分钟...</div></div></div>';
                             echo"<p class='fontsmall'>正在拉取可视包...</p>";
+                            echo str_pad('',4096);
+                            flush();
                             $res=Inc::SaveFile("https://codeload.github.com/usualtool/develop/zip/refs/heads/main",UTF_ROOT."/update","develop.zip",1);
                             if(!empty($res)){
                                 $zip=new ZipArchive;
@@ -241,7 +251,7 @@ if($do=="db-save"){
                                 echo"<p class='fontsmall' style='color:red;'>可视包下载失败，请检查网络后重试!</p>";
                             }
                         }
-                        echo'<div class="d-flex justify-content-between"><a class="btn btn-info" href="?do=pull&t=down">拉取可视包</a><a class="btn btn-warning" href="?do=app">跳过，下一步</a></div>';
+                        echo'<div class="d-flex justify-content-between"><a class="btn btn-info" href="?do=pull&t=down" onclick="return showWait(\'正在拉取可视包，请耐心等待约1分钟...\')">拉取可视包</a><a class="btn btn-warning" href="?do=app">跳过，下一步</a></div>';
                     }
                 }elseif($do=="app"){?>
                     <form action="?do=app&t=install" method="post" name="form">
@@ -256,6 +266,9 @@ if($do=="db-save"){
                     <hr/>
                     <?php
                     if($_GET["t"]=="install"){
+                        echo'<div class="wait-mask show"><div class="wait-box"><div class="wait-spinner"></div><div class="wait-text">正在安装模块与模板，请耐心等待...</div></div></div>';
+                        echo str_pad('',4096);
+                        flush();
                         if(!empty($_POST["app"])){
                             $app=explode("__",$_POST["app"]);
                             $temp=$app[0];
@@ -266,11 +279,15 @@ if($do=="db-save"){
                             for($i=0;$i<count($mods);$i++){
                                 $k=$i+1;
                                 echo"<br/>安装模块：".$mods[$i]."<br/>";
+                                flush();
                                 Cli::Install(array("usualtool","install","module",$mods[$i],"-1"));
+                                flush();
                             }
                             if($k==count($mods)){
                                 echo"<br/>安装模板：".$temp."<br/>";
+                                flush();
                                 Cli::Install(array("usualtool","install","template",$temp,"-1"));
+                                flush();
                                 if(is_dir(APP_ROOT."/template/".$temp)){
                                     Mysql::UpdateData("cms_template",array("makefront"=>1),"tid='$temp'");
                                     $info=preg_replace("/TEMPFRONT=(.*)/","TEMPFRONT={$temp}",file_get_contents(UTF_ROOT."/.ut.config"));
@@ -293,7 +310,7 @@ if($do=="db-save"){
                         ?>
                         </div>
                         <div class="d-flex justify-content-between border-top pt-3">
-                            <button type="submit" class="btn btn-info mr-2">安装（预计20秒）</button>
+                            <button type="submit" class="btn btn-info mr-2" onclick="return showWait('正在安装模块与模板，请耐心等待...')">安装（预计20秒）</button>
                             <a class="btn btn-warning" href="?do=finish">跳过，下一步</a>
                         </div>
                         </form>
@@ -312,6 +329,11 @@ if($do=="db-save"){
     <script>
         function Refresh(){
             window.location.reload();
+        }
+        function showWait(msg){
+            document.getElementById('waitText').innerText=msg;
+            document.getElementById('waitMask').classList.add('show');
+            return true;
         }
     </script>
 </html>
