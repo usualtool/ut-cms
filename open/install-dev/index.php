@@ -224,7 +224,7 @@ if($do=="db-save"){
                                 if($zip->open(UTF_ROOT."/update/develop.zip")===TRUE){
                                     $zip->extractTo(UTF_ROOT."/update/");
                                     $zip->close();
-                                    $pkg=is_dir(UTF_ROOT."/update/develop-main/")?"develop-main":"develop";
+                                    $pkg=is_dir(UTF_ROOT."/update/develop-main/") ? "develop-main" : "develop";
                                     Inc::MoveDir(UTF_ROOT."/update/".$pkg."/",UTF_ROOT);
                                     Inc::DelDir(UTF_ROOT."/update/".$pkg."/");
                                     unlink(UTF_ROOT."/update/develop.zip");
