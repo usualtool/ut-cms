@@ -117,37 +117,41 @@ if($do=="db-save"){
                     </div>
                     <div class="row">
                         <div class="form-group col-md-6">
-                            <label for="email">应用域名/IP:</label>
+                            <label>应用名称:</label>
+                            <input class="form-control" name="APPNAME" id="APPNAME" value="<?php echo$config["APPNAME"];?>" required>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>应用域名/IP:</label>
                             <input class="form-control" name="APPURL" id="APPURL" value="<?php echo$config["APPURL"];?>" required>
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="email">UT令牌:</label>
+                            <label>UT令牌:</label>
                             <input class="form-control" name="UTCODE" id="UTCODE" value="<?php echo$config["UTCODE"];?>" required>
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-md-6">
-                            <label for="email">数据库服务器:</label>
+                            <label>数据库服务器:</label>
                             <input class="form-control" name="MYSQL_HOST" id="MYSQL_HOST" value="<?php echo$config["MYSQL_HOST"];?>" required>
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="email">端口:</label>
+                            <label>端口:</label>
                             <input class="form-control" name="MYSQL_PORT" id="MYSQL_PORT" value="<?php echo$config["MYSQL_PORT"];?>" required>
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-md-6">
-                            <label for="email">数据库用户:</label>
+                            <label>数据库用户:</label>
                             <input class="form-control" name="MYSQL_USER" id="MYSQL_USER" value="<?php echo$config["MYSQL_USER"];?>" required>
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="email">数据库密码:</label>
+                            <label>数据库密码:</label>
                             <input class="form-control" name="MYSQL_PASS" id="MYSQL_PASS" value="<?php echo$config["MYSQL_PASS"];?>" required>
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-md-6">
-                            <label for="email">数据库名称:</label>
+                            <label>数据库名称:</label>
                             <input class="form-control" name="MYSQL_DB" id="MYSQL_DB" value="<?php echo$config["MYSQL_DB"];?>" required>
                         </div>
                     </div>
@@ -176,7 +180,7 @@ if($do=="db-save"){
                     if(Mysql::ModTable("cms_admin")){?>
                         <p>已创建过数据，若要重新创建，请清除表后刷新本页。</p>
                         <p class="mb-3">不建议的方式：<a href="?do=sql&t=db-sql">强制性更新</a> 数据结构。</p>
-                        <p><a class="btn btn-warning" href="?do=app">跳过，下一步</a></p>
+                        <p><a class="btn btn-warning" href="?do=pull">下一步</a></p>
                     <?php
                     }else{
                         if($_GET["t"]=="db-sql"){
@@ -194,11 +198,47 @@ if($do=="db-save"){
                                     echo"<p class='fontsmall' style='color:red;'>第".$k."条SQL执行失败:".$arr[$i]."</p>";
                                 }
                                 if($k==$total && $c==0){
-                                    Inc::GoUrl("?do=app","创建数据成功!");
+                                    Inc::GoUrl("?do=pull","创建数据成功!");
                                 }
                             }
                         }
                         echo'<p><a class="btn btn-info" href="?do=sql&t=db-sql">创建数据</a></p>';
+                    }
+                }elseif($do=="pull"){?>
+                    <div class="row">
+                        <div class="col-7">
+                            <h4>拉取可视包</h4>
+                        </div>
+                        <div class="col-5 text-right">
+                            <a class="btn btn-warning" href="?do=sql">上一步</a>
+                        </div>
+                    </div>
+                    <hr/>
+                    <?php
+                    if(is_dir(OPEN_ROOT."/dev")){
+                        echo"<p>develop可视包已就位，无需重复拉取。</p>";
+                        echo"<p><a class=\"btn btn-info\" href=\"?do=app\">下一步</a></p>";
+                    }else{
+                        if($_GET["t"]=="down"){
+                            echo"<p class='fontsmall'>正在拉取develop可视包...</p>";
+                            $res=Inc::SaveFile($config["DOWNURL"]."/develop.zip",UTF_ROOT."/update","develop.zip",1);
+                            if(!empty($res)){
+                                $zip=new ZipArchive;
+                                if($zip->open(UTF_ROOT."/update/develop.zip")===TRUE){
+                                    $zip->extractTo(UTF_ROOT."/update/");
+                                    $zip->close();
+                                    Inc::MoveDir(UTF_ROOT."/update/develop/",UTF_ROOT);
+                                    Inc::DelDir(UTF_ROOT."/update/develop/");
+                                    unlink(UTF_ROOT."/update/develop.zip");
+                                    Inc::GoUrl("?do=app","develop可视包拉取成功!");
+                                }else{
+                                    echo"<p class='fontsmall' style='color:red;'>develop可视包解压失败，请重试或在完成步骤重试!</p>";
+                                }
+                            }else{
+                                echo"<p class='fontsmall' style='color:red;'>develop可视包下载失败，请检查网络后重试或在完成步骤重试!</p>";
+                            }
+                        }
+                        echo'<div class="d-flex justify-content-between"><a class="btn btn-info" href="?do=pull&t=down">拉取develop可视包</a><a class="btn btn-warning" href="?do=app">跳过，下一步</a></div>';
                     }
                 }elseif($do=="app"){?>
                     <form action="?do=app&t=install" method="post" name="form">
@@ -207,7 +247,7 @@ if($do=="db-save"){
                             <h4>快速搭建</h4>
                         </div>
                         <div class="col-5 text-right">
-                            <a class="btn btn-warning" href="javascript:history.go(-1)">上一步</a>
+                            <a class="btn btn-warning" href="?do=pull">上一步</a>
                         </div>
                     </div>
                     <hr/>
@@ -257,29 +297,34 @@ if($do=="db-save"){
                     <?php
                     }
                 }elseif($do=="finish"){
-                     $res=Inc::SaveFile($config["DOWNURL"]."/develop.zip",UTF_ROOT."/update","develop.zip",1);
-                     if(!empty($res)){
-                        $zip=new ZipArchive;
-                        if($zip->open(UTF_ROOT."/update/develop.zip")===TRUE){ 
-                            $zip->extractTo(UTF_ROOT."/update/");
-                            $zip->close();
-                            Inc::MoveDir(UTF_ROOT."/update/develop/",UTF_ROOT);
-                            Inc::DelDir(UTF_ROOT."/update/develop/");
-                            unlink(UTF_ROOT."/update/develop.zip");
-                            file_put_contents("./usualtool.lock","lock");
+                    if(is_dir(OPEN_ROOT."/dev")){
+                        $res="skip";
+                    }else{
+                        $res=Inc::SaveFile($config["DOWNURL"]."/develop.zip",UTF_ROOT."/update","develop.zip",1);
+                    }
+                    if(!empty($res)){
+                        if($res!=="skip"){
+                            $zip=new ZipArchive;
+                            if($zip->open(UTF_ROOT."/update/develop.zip")===TRUE){
+                                $zip->extractTo(UTF_ROOT."/update/");
+                                $zip->close();
+                                Inc::MoveDir(UTF_ROOT."/update/develop/",UTF_ROOT);
+                                Inc::DelDir(UTF_ROOT."/update/develop/");
+                                unlink(UTF_ROOT."/update/develop.zip");
+                            }else{
+                                Inc::GoUrl("?do=dev","文件夹权限不足!");
+                            }
+                        }
+                        file_put_contents("./usualtool.lock","lock");
                             $info=file_get_contents(UTF_ROOT."/.ut.config"); 
                             $info = preg_replace("/^DEVELOP=.*/m","DEVELOP=/dev",$info);
                             $info = preg_replace("/^ADMIN_POWER_PAGE=.*/m","ADMIN_POWER_PAGE=ut-frame/admin/session",$info);
                             $info = preg_replace("/^ADMIN_POWER_OUT=.*/m","ADMIN_POWER_OUT=ut-frame/admin/login,ut-frame/admin/captcha",$info);
                             file_put_contents(UTF_ROOT."/.ut.config",$info);
                             Inc::GoUrl("../dev/","安装成功!后端初始账号密码为“admin”请及时修改!");
-                        }else{
-                            echo "<script>alert('文件夹权限不足!');window.location.href='?do=dev'</script>";
-                           exit();
-                        }
-                     }else{
-                        echo "<script>alert('请检查网络是否通畅!');window.location.href='?do=dev'</script>";
-                     }
+                    }else{
+                        Inc::GoUrl("?do=dev","请检查网络是否通畅!");
+                    }
                 }
                 ?>
                 </div>
