@@ -21,8 +21,6 @@ if(Inc::SearchFile(OPEN_ROOT."/install-dev/usualtool.lock")){
    exit();
 }
 $do=$_GET["do"];
-$httpcode=Inc::HttpCode($config["UTFURL"]);
-$sysinfo=Inc::GetSystemInfo();
 if($do=="db-save"){
    $info = file_get_contents(UTF_ROOT."/.ut.config"); 
     foreach($_POST as $k=>$v){
@@ -30,6 +28,96 @@ if($do=="db-save"){
     }
    file_put_contents(UTF_ROOT."/.ut.config",$info);
    Inc::GoUrl("?do=sql","配置成功!");
+}
+if($do=="pull"&&isset($_GET["t"])&&$_GET["t"]=="down"){
+   while(ob_get_level()>0){@ob_end_flush();}
+   header('Content-Type: text/html; charset=utf-8');
+   echo'<!DOCTYPE html><html><head><meta charset="utf-8"><script>window.__taskChild=true;</script></head><body>';
+   echo'<span data-status="正在下载可视包，约需1分钟，请耐心等待..."></span>';
+   echo str_pad('',4096);
+   flush();
+   $res=Inc::SaveFile("https://codeload.github.com/usualtool/develop/zip/refs/heads/main",UTF_ROOT."/update","develop.zip",1);
+   if(!empty($res)){
+      echo'<span data-status="下载完成，正在解压可视包..."></span>';
+      flush();
+      $zip=new ZipArchive;
+      if($zip->open(UTF_ROOT."/update/develop.zip")===TRUE){
+         $zip->extractTo(UTF_ROOT."/update/");
+         $zip->close();
+         $pkg=is_dir(UTF_ROOT."/update/develop-main/") ? "develop-main" : "develop";
+         echo'<span data-status="解压完成，正在部署可视包文件..."></span>';
+         flush();
+         Inc::MoveDir(UTF_ROOT."/update/".$pkg."/",UTF_ROOT);
+         Inc::DelDir(UTF_ROOT."/update/".$pkg."/");
+         unlink(UTF_ROOT."/update/develop.zip");
+         $info=file_get_contents(UTF_ROOT."/.ut.config"); 
+         $info = preg_replace("/^DEVELOP=.*/m","DEVELOP=/dev",$info);
+         $info = preg_replace("/^ADMIN_POWER_PAGE=.*/m","ADMIN_POWER_PAGE=ut-frame/admin/session",$info);
+         $info = preg_replace("/^ADMIN_POWER_OUT=.*/m","ADMIN_POWER_OUT=ut-frame/admin/login,ut-frame/admin/captcha",$info);
+         file_put_contents(UTF_ROOT."/.ut.config",$info);
+         echo'<script>if(window.parent&&window.parent.waitDone){window.parent.waitDone("?do=app","可视包拉取成功!");}else{location.href="?do=app";}</script>';
+      }else{
+         echo'<script>if(window.parent&&window.parent.waitFail){window.parent.waitFail("可视包解压失败，请检查update权限!");}else{alert("可视包解压失败，请检查update权限!");history.back();}</script>';
+      }
+   }else{
+      echo'<script>if(window.parent&&window.parent.waitFail){window.parent.waitFail("可视包下载失败，请检查网络后重试!");}else{alert("可视包下载失败，请检查网络后重试!");history.back();}</script>';
+   }
+   echo'</body></html>';
+   exit();
+}
+if($do=="app"&&isset($_GET["t"])&&$_GET["t"]=="install"){
+   while(ob_get_level()>0){@ob_end_flush();}
+   header('Content-Type: text/html; charset=utf-8');
+   echo'<!DOCTYPE html><html><head><meta charset="utf-8"><script>window.__taskChild=true;</script></head><body>';
+   if(!empty($_POST["app"])){
+      $app=explode("__",$_POST["app"]);
+      $temp=$app[0];
+      if(!preg_match('/^[A-Za-z0-9_-]+$/',$temp)){
+         echo'<script>if(window.parent&&window.parent.waitFail){window.parent.waitFail("参数非法!");}else{alert("参数非法!");history.back();}</script>';
+         echo'</body></html>';
+         exit();
+      }
+      echo'<span data-status="正在安装模块与模板，请耐心等待..."></span>';
+      echo str_pad('',4096);
+      flush();
+      $mods=array_values(array_filter(explode(",",$app[1]),'strlen'));
+      for($i=0;$i<count($mods);$i++){
+         if(!preg_match('/^[A-Za-z0-9_-]+$/',$mods[$i])){
+            echo'<script>if(window.parent&&window.parent.waitFail){window.parent.waitFail("参数非法!");}else{alert("参数非法!");history.back();}</script>';
+            echo'</body></html>';
+            exit();
+         }
+         echo'<span data-status="正在安装模块：'.$mods[$i].'"></span>';
+         flush();
+         ob_start();
+         Cli::Install(array("usualtool","install","module",$mods[$i],"-1"));
+         $cliout=trim(ob_get_clean());
+         if(!is_dir(APP_ROOT."/modules/".$mods[$i])){
+            $msg=json_encode("安装模块 ".$mods[$i]." 失败：".$cliout,JSON_UNESCAPED_UNICODE);
+            echo'<script>if(window.parent&&window.parent.waitFail){window.parent.waitFail('.$msg.');}else{alert('.$msg.');history.back();}</script>';
+            echo'</body></html>';
+            exit();
+         }
+      }
+      echo'<span data-status="正在安装模板：'.$temp.'"></span>';
+      flush();
+      ob_start();
+      Cli::Install(array("usualtool","install","template",$temp,"-1"));
+      $cliout=trim(ob_get_clean());
+      if(is_dir(APP_ROOT."/template/".$temp)){
+         Mysql::UpdateData("cms_template",array("makefront"=>1),"tid='$temp'");
+         $info=preg_replace("/TEMPFRONT=(.*)/","TEMPFRONT={$temp}",file_get_contents(UTF_ROOT."/.ut.config"));
+         file_put_contents(UTF_ROOT."/.ut.config",$info);
+         echo'<script>if(window.parent&&window.parent.waitDone){window.parent.waitDone("?do=finish","快速搭建应用成功!");}else{location.href="?do=finish";}</script>';
+      }else{
+         $msg=json_encode("安装模板失败：".$cliout,JSON_UNESCAPED_UNICODE);
+         echo'<script>if(window.parent&&window.parent.waitFail){window.parent.waitFail('.$msg.');}else{alert('.$msg.');history.back();}</script>';
+      }
+   }else{
+      echo'<script>if(window.parent&&window.parent.waitFail){window.parent.waitFail("请选择模板工程!");}else{alert("请选择模板工程!");history.back();}</script>';
+   }
+   echo'</body></html>';
+   exit();
 }
 ?>
 <!DOCTYPE html>
@@ -57,6 +145,7 @@ if($do=="db-save"){
 </head>
 <body>
     <div class="wait-mask" id="waitMask"><div class="wait-box"><div class="wait-spinner"></div><div class="wait-text" id="waitText"></div></div></div>
+    <iframe id="taskFrame" name="taskFrame" style="display:none;width:0;height:0;border:0;"></iframe>
     <div class="container">
         <div class="row">
             <div class="col-md-12 mt-3 mb-3 text-center"><img src="<?php echo$config["APPURL"];?>/assets/logo.png?v=2.0"></div>
@@ -104,6 +193,8 @@ if($do=="db-save"){
                     </script>
                 <?php
                 }elseif($do=="config"){
+                    $httpcode=Inc::HttpCode($config["UTFURL"]);
+                    $sysinfo=Inc::GetSystemInfo();
                     if(Inc::FileMode(UTF_ROOT)){
                 ?><div class="row">
                         <div class="col-7">
@@ -223,38 +314,10 @@ if($do=="db-save"){
                         echo"<p class='mb-3'>可视包已就位，无需重复拉取。</p>";
                         echo"<p><a class=\"btn btn-info\" href=\"?do=app\">下一步</a></p>";
                     }else{
-                        if($_GET["t"]=="down"){
-                            echo'<div class="wait-mask show"><div class="wait-box"><div class="wait-spinner"></div><div class="wait-text">正在拉取可视包，请耐心等待约1分钟...</div></div></div>';
-                            echo"<p class='fontsmall'>正在拉取可视包...</p>";
-                            echo str_pad('',4096);
-                            flush();
-                            $res=Inc::SaveFile("https://codeload.github.com/usualtool/develop/zip/refs/heads/main",UTF_ROOT."/update","develop.zip",1);
-                            if(!empty($res)){
-                                $zip=new ZipArchive;
-                                if($zip->open(UTF_ROOT."/update/develop.zip")===TRUE){
-                                    $zip->extractTo(UTF_ROOT."/update/");
-                                    $zip->close();
-                                    $pkg=is_dir(UTF_ROOT."/update/develop-main/") ? "develop-main" : "develop";
-                                    Inc::MoveDir(UTF_ROOT."/update/".$pkg."/",UTF_ROOT);
-                                    Inc::DelDir(UTF_ROOT."/update/".$pkg."/");
-                                    unlink(UTF_ROOT."/update/develop.zip");
-                                    $info=file_get_contents(UTF_ROOT."/.ut.config"); 
-                                    $info = preg_replace("/^DEVELOP=.*/m","DEVELOP=/dev",$info);
-                                    $info = preg_replace("/^ADMIN_POWER_PAGE=.*/m","ADMIN_POWER_PAGE=ut-frame/admin/session",$info);
-                                    $info = preg_replace("/^ADMIN_POWER_OUT=.*/m","ADMIN_POWER_OUT=ut-frame/admin/login,ut-frame/admin/captcha",$info);
-                                    file_put_contents(UTF_ROOT."/.ut.config",$info);
-                                    Inc::GoUrl("?do=app","可视包拉取成功!");
-                                }else{
-                                    echo"<p class='fontsmall' style='color:red;'>可视包解压失败，请检查update权限!</p>";
-                                }
-                            }else{
-                                echo"<p class='fontsmall' style='color:red;'>可视包下载失败，请检查网络后重试!</p>";
-                            }
-                        }
-                        echo'<div class="d-flex justify-content-between"><a class="btn btn-info" href="?do=pull&t=down" onclick="return showWait(\'正在拉取可视包，请耐心等待约1分钟...\')">拉取可视包</a><a class="btn btn-warning" href="?do=app">跳过，下一步</a></div>';
+                        echo'<div class="d-flex justify-content-between"><a class="btn btn-info" href="javascript:void(0)" onclick="return runTask(\'正在下载可视包，约需1分钟，请耐心等待...\',\'?do=pull&t=down\')">拉取可视包</a><a class="btn btn-warning" href="?do=app">跳过，下一步</a></div>';
                     }
                 }elseif($do=="app"){?>
-                    <form action="?do=app&t=install" method="post" name="form">
+                    <form action="?do=app&t=install" method="post" name="form" target="taskFrame">
                     <div class="row">
                         <div class="col-7">
                             <h4>快速搭建</h4>
@@ -264,58 +327,22 @@ if($do=="db-save"){
                         </div>
                     </div>
                     <hr/>
+                    <div class="row">
                     <?php
-                    if($_GET["t"]=="install"){
-                        echo'<div class="wait-mask show"><div class="wait-box"><div class="wait-spinner"></div><div class="wait-text">正在安装模块与模板，请耐心等待...</div></div></div>';
-                        echo str_pad('',4096);
-                        flush();
-                        if(!empty($_POST["app"])){
-                            $app=explode("__",$_POST["app"]);
-                            $temp=$app[0];
-                            if(!preg_match('/^[A-Za-z0-9_-]+$/',$temp)){
-                                Inc::GoUrl("-1","参数非法!");
-                            }
-                            $mods=explode(",",$app[1]);
-                            for($i=0;$i<count($mods);$i++){
-                                $k=$i+1;
-                                echo"<br/>安装模块：".$mods[$i]."<br/>";
-                                flush();
-                                Cli::Install(array("usualtool","install","module",$mods[$i],"-1"));
-                                flush();
-                            }
-                            if($k==count($mods)){
-                                echo"<br/>安装模板：".$temp."<br/>";
-                                flush();
-                                Cli::Install(array("usualtool","install","template",$temp,"-1"));
-                                flush();
-                                if(is_dir(APP_ROOT."/template/".$temp)){
-                                    Mysql::UpdateData("cms_template",array("makefront"=>1),"tid='$temp'");
-                                    $info=preg_replace("/TEMPFRONT=(.*)/","TEMPFRONT={$temp}",file_get_contents(UTF_ROOT."/.ut.config"));
-                                    file_put_contents(UTF_ROOT."/.ut.config",$info);
-                                    Inc::GoUrl("?do=finish","快速搭建应用成功!");
-                                }
-                            }
-                        }else{
-                            Inc::GoUrl("-1","请选择模板工程!");
+                    $data=Inc::Gettemplate(1);
+                    foreach($data as $rows){
+                        if(strpos($rows["isfree"],'公开使用')!==false){
+                            echo"<div class='col-md-3 mb-2 text-center'><img src='".$rows["picurl"]."' style='width:100%;' class='mb-2'><br/><input type='radio' name='app' value='".$rows["tid"]."__".$rows["module"]."' class='mr-1'>".$rows["title"]."</div>";
                         }
-                    }else{?>
-                        <div class="row">
-                        <?php
-                        $data=Inc::Gettemplate(1);
-                        foreach($data as $rows){
-                            if(strpos($rows["isfree"],'公开使用')!==false){
-                                echo"<div class='col-md-3 mb-2 text-center'><img src='".$rows["picurl"]."' style='width:100%;' class='mb-2'><br/><input type='radio' name='app' value='".$rows["tid"]."__".$rows["module"]."' class='mr-1'>".$rows["title"]."</div>";
-                            }
-                        }
-                        ?>
-                        </div>
-                        <div class="d-flex justify-content-between border-top pt-3">
-                            <button type="submit" class="btn btn-info mr-2" onclick="return showWait('正在安装模块与模板，请耐心等待...')">安装（预计20秒）</button>
-                            <a class="btn btn-warning" href="?do=finish">跳过，下一步</a>
-                        </div>
-                        </form>
-                    <?php
                     }
+                    ?>
+                    </div>
+                    <div class="d-flex justify-content-between border-top pt-3">
+                        <button type="submit" class="btn btn-info mr-2" onclick="return startWait('正在安装模块与模板，请耐心等待...')">安装（预计20秒）</button>
+                        <a class="btn btn-warning" href="?do=finish">跳过，下一步</a>
+                    </div>
+                    </form>
+                <?php
                 }elseif($do=="finish"){
                     file_put_contents("./usualtool.lock","lock");
                     Inc::GoUrl("/dev/","安装成功!后端初始账号密码为“admin”请及时修改!");
@@ -330,10 +357,50 @@ if($do=="db-save"){
         function Refresh(){
             window.location.reload();
         }
-        function showWait(msg){
+        var pollTimer=null;
+        var taskFailTicks=0;
+        function startWait(msg){
             document.getElementById('waitText').innerText=msg;
             document.getElementById('waitMask').classList.add('show');
+            taskFailTicks=0;
+            if(pollTimer){clearInterval(pollTimer);}
+            pollTimer=setInterval(pollTask,500);
             return true;
+        }
+        function pollTask(){
+            try{
+                var d=document.getElementById('taskFrame').contentDocument;
+                if(!d||!d.defaultView){return;}
+                var list=d.querySelectorAll('[data-status]');
+                if(list.length){
+                    document.getElementById('waitText').innerText=list[list.length-1].getAttribute('data-status');
+                }
+                if(d.readyState==='complete'&&d.defaultView.__taskChild){
+                    taskFailTicks++;
+                    if(taskFailTicks>=4){
+                        var tail=d.body?d.body.innerText.replace(/\s+/g,' ').trim():'';
+                        waitFail('安装进程异常中止！'+(tail?'信息：'+tail.slice(-160):'请查看服务器日志。'));
+                    }
+                }else{
+                    taskFailTicks=0;
+                }
+            }catch(e){}
+        }
+        function runTask(msg,url){
+            startWait(msg);
+            document.getElementById('taskFrame').src=url;
+            return false;
+        }
+        function waitDone(url,msg){
+            if(pollTimer){clearInterval(pollTimer);}
+            document.getElementById('waitMask').classList.remove('show');
+            if(msg){alert(msg);}
+            window.location.href=url;
+        }
+        function waitFail(msg){
+            if(pollTimer){clearInterval(pollTimer);}
+            document.getElementById('waitMask').classList.remove('show');
+            alert(msg);
         }
     </script>
 </html>
