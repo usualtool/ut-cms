@@ -274,7 +274,7 @@ if($do=="app" && isset($_GET["t"]) && $_GET["t"]=="install"){
                     </form>
                 <?php
                     }else{
-                        echo"<p>请将/app、/log、/update、/open/assets权限设置为可写（755），并在此处 <a onclick='Refresh()' class='text-danger'>刷新页面</a></p>";
+                        echo"<p>请将/app、/log、/update、/open、/assets权限设置为可写（755），并在此处 <a onclick='Refresh()' class='text-danger'>刷新页面</a></p>";
                     }
                 }elseif($do=="pull"){?>
                     <div class="row">
@@ -307,7 +307,18 @@ if($do=="app" && isset($_GET["t"]) && $_GET["t"]=="install"){
                     <hr/>
                     <div class="row">
                     <?php
-                    $data=Inc::Gettemplate(1);
+                    $data=array();
+                    $temps=Inc::Auth("temp");
+                    preg_match_all( "/\<temp\>(.*?)\<\/temp\>/s",$temps,$tempblocks);
+                    foreach($tempblocks[1] as $temp){
+                        preg_match_all("/\<tid\>(.*?)\<\/tid\>/",$temp,$tid);
+                        preg_match_all("/\<title\>(.*?)\<\/title\>/",$temp,$title);
+                        preg_match_all("/\<picurl\>(.*?)\<\/picurl\>/",$temp,$picurl);
+                        preg_match_all("/\<module\>(.*?)\<\/module\>/",$temp,$module);
+                        preg_match_all("/\<lang\>(.*?)\<\/lang\>/",$temp,$lang);
+                        preg_match_all("/\<isfree\>(.*?)\<\/isfree\>/",$temp,$isfree);
+                        $data[]=array("tid"=>$tid[1][0],"title"=>$title[1][0],"picurl"=>$picurl[1][0],"module"=>$module[1][0],"lang"=>$lang[1][0],"isfree"=>$isfree[1][0]);
+                    }
                     foreach($data as $rows){
                         if(strpos($rows["isfree"],'公开使用')!==false){
                             echo"<div class='col-md-3 mb-2 text-center'><img src='".$rows["picurl"]."' style='width:100%;' class='mb-2'><br/><input type='radio' name='app' value='".$rows["tid"]."__".$rows["module"]."' class='mr-1'>".$rows["title"]."</div>";
