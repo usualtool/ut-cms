@@ -274,7 +274,7 @@ if($do=="app" && isset($_GET["t"]) && $_GET["t"]=="install"){
                     </form>
                 <?php
                     }else{
-                        echo"<p>请将/app、/log、/update、/open、/assets权限设置为可写（755），并在此处 <a onclick='Refresh()' class='text-danger'>刷新页面</a></p>";
+                        echo"<p>请将/app、/log、/update、/open/assets权限设置为可写，并在此处 <a onclick='Refresh()' class='text-danger'>刷新页面</a></p>";
                     }
                 }elseif($do=="pull"){?>
                     <div class="row">
