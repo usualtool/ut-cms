@@ -54,7 +54,7 @@ if($do=="pull" && isset($_GET["t"]) && $_GET["t"]=="down"){
    while(ob_get_level()>0){@ob_end_flush();}
    header('Content-Type: text/html; charset=utf-8');
    echo'<!DOCTYPE html><html><head><meta charset="utf-8"><script>window.__taskChild=true;</script></head><body>';
-   echo'<span data-status="正在部署可视包（源码 + 数据），约需1分钟，请耐心等待..."></span>';
+   echo'<span data-status="正在部署可视包，约需1分钟，请耐心等待..."></span>';
    echo str_pad('',4096);
    flush();
    task_guard("dev_done","部署失败或中断！");
@@ -292,7 +292,7 @@ if($do=="app" && isset($_GET["t"]) && $_GET["t"]=="install"){
                         echo"<p><a class=\"btn btn-info\" href=\"?do=app\">下一步</a></p>";
                     }else{
                         echo'<p class="mb-3">将自动拉取可视包并安装数据表。</p>';
-                        echo'<div class="d-flex justify-content-between"><a class="btn btn-info" href="javascript:void(0)" onclick="return runTask(\'正在部署可视包（源码 + 数据），约需1分钟，请耐心等待...\',\'?do=pull&t=down\')">部署可视包</a></div>';
+                        echo'<div class="d-flex justify-content-between"><a class="btn btn-info" href="javascript:void(0)" onclick="return runTask(\'正在部署可视包，约需1分钟，请耐心等待...\',\'?do=pull&t=down\')">部署可视包</a></div>';
                     }
                 }elseif($do=="app"){?>
                     <form action="?do=app&t=install" method="post" name="form" target="taskFrame">
