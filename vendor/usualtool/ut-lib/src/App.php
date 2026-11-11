@@ -87,6 +87,24 @@ class App{
         unset(self::$bindings[$abstract],self::$instances[$abstract]);
     }
     /**
+     * 批量绑定
+     * @param array $bindings 抽象名=>实现
+     */
+    public static function LoadBindings($bindings){
+        if(!is_array($bindings)){
+            return;
+        }
+        foreach($bindings as $abstract=>$concrete){
+            if($concrete instanceof \Closure){
+                self::Bind($abstract,$concrete);
+            }elseif(is_array($concrete) && isset($concrete[1]) && $concrete[1]===true){
+                self::Singleton($abstract,$concrete[0]);
+            }else{
+                self::Bind($abstract,$concrete);
+            }
+        }
+    }
+    /**
      * 从容器取实例
      * @param string $abstract 抽象名或类名
      * @return object
