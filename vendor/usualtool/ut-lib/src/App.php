@@ -22,6 +22,18 @@ class App{
     private static $instances=array();
     private static $resolving=array();
     /**
+     * 引导
+     * @param object $engine Temp 引擎
+     * @return void
+     */
+    public static function Boot($engine){
+        self::Set($engine);
+        defined('APP_ROOT') or define('APP_ROOT',UTF_ROOT.'/app');
+        foreach(glob(APP_ROOT."/modules/*/bind.php") ?: array() as $bind_file){
+            self::LoadBindings(include $bind_file);
+        }
+    }
+    /**
      * 配置引擎实例
      * @param object $engine Temp 引擎
      */
