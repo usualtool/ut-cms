@@ -135,14 +135,14 @@ class Kernel{
         $app=new Temp($config["TEMPCACHE"],$_skin_."/".$_form_,$_cache_."/".$_form_);
         $app->Runin(
             array(
-                "appname",//应用名称
-                "appurl",//应用地址
-                "module",//当前模块
-                "page",//当前页/方法
-                "lang",//本地化语言列表
-                "thelang",//当前语言
-                "pubtemp",//模块化公共模板路径
-                "template"//工程化模板路径
+                "appname",
+                "appurl",
+                "module",
+                "page",
+                "lang",
+                "thelang",
+                "pubtemp",
+                "template"
             ),array(
                 $config["APPNAME"],
                 $config["APPURL"],
@@ -340,6 +340,20 @@ class Kernel{
             return;
         }
         setcookie($name,$value);
+    }
+    /**
+     * 删除 Cookie
+     * @param string $name Cookie 名
+     * @return void
+     */
+    public static function DelCookie($name){
+        if(self::$longrun){
+            self::$headers[]="Set-Cookie: ".$name."=; Path=/; Max-Age=0; SameSite=Lax".((($_SERVER['HTTPS'] ?? ''))==='on' ? "; Secure" : "");
+            return;
+        }
+        if(!headers_sent()){
+            setcookie($name,"",time()-3600,"/");
+        }
     }
     /**
      * 追加响应头
