@@ -1,7 +1,7 @@
 {
-    "name":             "usualtool/framework",
-    "description":      "UsualTool Framework (UT) is a PHP-based multi-end development framework with a comprehensive class library, suitable for building various types of applications.",
-    "keywords":         ["UT框架", "UsualTool Framework", "UTFramework"],
+    "name":             "usualtool/ut-cms",
+    "description":      "UTCMS 是基于 UT 框架及其可视包构建的开源内容管理系统，能够快速搭建各种类型的应用，遵循 Apache 2.0 和 UT 开源免费协议。",
+    "keywords":         ["UTCMS", "内容管理系统", "UT Framework"],
     "homepage":         "https://github.com/usualtool",
     "license": "Apache-2.0",
     "authors": [{
